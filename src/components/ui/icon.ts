@@ -12,8 +12,10 @@ import iconCheck from '@material-symbols/svg-400/outlined/check.svg?raw';
 import iconCheckCircle from '@material-symbols/svg-400/outlined/check_circle.svg?raw';
 import iconChevronLeft from '@material-symbols/svg-400/outlined/chevron_left.svg?raw';
 import iconChevronRight from '@material-symbols/svg-400/outlined/chevron_right.svg?raw';
+import iconClearAll from '@material-symbols/svg-400/outlined/clear_all.svg?raw';
 import iconClose from '@material-symbols/svg-400/outlined/close.svg?raw';
 import iconConfirmationNumber from '@material-symbols/svg-400/outlined/confirmation_number.svg?raw';
+import iconContentCopy from '@material-symbols/svg-400/outlined/content_copy.svg?raw';
 import iconCottage from '@material-symbols/svg-400/outlined/cottage.svg?raw';
 import iconDashboard from '@material-symbols/svg-400/outlined/dashboard.svg?raw';
 import iconDataUsage from '@material-symbols/svg-400/outlined/data_usage.svg?raw';
@@ -88,8 +90,10 @@ const ICON_SVGS: Record<IconName, string> = {
   check_circle: iconCheckCircle,
   chevron_left: iconChevronLeft,
   chevron_right: iconChevronRight,
+  clear_all: iconClearAll,
   close: iconClose,
   confirmation_number: iconConfirmationNumber,
+  content_copy: iconContentCopy,
   cottage: iconCottage,
   dashboard: iconDashboard,
   data_usage: iconDataUsage,

@@ -8,7 +8,7 @@ import {
 import type { PppStoreApi } from '@store/ppp.store';
 import { closeDrawer, toast, uiStore } from '@store/ui.store';
 import type { ViewRouter } from '@router/view-router';
-import type { PppTabName, ViewName } from '@types';
+import type { MonitorSection, PppTabName, ViewName } from '@types';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
 
@@ -24,8 +24,10 @@ const ACCENT_BORDER: Record<'primary' | 'tertiary' | 'secondary', string> = {
   secondary: 'border-secondary/30',
 };
 
-function isMonitorSection(section: string | undefined): section is 'logs' | 'traffic' | 'firewall' {
-  return section === 'logs' || section === 'traffic' || section === 'firewall';
+function isMonitorSection(section: string | undefined): section is MonitorSection {
+  return (
+    section === 'logs' || section === 'traffic' || section === 'firewall' || section === 'queues'
+  );
 }
 
 export class SidebarComponent {

@@ -23,6 +23,19 @@ export function formatBytes(bytes: number): string {
   return `${value.toFixed(1)} ${units[unit] ?? 'B'}`;
 }
 
+export function formatBitsPerSec(bps: number): string {
+  if (bps >= 1_000_000_000) {
+    return `${(bps / 1_000_000_000).toFixed(2)} Gbps`;
+  }
+  if (bps >= 1_000_000) {
+    return `${(bps / 1_000_000).toFixed(1)} Mbps`;
+  }
+  if (bps >= 1_000) {
+    return `${(bps / 1_000).toFixed(0)} Kbps`;
+  }
+  return `${Math.round(bps)} bps`;
+}
+
 export function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);

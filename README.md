@@ -42,15 +42,28 @@ NetOS dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web d
   - Batasan waktu (_Time Limit_), batasan kuota (_Data Limit_), profil kecepatan, harga modal, harga jual, dan komentar batch.
 - **Operasi Hotspot**: Reset counter pemakaian (Bytes & Uptime), tambah user manual, dan hapus user massal.
 
-### 4. Monitor & Log Router
+### 4. System Monitor Terpadu
 
-- **Live System Log**: Streaming log aktivitas router secara real-time.
-- **Fitur Log Interaktif**:
-  - Filter berdasarkan level keparahan (_INFO, WARN, ERROR, DEBUG_).
-  - Tag topik sistem (misal: _system, ppp, hotspot, account, info_).
-  - Jeda / lanjutkan (_Pause/Resume_) stream log secara langsung.
-  - Deteksi dan badge _unread log count_ saat scrolling dihentikan.
-- **Interface Traffic & Firewall**: Pratinjau monitor lalu lintas interface dan status filter firewall.
+- **Live System Log**:
+  - Streaming log aktivitas router secara real-time.
+  - Pencarian cepat teks log dan filter berdasarkan topik (`system`, `ppp`, `hotspot`, `firewall`, `dhcp`).
+  - Filter tingkat keparahan (_INFO, WARN, ERROR, DEBUG_) dengan badge warna kontras.
+  - Jeda / lanjutkan (_Pause/Resume_) stream, salin log ke clipboard, serta bersihkan tampilan log.
+  - Smart auto-scroll dengan deteksi posisi baca dan badge _unread count_.
+- **Interfaces Traffic**:
+  - Kartu ringkasan agregat WAN (Total Rx, Total Tx, Jumlah port link-up, Total volume).
+  - Monitoring throughput real-time per interface (bps, Kbps, Mbps, Gbps) dan packet rate (pps).
+  - Status koneksi adaptif (_Running, Link Down, Disabled_) dan tipe interface (_Ethernet, SFP 10G, Bridge, VLAN, Wireless_).
+  - Tampilan tabel desktop yang padat dan kartu seluler interaktif.
+- **IP Firewall**:
+  - 4 sub-modul: _Filter Rules_, _NAT_, _Mangle_, dan _Active Connections_ (conntrack).
+  - Filter berdasarkan Chain (_input, forward, output, srcnat, dstnat, prerouting_).
+  - Action Badges berwarna khas (_accept, drop, reject, fasttrack, masquerade, dst-nat, mark-connection_).
+  - Fitur toggle enable/disable rule secara langsung dan dialog konfirmasi penghapusan.
+- **Bandwidth Queues (Simple Queues)**:
+  - Antrean bandwidth per IP klien atau subnet target.
+  - **Winbox Color-Coded Usage Meter**: Progress bar dwiarah (Upload & Download) dengan indikator warna berbasis persentase batas maksimum (_Hijau <50%, Kuning 50–85%, Merah >85% / Jenuh_).
+  - Reset counter pemakaian data dan toggle status antrean.
 
 ### 5. Arsitektur & Keamanan
 

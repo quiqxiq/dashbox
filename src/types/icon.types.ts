@@ -71,4 +71,6 @@ export type IconName =
   | 'history_toggle_off'
   | 'edit_document'
   | 'power_off'
+  | 'content_copy'
+  | 'clear_all'
   | 'minimize';

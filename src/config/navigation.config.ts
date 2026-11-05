@@ -1,12 +1,12 @@
 import type { IconName } from '@types';
-import type { PppTabName, ViewMeta, ViewName } from '@types';
+import type { MonitorSection, PppTabName, ViewMeta, ViewName } from '@types';
 
 export interface NavChild {
   label: string;
   icon: IconName;
   view: ViewName;
   pppTab?: PppTabName;
-  monitorSection?: 'logs' | 'traffic' | 'firewall';
+  monitorSection?: MonitorSection;
   badge?: string;
 }
 
@@ -79,8 +79,22 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: 'swap_calls',
         view: 'monitor',
         monitorSection: 'traffic',
+        badge: '7',
       },
-      { label: 'IP Firewall', icon: 'security', view: 'monitor', monitorSection: 'firewall' },
+      {
+        label: 'IP Firewall',
+        icon: 'security',
+        view: 'monitor',
+        monitorSection: 'firewall',
+        badge: '12',
+      },
+      {
+        label: 'Bandwidth Queues',
+        icon: 'speed',
+        view: 'monitor',
+        monitorSection: 'queues',
+        badge: '5',
+      },
     ],
   },
 ];
