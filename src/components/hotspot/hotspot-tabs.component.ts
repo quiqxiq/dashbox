@@ -1,0 +1,78 @@
+import { icon } from '@components/ui/icon';
+import type { HotspotTabName, IconName } from '@types';
+import { escapeHtml } from '@utils/format';
+
+interface HotspotTabDefinition {
+  tab: HotspotTabName;
+  label: string;
+  icon: IconName;
+}
+
+const TABS: readonly HotspotTabDefinition[] = [
+  { tab: 'users', label: 'Users', icon: 'group' },
+  { tab: 'profiles', label: 'User Profile', icon: 'badge' },
+  { tab: 'active', label: 'Active', icon: 'wifi_tethering' },
+  { tab: 'hosts', label: 'Hosts', icon: 'lan' },
+];
+
+export class HotspotTabsComponent {
+  private el: HTMLElement | null = null;
+
+  constructor(private readonly onSelect: (tab: HotspotTabName) => void) {}
+
+  mount(parent: HTMLElement): this {
+    const el = document.createElement('div');
+    el.className = 'w-full overflow-x-auto no-scrollbar pt-1';
+    el.innerHTML = `
+      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container/60 backdrop-blur-md ring-1 ring-outline-variant/20 min-w-max" role="tablist" aria-label="Tab Hotspot">
+        ${TABS.map(
+          (tab) => `
+            <button type="button" data-tab="${tab.tab}" role="tab" aria-selected="false"
+              class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center gap-1.5 shrink-0">
+              ${icon(tab.icon, 'text-[15px]')}
+              <span>${escapeHtml(tab.label)}</span>
+              <span data-badge class="px-1.5 rounded-full bg-surface-container-highest text-[10px] font-mono">0</span>
+            </button>`,
+        ).join('')}
+      </div>`;
+    parent.appendChild(el);
+    this.el = el;
+
+    el.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-tab]');
+      const tab = button?.dataset.tab as HotspotTabName | undefined;
+      if (tab) this.onSelect(tab);
+    });
+
+    return this;
+  }
+
+  update(activeTab: HotspotTabName, counts: Record<HotspotTabName, number>): void {
+    if (!this.el) return;
+
+    this.el.querySelectorAll<HTMLButtonElement>('button[data-tab]').forEach((button) => {
+      const tab = button.dataset.tab as HotspotTabName | undefined;
+      if (!tab) return;
+
+      const active = tab === activeTab;
+      button.setAttribute('aria-selected', String(active));
+
+      button.classList.toggle('bg-primary/15', active);
+      button.classList.toggle('text-primary', active);
+      button.classList.toggle('font-semibold', active);
+      button.classList.toggle('shadow-[0_0_12px_rgba(125,211,252,0.18)]', active);
+      button.classList.toggle('text-on-surface-variant', !active);
+      button.classList.toggle('font-medium', !active);
+
+      const badge = button.querySelector<HTMLElement>('[data-badge]');
+      if (badge) {
+        badge.textContent = String(counts[tab]);
+        badge.classList.toggle('bg-primary/20', active);
+        badge.classList.toggle('text-primary', active);
+        badge.classList.toggle('font-bold', active);
+        badge.classList.toggle('bg-surface-container-highest', !active);
+        badge.classList.toggle('text-on-surface-variant', !active);
+      }
+    });
+  }
+}

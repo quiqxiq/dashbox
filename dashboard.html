@@ -1,0 +1,451 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-low": "#111828", "outline-variant": "#2a3a48", "on-secondary": "#001f2e", "surface": "#0f1524", "on-secondary-container": "#c0d8e8", "inverse-on-surface": "#0a0e1a", "error": "#ff6b6b", "on-tertiary-container": "#e8d0ff", "tertiary-fixed-dim": "#c8a0f0", "on-surface": "#e0e8f0", "on-error-container": "#ffb3b3", "background": "#0a0e1a", "on-tertiary-fixed-variant": "#4d2a73", "secondary-fixed-dim": "#88b4cc", "on-error": "#1a0000", "surface-container": "#141c2e", "on-primary-fixed": "#001f2e", "surface-container-lowest": "#0a0e1a", "surface-variant": "#1a2438", "tertiary-container": "#3d2060", "on-primary-container": "#c8eaff", "on-tertiary-fixed": "#1a002e", "primary-container": "#0e4d6e", "primary": "#7dd3fc", "secondary-container": "#1a3a4e", "surface-tint": "#7dd3fc", "surface-container-high": "#1a2438", "on-background": "#e0e8f0", "on-secondary-fixed-variant": "#2a4a5e", "primary-fixed-dim": "#7dd3fc", "outline": "#4a6070", "inverse-surface": "#e0e8f0", "on-primary-fixed-variant": "#004d73", "on-primary": "#001f2e", "inverse-primary": "#0a4c6e", "surface-dim": "#0f1524", "surface-bright": "#1a2438", "secondary-fixed": "#c0d8e8", "primary-fixed": "#c8eaff", "error-container": "#3d1414", "on-secondary-fixed": "#0d1f2b", "tertiary": "#c8a0f0", "on-tertiary": "#1a002e", "on-surface-variant": "#a0b4c4", "secondary": "#88b4cc", "tertiary-fixed": "#e8d0ff", "surface-container-highest": "#202c42" }, borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" }, fontFamily: { headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#0a0e1a;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-background font-body text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-40 bg-surface/75 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.3)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><button class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary active:bg-surface-container/60 transition-colors" onclick="document.getElementById('mobile-drawer').classList.remove('-translate-x-full');document.getElementById('drawer-backdrop').classList.remove('opacity-0','pointer-events-none');" type="button"><span class="material-symbols-outlined text-[24px]">menu</span></button><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high/80 ring-1 ring-outline-variant/30 backdrop-blur-md shrink-0 shadow-sm"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="material-symbols-outlined text-[13px] text-primary">network_ping</span><span class="text-[11px] font-mono font-bold text-primary tracking-wide">14 ms</span></div><div class="flex flex-col truncate"></div></div><div class="flex items-center gap-2 shrink-0"><div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high/60 backdrop-blur-md"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="text-[11px] font-medium text-on-surface-variant">RB4011 · CPU 18%</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(125,211,252,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-opacity duration-300" id="drawer-backdrop" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');this.classList.add('opacity-0','pointer-events-none');"></div><aside class="fixed top-0 bottom-0 left-0 z-50 w-72 max-w-[85vw] bg-surface-container-low/95 backdrop-blur-2xl shadow-[0_0_40px_rgba(0,0,0,0.6)] flex flex-col transform transition-transform duration-300 ease-out pt-safe pb-safe" id="mobile-drawer"><div class="h-16 px-5 flex items-center justify-between shrink-0"><div class="flex items-center gap-2.5"><img alt="NetOS Router Icon" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UyLGKaVkP-dV_2Cn4voGiF3EOyrJwv2Dcutt3i5JCjJBJ6cDyPTnIzDwYwu_NquQoeiK2rp_jupLNR9MmoG7B8XcInSFKgTt_MK43N6OG-Dw0IHC09YYWYE-l7qDzYnA-5nVgRH-vuyA1zkTRAc797sshUiKUwpVQftXG1PdHL_fIXtVuPnh_WfYa2Toqj8Xmx1o9c0MIFW4Lr0TxM9Vbfp0yJkns7qKe3ldsHHDL8"><span class="font-headline font-bold text-base text-primary tracking-wide">RouterOS</span></div><button class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button></div><div class="px-4 py-2 shrink-0"><div class="rounded-xl bg-surface-container/70 ring-1 ring-outline-variant/30 backdrop-blur-md p-2.5 space-y-2"><div class="flex items-center justify-between px-1"><span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">router</span>Pilih Router</span><span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">4 Online</span></div><div class="relative"><select aria-label="Pilih Router Aktif" class="w-full appearance-none rounded-lg bg-surface-variant/80 border border-outline-variant/30 pl-8 pr-8 py-2 text-xs font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer transition-colors shadow-inner"><option selected="" value="ccr1009">CCR1009-7G-1C-1S+ · Core (Online)</option><option value="rb4011">RB4011-iGS+ · Distribution (Online)</option><option value="hexs">hEX S · Branch Office (Online)</option><option value="ccr2004">CCR2004-16G-2S+ · DC (Standby)</option></select><div class="pointer-events-none absolute inset-y-0 left-0 pl-2.5 flex items-center"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span></div><div class="pointer-events-none absolute inset-y-0 right-0 pr-2 flex items-center text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">expand_more</span></div></div><div class="flex items-center justify-between pt-0.5 px-0.5 text-[10px]"><span class="text-on-surface-variant/80 font-mono">192.168.1.1</span></div></div></div><div class="flex-1 overflow-y-auto px-3 py-2 space-y-4"><!-- Overview Flat Links -->
+<div class="space-y-1">
+  <p class="px-3 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70">Overview</p>
+  <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-primary bg-primary/10 transition-colors" data-path="dashboard" href="#">
+    <span class="material-symbols-outlined text-[20px] text-primary">dashboard</span>
+    <span class="">Dashboard</span>
+  </a>
+  <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-on-surface-variant hover:bg-surface-container/60 hover:text-on-surface transition-colors" data-path="quick-settings" href="#">
+    <span class="material-symbols-outlined text-[20px]">tune</span>
+    <span class="">Quick Settings</span>
+  </a>
+</div>
+
+<!-- Navigation Accordions Container -->
+<div class="space-y-1.5">
+  <p class="px-3 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70">Management &amp; Monitor</p>
+
+  <!-- PPP Management Accordion (Expanded by default) -->
+  <details class="group rounded-xl overflow-hidden bg-surface-container/40 ring-1 ring-outline-variant/20 transition-colors open:bg-surface-container/70" open="">
+    <summary class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container/60 cursor-pointer list-none select-none transition-colors">
+      <div class="flex items-center gap-2.5">
+        <span class="material-symbols-outlined text-[18px] text-primary">hub</span>
+        <span class="">PPP Management</span>
+      </div>
+      <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform duration-200 group-open:rotate-180">expand_more</span>
+    </summary>
+    <div class="pl-8 pr-2.5 pb-2 pt-0.5 space-y-0.5 border-l-2 border-primary/30 ml-4.5 my-1">
+      <a class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-primary hover:bg-surface-variant/80 transition-colors" data-path="ppp-secrets" href="#">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[15px]">key</span>
+          <span class="">Secrets</span>
+        </div>
+        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-primary/20 text-primary font-bold">48</span>
+      </a>
+      <a class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="ppp-active-connections" href="#">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[15px]">sync_alt</span>
+          <span class="">Active Connections</span>
+        </div>
+        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="ppp-profiles" href="#">
+        <span class="material-symbols-outlined text-[15px]">badge</span>
+        <span class="">Profiles</span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="ppp-inactive" href="#">
+        <span class="material-symbols-outlined text-[15px]">link_off</span>
+        <span class="">Inactive</span>
+      </a>
+    </div>
+  </details>
+
+  <!-- Hotspot Management Accordion -->
+  <details class="group rounded-xl overflow-hidden bg-surface-container/40 ring-1 ring-outline-variant/20 transition-colors open:bg-surface-container/70">
+    <summary class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container/60 cursor-pointer list-none select-none transition-colors">
+      <div class="flex items-center gap-2.5">
+        <span class="material-symbols-outlined text-[18px] text-tertiary">wifi_tethering</span>
+        <span class="">Hotspot Management</span>
+      </div>
+      <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform duration-200 group-open:rotate-180">expand_more</span>
+    </summary>
+    <div class="pl-8 pr-2.5 pb-2 pt-0.5 space-y-0.5 border-l-2 border-tertiary/30 ml-4.5 my-1">
+      <a class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="hotspot-users" href="#">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[15px]">group</span>
+          <span class="">Users</span>
+        </div>
+        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-tertiary/20 text-tertiary font-bold">128</span>
+      </a>
+      <a class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="hotspot-active-sessions" href="#">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[15px]">timer</span>
+          <span class="">Active</span>
+        </div>
+        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="hotspot-user-profiles" href="#">
+        <span class="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+        <span class="">Profiles</span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="hotspot-inactive" href="#">
+        <span class="material-symbols-outlined text-[15px]">wifi_off</span>
+        <span class="">Inactive</span>
+      </a>
+    </div>
+  </details>
+
+  <!-- Monitor & Diagnostics Accordion -->
+  <details class="group rounded-xl overflow-hidden bg-surface-container/40 ring-1 ring-outline-variant/20 transition-colors open:bg-surface-container/70">
+    <summary class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container/60 cursor-pointer list-none select-none transition-colors">
+      <div class="flex items-center gap-2.5">
+        <span class="material-symbols-outlined text-[18px] text-secondary">monitoring</span>
+        <span class="">Monitor &amp; Diagnostics</span>
+      </div>
+      <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform duration-200 group-open:rotate-180">expand_more</span>
+    </summary>
+    <div class="pl-8 pr-2.5 pb-2 pt-0.5 space-y-0.5 border-l-2 border-secondary/30 ml-4.5 my-1">
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="system-log" href="#">
+        <span class="material-symbols-outlined text-[15px]">terminal</span>
+        <span class="">System Log</span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="interfaces-traffic" href="#">
+        <span class="material-symbols-outlined text-[15px]">swap_calls</span>
+        <span class="">Interfaces Traffic</span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="simple-queues" href="#">
+        <span class="material-symbols-outlined text-[15px]">speed</span>
+        <span class="">Simple Queues</span>
+      </a>
+      <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/70 transition-colors" data-path="ip-firewall" href="#">
+        <span class="material-symbols-outlined text-[15px]">security</span>
+        <span class="">IP Firewall</span>
+      </a>
+    </div>
+  </details>
+</div></div></aside><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-background"><div class="flex flex-col w-full px-3.5 pb-8 space-y-4">
+<!-- Hero Device & Health Card (Layered Glacier Glass) -->
+<div class="w-full rounded-2xl bg-surface-container/70 backdrop-blur-xl p-4 shadow-xl relative overflow-hidden ring-1 ring-outline-variant/30">
+  <div class="absolute -right-12 -top-12 w-44 h-44 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+  <div class="absolute -left-10 bottom-0 w-36 h-36 rounded-full bg-tertiary/10 blur-2xl pointer-events-none"></div>
+  <!-- Top Meta Row: Badges & WAN Throughput -->
+  <div class="relative z-10 flex items-center justify-between gap-2 pb-2.5 border-b border-outline-variant/20">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="px-2 py-0.5 rounded-full bg-primary-container/80 text-primary text-[10px] font-bold tracking-wider uppercase shadow-sm">Core Router</span>
+      <span class="px-2 py-0.5 rounded-full bg-surface-variant/80 text-on-surface-variant text-[10px] font-mono font-medium">RouterOS v7.14.3</span>
+    </div>
+    <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-high/80 shadow-inner shrink-0">
+      <span class="text-[9px] font-bold uppercase tracking-wider text-on-surface-variant mr-0.5">WAN</span>
+      <span class="flex items-center text-[11px] font-bold text-primary font-mono">
+        <span class="material-symbols-outlined text-[13px] mr-0.5">arrow_downward</span>184M
+      </span>
+      <span class="text-outline-variant text-[10px]">/</span>
+      <span class="flex items-center text-[11px] font-bold text-secondary font-mono">
+        <span class="material-symbols-outlined text-[13px] mr-0.5">arrow_upward</span>46M
+      </span>
+    </div>
+  </div>
+  <!-- Router Device Identity -->
+  <div class="relative z-10 pt-2.5 pb-3">
+    <h1 class="text-[15px] sm:text-base font-bold font-headline text-on-surface tracking-tight leading-snug break-words">MikroTik CCR1009-7G-1C-1S+</h1>
+    <div class="flex items-center justify-between flex-wrap gap-y-1 gap-x-2 mt-1 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-1.5">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+        </span>
+        <span class="text-[11px] text-on-surface font-medium">Sistem Berjalan Stabil</span>
+      </div>
+      <div class="flex items-center gap-1 text-[11px] text-primary font-mono font-medium bg-primary/10 px-2 py-0.5 rounded-full">
+        <span class="material-symbols-outlined text-[13px]">schedule</span>
+        <span class="">Uptime 48h 14j</span>
+      </div>
+    </div>
+  </div>
+  <!-- Quick Telemetry Grid (Balanced 2x2 with clean visual hierarchy) -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 relative z-10 pt-1">
+    <!-- CPU -->
+    <div class="p-2.5 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between shadow-sm ring-1 ring-outline-variant/20">
+      <div class="flex items-center justify-between text-on-surface-variant">
+        <span class="text-[11px] font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-primary">memory</span> CPU
+        </span>
+        <span class="text-[10px] font-mono text-primary font-semibold">Normal</span>
+      </div>
+      <div class="mt-1.5 flex items-baseline justify-between">
+        <span class="text-lg font-bold font-headline text-on-surface tracking-tight">24%</span>
+        <span class="text-[10px] text-on-surface-variant font-mono">1.2 GHz</span>
+      </div>
+      <div class="w-full bg-surface-container-lowest/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
+        <div class="bg-primary h-full rounded-full" style="width: 24%"></div>
+      </div>
+    </div>
+    <!-- RAM -->
+    <div class="p-2.5 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between shadow-sm ring-1 ring-outline-variant/20">
+      <div class="flex items-center justify-between text-on-surface-variant">
+        <span class="text-[11px] font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-tertiary">storage</span> RAM
+        </span>
+        <span class="text-[10px] font-mono text-tertiary font-semibold">High</span>
+      </div>
+      <div class="mt-1.5 flex items-baseline justify-between">
+        <span class="text-lg font-bold font-headline text-on-surface tracking-tight">82%</span>
+        <span class="text-[10px] text-on-surface-variant font-mono">1.6/2.0 GB</span>
+      </div>
+      <div class="w-full bg-surface-container-lowest/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
+        <div class="bg-tertiary h-full rounded-full" style="width: 82%"></div>
+      </div>
+    </div>
+    <!-- Temp -->
+    <div class="p-2.5 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between shadow-sm ring-1 ring-outline-variant/20">
+      <div class="flex items-center justify-between text-on-surface-variant">
+        <span class="text-[11px] font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-primary">device_thermostat</span> Temp
+        </span>
+        <span class="text-[10px] font-mono text-primary font-semibold">Safe</span>
+      </div>
+      <div class="mt-1.5 flex items-baseline justify-between">
+        <span class="text-lg font-bold font-headline text-on-surface tracking-tight">42°C</span>
+        <span class="text-[10px] text-on-surface-variant font-mono">Max 70°C</span>
+      </div>
+      <div class="w-full bg-surface-container-lowest/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
+        <div class="bg-primary h-full rounded-full" style="width: 42%"></div>
+      </div>
+    </div>
+    <!-- Fan -->
+    <div class="p-2.5 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between shadow-sm ring-1 ring-outline-variant/20">
+      <div class="flex items-center justify-between text-on-surface-variant">
+        <span class="text-[11px] font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-secondary">mode_fan</span> Fan
+        </span>
+        <span class="text-[10px] font-mono text-secondary font-semibold">OK</span>
+      </div>
+      <div class="mt-1.5 flex items-baseline justify-between">
+        <span class="text-lg font-bold font-headline text-on-surface tracking-tight">2840</span>
+        <span class="text-[10px] text-on-surface-variant font-mono">RPM</span>
+      </div>
+      <div class="w-full bg-surface-container-lowest/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
+        <div class="bg-secondary h-full rounded-full" style="width: 58%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Primary Instant Search & Filtering Hub -->
+<div class="w-full rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 shadow-lg space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">travel_explore</span>
+<h2 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">Pencarian Cepat Akses</h2>
+</div>
+<span class="text-[11px] text-on-surface-variant">PPP &amp; Hotspot Live</span>
+</div>
+<!-- Live Search Input -->
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[20px] text-primary">search</span>
+</div>
+<input class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-variant/70 text-on-surface placeholder:text-on-surface-variant/60 text-xs font-medium focus:outline-none focus:bg-surface-variant/90 shadow-inner" id="dashboardSearchInput" placeholder="Cari username, IP, MAC, service..." type="text">
+<button aria-label="Bersihkan pencarian" class="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-on-surface hidden" id="clearSearchBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</div>
+<!-- Filter Chips Scrollable on Mobile -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs -mx-1 px-1">
+<button class="filter-chip px-3 py-1 rounded-full bg-primary text-on-primary font-semibold shrink-0 transition-transform active:scale-95 shadow-sm" data-filter="all" type="button">
+        Semua
+      </button>
+<button class="filter-chip px-3 py-1 rounded-full bg-surface-variant/80 text-on-surface-variant font-medium shrink-0 transition-transform active:scale-95 hover:text-on-surface" data-filter="ppp" type="button">
+        PPP Secret
+      </button>
+<button class="filter-chip px-3 py-1 rounded-full bg-surface-variant/80 text-on-surface-variant font-medium shrink-0 transition-transform active:scale-95 hover:text-on-surface" data-filter="hotspot" type="button">
+        Hotspot Users
+      </button>
+<button class="filter-chip px-3 py-1 rounded-full bg-surface-variant/80 text-on-surface-variant font-medium shrink-0 transition-transform active:scale-95 hover:text-on-surface flex items-center gap-1" data-filter="online" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Online
+      </button>
+<button class="filter-chip px-3 py-1 rounded-full bg-surface-variant/80 text-on-surface-variant font-medium shrink-0 transition-transform active:scale-95 hover:text-on-surface" data-filter="offline" type="button">
+        Offline
+      </button>
+</div>
+<!-- Search Results / Directory Feed -->
+<div class="space-y-2.5 pt-1" id="resultsList">
+<!-- Item 1: Active PPPoE Secret -->
+<div class="search-item rounded-xl bg-surface-container-high/60 backdrop-blur-md p-3 transition-colors hover:bg-surface-container-high/90" data-status="online" data-text="budi_home_pppoe 10.10.20.45 pppoe 50m-unlimited" data-type="ppp">
+<div class="flex items-start justify-between gap-2">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container text-[9px] font-bold tracking-wide uppercase">PPP • PPPoE</span>
+<span class="text-xs font-bold text-on-surface truncate">budi_home_pppoe</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
+<span class="text-primary font-mono font-medium">10.10.20.45</span>
+<span class="">•</span>
+<span class="px-1 rounded bg-surface-variant text-[10px] text-secondary">50M-Unlimited</span>
+</p>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> ONLINE
+            </span>
+<span class="text-[10px] text-on-surface-variant mt-1">Uptime: 3j 24m</span>
+</div>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/80 bg-surface-container-lowest/40 rounded-lg px-2 py-1">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">data_usage</span> Kuota: 4.2 GB</span>
+<span class="flex items-center gap-1 text-primary cursor-pointer hover:underline">
+<span class="">Detail</span>
+<span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Item 2: Active Hotspot User -->
+<div class="search-item rounded-xl bg-surface-container-high/60 backdrop-blur-md p-3 transition-colors hover:bg-surface-container-high/90" data-status="online" data-text="guest_voucher_88 192.168.88.102 hs-wlan1 2jam-5k" data-type="hotspot">
+<div class="flex items-start justify-between gap-2">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-tertiary-container text-on-tertiary-container text-[9px] font-bold tracking-wide uppercase">Hotspot • Voucher</span>
+<span class="text-xs font-bold text-on-surface truncate">guest_voucher_88</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
+<span class="text-tertiary font-mono font-medium">192.168.88.102</span>
+<span class="">•</span>
+<span class="text-[10px] text-on-surface-variant">hs-wlan1</span>
+</p>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> ONLINE
+            </span>
+<span class="text-[10px] text-secondary font-medium mt-1">Sisa: 42 mnt</span>
+</div>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/80 bg-surface-container-lowest/40 rounded-lg px-2 py-1">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-tertiary">confirmation_number</span> Paket 2Jam-5K</span>
+<span class="flex items-center gap-1 text-primary cursor-pointer hover:underline">
+<span class="">Detail</span>
+<span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Item 3: Offline L2TP Secret -->
+<div class="search-item rounded-xl bg-surface-container-high/40 backdrop-blur-md p-3 opacity-90 transition-colors hover:bg-surface-container-high/80" data-status="offline" data-text="andi_kantor_l2tp l2tp 100m-dedicated offline" data-type="ppp">
+<div class="flex items-start justify-between gap-2">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant text-[9px] font-bold tracking-wide uppercase">PPP • L2TP</span>
+<span class="text-xs font-bold text-on-surface/90 truncate">andi_kantor_l2tp</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
+<span class="px-1 rounded bg-surface-variant/70 text-[10px] text-on-surface-variant">100M-Dedicated</span>
+<span class="">•</span>
+<span class="text-[10px] text-on-surface-variant/70">Auth MSCHAPv2</span>
+</p>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-semibold">
+              OFFLINE
+            </span>
+<span class="text-[10px] text-on-surface-variant/70 mt-1">Logout: 2 jam lalu</span>
+</div>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/70 bg-surface-container-lowest/30 rounded-lg px-2 py-1">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">check_circle</span> Status Akun: Aktif</span>
+<span class="text-primary cursor-pointer hover:underline text-[10px]">Ping Host</span>
+</div>
+</div>
+<!-- Item 4: Offline Hotspot User -->
+<div class="search-item rounded-xl bg-surface-container-high/40 backdrop-blur-md p-3 opacity-90 transition-colors hover:bg-surface-container-high/80" data-status="offline" data-text="siswa_lab3_09 siswa-reguler hs-wlan2 expired" data-type="hotspot">
+<div class="flex items-start justify-between gap-2">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant text-[9px] font-bold tracking-wide uppercase">Hotspot • Member</span>
+<span class="text-xs font-bold text-on-surface/90 truncate">siswa_lab3_09</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
+<span class="text-[10px] text-on-surface-variant">hs-wlan2</span>
+<span class="">•</span>
+<span class="px-1 rounded bg-surface-variant/70 text-[10px] text-on-surface-variant">Siswa-Reguler</span>
+</p>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-semibold">
+              EXPIRED
+            </span>
+<span class="text-[10px] text-error/90 mt-1">Kemarin 17:00</span>
+</div>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/70 bg-surface-container-lowest/30 rounded-lg px-2 py-1">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-error">history_toggle_off</span> Masa Aktif Habis</span>
+<span class="text-primary cursor-pointer hover:underline text-[10px]">Perpanjang</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Ringkasan Layanan Utama (KPI Cards) -->
+
+<!-- Realtime WAN Throughput Graph & Live Logs Card -->
+
+<!-- Shortcut Akses Cepat Sub-Menu (Mobile Grid) -->
+
+</div>
+<script>
+  (function initDashboardInteractivity() {
+    const searchInput = document.getElementById('dashboardSearchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    const filterChips = document.querySelectorAll('.filter-chip');
+    const items = document.querySelectorAll('.search-item');
+
+    let currentFilter = 'all';
+
+    function filterItems() {
+      const query = (searchInput.value || '').trim().toLowerCase();
+
+      items.forEach((item) => {
+        const itemType = item.getAttribute('data-type');
+        const itemStatus = item.getAttribute('data-status');
+        const itemText = (item.getAttribute('data-text') || '').toLowerCase();
+
+        const matchesQuery = !query || itemText.includes(query);
+
+        let matchesChip = true;
+        if (currentFilter === 'ppp') matchesChip = itemType === 'ppp';
+        else if (currentFilter === 'hotspot') matchesChip = itemType === 'hotspot';
+        else if (currentFilter === 'online') matchesChip = itemStatus === 'online';
+        else if (currentFilter === 'offline') matchesChip = itemStatus === 'offline';
+
+        if (matchesQuery && matchesChip) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        if (e.target.value.length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+        filterItems();
+      });
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.classList.add('hidden');
+        filterItems();
+        searchInput.focus();
+      });
+    }
+
+    filterChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach((c) => {
+          c.classList.remove('bg-primary', 'text-on-primary', 'font-semibold');
+          c.classList.add('bg-surface-variant/80', 'text-on-surface-variant', 'font-medium');
+        });
+        chip.classList.remove('bg-surface-variant/80', 'text-on-surface-variant', 'font-medium');
+        chip.classList.add('bg-primary', 'text-on-primary', 'font-semibold');
+
+        currentFilter = chip.getAttribute('data-filter') || 'all';
+        filterItems();
+      });
+    });
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-2px_16px_rgba(0,0,0,0.35)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-2"><a aria-current="page" class="flex flex-col items-center justify-center gap-1 w-16 h-12 transition-colors text-primary font-semibold" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="text-[10px] tracking-tight">Dashboard</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant transition-colors" data-path="ppp-management" href="#"><span class="material-symbols-outlined text-[22px]">hub</span><span class="text-[10px] tracking-tight">PPP</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant transition-colors" data-path="hotspot-management" href="#"><span class="material-symbols-outlined text-[22px]">wifi_tethering</span><span class="text-[10px] tracking-tight">Hotspot</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant transition-colors" data-path="monitor-and-diagnostics" href="#"><span class="material-symbols-outlined text-[22px]">monitoring</span><span class="text-[10px] tracking-tight">Monitor</span></a></div></nav>
+
+</body></html>
