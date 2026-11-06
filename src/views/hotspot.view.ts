@@ -119,7 +119,7 @@ export class HotspotView implements View {
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col pb-8 space-y-2.5';
+    root.className = 'view flex flex-col pb-8 space-y-3.5';
     container.appendChild(root);
     this.root = root;
 
@@ -131,7 +131,7 @@ export class HotspotView implements View {
     this.tabs = tabs;
 
     const listPanel = document.createElement('div');
-    listPanel.className = 'space-y-2.5';
+    listPanel.className = 'space-y-3';
     root.appendChild(listPanel);
     this.listPanel = listPanel;
 

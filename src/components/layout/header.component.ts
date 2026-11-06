@@ -21,7 +21,7 @@ export class HeaderComponent {
   mount(parent: HTMLElement): this {
     const el = document.createElement('header');
     el.className =
-      'fixed top-0 inset-x-0 z-40 bg-surface/75 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.35)] pt-safe';
+      'fixed top-0 inset-x-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-[0_1px_12px_rgba(0,0,0,0.35)] pt-safe';
     el.innerHTML = `
       <div class="h-16 px-3 flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 min-w-0">

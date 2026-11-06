@@ -16,9 +16,9 @@ export class SettingsView implements View {
     const username = user?.username ?? 'admin';
 
     const root = document.createElement('section');
-    root.className = 'view flex flex-col gap-3 pb-8';
+    root.className = 'view flex flex-col gap-3.5 pb-8';
     root.innerHTML = `
-      <header class="flex items-center gap-3 px-1 pt-1">
+      <header class="flex items-center gap-3 px-1 pb-1">
         <div class="min-w-0">
           <h1 class="text-base font-bold font-headline text-on-surface">${escapeHtml(t('settings.title'))}</h1>
           <p class="mt-0.5 text-[11px] text-on-surface-variant">${escapeHtml(t('settings.languageSection'))}</p>
