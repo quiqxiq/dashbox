@@ -1,18 +1,20 @@
 import { icon } from '@components/ui/icon';
+import type { TranslationKey } from '@i18n/translate';
+import { t } from '@i18n/translate';
 import type { IconName, MonitorSection } from '@types';
 import { escapeHtml } from '@utils/format';
 
 interface MonitorTabDefinition {
   section: MonitorSection;
-  label: string;
+  labelKey: TranslationKey;
   icon: IconName;
 }
 
 const TABS: readonly MonitorTabDefinition[] = [
-  { section: 'logs', label: 'System Log', icon: 'terminal' },
-  { section: 'traffic', label: 'Interfaces Traffic', icon: 'swap_calls' },
-  { section: 'firewall', label: 'IP Firewall', icon: 'security' },
-  { section: 'queues', label: 'Simple Queues', icon: 'speed' },
+  { section: 'logs', labelKey: 'monitor.logs', icon: 'terminal' },
+  { section: 'traffic', labelKey: 'monitor.traffic', icon: 'swap_calls' },
+  { section: 'firewall', labelKey: 'monitor.firewall', icon: 'security' },
+  { section: 'queues', labelKey: 'monitor.queues', icon: 'speed' },
 ];
 
 export class MonitorTabsComponent {
@@ -30,7 +32,7 @@ export class MonitorTabsComponent {
             <button type="button" data-section="${tab.section}" role="tab" aria-selected="false"
               class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center gap-1.5 shrink-0">
               ${icon(tab.icon, 'text-[15px]')}
-              <span>${escapeHtml(tab.label)}</span>
+              <span>${escapeHtml(t(tab.labelKey))}</span>
               <span data-badge class="px-1.5 rounded-full bg-surface-container-highest text-[10px] font-mono">0</span>
             </button>`,
         ).join('')}

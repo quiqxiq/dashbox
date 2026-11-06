@@ -19,6 +19,7 @@ import type {
 import { debounce } from '@utils/debounce';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import type { View } from './base.view';
 
 const TONE_TEXT: Record<AccentTone, string> = {
@@ -85,7 +86,7 @@ export class DashboardView implements View {
 
         <div class="relative z-10 flex items-center justify-between gap-2 pb-2.5 border-b border-outline-variant/20">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="px-2 py-0.5 rounded-full bg-primary-container/80 text-primary text-[10px] font-bold tracking-wider uppercase">Core Router</span>
+            <span class="px-2 py-0.5 rounded-full bg-primary-container/80 text-primary text-[10px] font-bold tracking-wider uppercase">${escapeHtml(t('dashboard.coreRouter'))}</span>
             <span class="px-2 py-0.5 rounded-full bg-surface-variant/80 text-on-surface-variant text-[10px] font-mono font-medium">v7.14.3</span>
           </div>
           <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-high/80 shrink-0">
@@ -108,7 +109,7 @@ export class DashboardView implements View {
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              <span class="text-[11px] text-on-surface font-medium">Sistem Berjalan Stabil</span>
+              <span class="text-[11px] text-on-surface font-medium">${escapeHtml(t('dashboard.systemRunning'))}</span>
             </div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-mono font-medium bg-primary/10 px-2 py-0.5 rounded-full">
               ${icon('schedule', 'text-[13px]')}
@@ -130,9 +131,9 @@ export class DashboardView implements View {
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-1.5">
             ${icon('show_chart', 'text-primary text-[17px]')}
-            <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">Throughput WAN</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">${escapeHtml(t('dashboard.wanThroughput'))}</h3>
           </div>
-          <span class="text-[10px] font-mono text-on-surface-variant">60 detik terakhir</span>
+          <span class="text-[10px] font-mono text-on-surface-variant">${escapeHtml(t('dashboard.last60s'))}</span>
         </div>
         <div class="flex items-end gap-[3px] h-16">
           ${THROUGHPUT_BARS.map(

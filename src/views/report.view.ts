@@ -13,6 +13,8 @@ import {
   toXlsHtml,
 } from '@mock/report.mock';
 import { toast } from '@store/ui.store';
+import { t } from '@i18n/translate';
+import { escapeHtml } from '@utils/format';
 import type { ReportEntry, ReportFilter, ReportTab } from '@types';
 import type { View } from './base.view';
 
@@ -38,8 +40,8 @@ export class ReportView implements View {
     root.innerHTML = `
       <header class="flex items-center justify-between gap-3 px-1 pt-1">
         <div class="min-w-0">
-          <h1 class="text-base font-bold font-headline text-on-surface">Sales Report</h1>
-          <p class="mt-0.5 text-[11px] text-on-surface-variant">Laporan penjualan voucher hotspot · data mock terstruktur</p>
+          <h1 class="text-base font-bold font-headline text-on-surface">${escapeHtml(t('report.title'))}</h1>
+          <p class="mt-0.5 text-[11px] text-on-surface-variant">${escapeHtml(t('report.subtitle'))}</p>
         </div>
         <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary">
           <span class="size-1.5 rounded-full bg-primary animate-pulse"></span>

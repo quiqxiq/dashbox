@@ -37,12 +37,14 @@ import iconHub from '@material-symbols/svg-400/outlined/hub.svg?raw';
 import iconInfo from '@material-symbols/svg-400/outlined/info.svg?raw';
 import iconKey from '@material-symbols/svg-400/outlined/key.svg?raw';
 import iconLan from '@material-symbols/svg-400/outlined/lan.svg?raw';
+import iconLanguage from '@material-symbols/svg-400/outlined/language.svg?raw';
 import iconLinkOff from '@material-symbols/svg-400/outlined/link_off.svg?raw';
 import iconMemory from '@material-symbols/svg-400/outlined/memory.svg?raw';
 import iconMenu from '@material-symbols/svg-400/outlined/menu.svg?raw';
 import iconMinimize from '@material-symbols/svg-400/outlined/minimize.svg?raw';
 import iconModeFan from '@material-symbols/svg-400/outlined/mode_fan.svg?raw';
 import iconMonitoring from '@material-symbols/svg-400/outlined/monitoring.svg?raw';
+import iconMoreHoriz from '@material-symbols/svg-400/outlined/more_horiz.svg?raw';
 import iconMoreVert from '@material-symbols/svg-400/outlined/more_vert.svg?raw';
 import iconNetworkPing from '@material-symbols/svg-400/outlined/network_ping.svg?raw';
 import iconNotificationImportant from '@material-symbols/svg-400/outlined/notification_important.svg?raw';
@@ -53,6 +55,7 @@ import iconPlayCircle from '@material-symbols/svg-400/outlined/play_circle.svg?r
 import iconPowerOff from '@material-symbols/svg-400/outlined/power_off.svg?raw';
 import iconPowerSettingsNew from '@material-symbols/svg-400/outlined/power_settings_new.svg?raw';
 import iconRefresh from '@material-symbols/svg-400/outlined/refresh.svg?raw';
+import iconRadioButtonUnchecked from '@material-symbols/svg-400/outlined/radio_button_unchecked.svg?raw';
 import iconReceiptLong from '@material-symbols/svg-400/outlined/receipt_long.svg?raw';
 import iconRemove from '@material-symbols/svg-400/outlined/remove.svg?raw';
 import iconRestartAlt from '@material-symbols/svg-400/outlined/restart_alt.svg?raw';
@@ -70,6 +73,7 @@ import iconSyncAlt from '@material-symbols/svg-400/outlined/sync_alt.svg?raw';
 import iconTerminal from '@material-symbols/svg-400/outlined/terminal.svg?raw';
 import iconTimer from '@material-symbols/svg-400/outlined/timer.svg?raw';
 import iconTravelExplore from '@material-symbols/svg-400/outlined/travel_explore.svg?raw';
+import iconTranslate from '@material-symbols/svg-400/outlined/translate.svg?raw';
 import iconTune from '@material-symbols/svg-400/outlined/tune.svg?raw';
 import iconVerified from '@material-symbols/svg-400/outlined/verified.svg?raw';
 import iconVisibility from '@material-symbols/svg-400/outlined/visibility.svg?raw';
@@ -119,12 +123,14 @@ const ICON_SVGS: Record<IconName, string> = {
   info: iconInfo,
   key: iconKey,
   lan: iconLan,
+  language: iconLanguage,
   link_off: iconLinkOff,
   memory: iconMemory,
   menu: iconMenu,
   minimize: iconMinimize,
   mode_fan: iconModeFan,
   monitoring: iconMonitoring,
+  more_horiz: iconMoreHoriz,
   more_vert: iconMoreVert,
   network_ping: iconNetworkPing,
   notification_important: iconNotificationImportant,
@@ -134,6 +140,7 @@ const ICON_SVGS: Record<IconName, string> = {
   play_circle: iconPlayCircle,
   power_off: iconPowerOff,
   power_settings_new: iconPowerSettingsNew,
+  radio_button_unchecked: iconRadioButtonUnchecked,
   receipt_long: iconReceiptLong,
   refresh: iconRefresh,
   remove: iconRemove,
@@ -151,6 +158,7 @@ const ICON_SVGS: Record<IconName, string> = {
   sync_alt: iconSyncAlt,
   terminal: iconTerminal,
   timer: iconTimer,
+  translate: iconTranslate,
   travel_explore: iconTravelExplore,
   tune: iconTune,
   verified: iconVerified,

@@ -1,18 +1,20 @@
 import { icon } from '@components/ui/icon';
+import type { TranslationKey } from '@i18n/translate';
+import { t } from '@i18n/translate';
 import type { HotspotTabName, IconName } from '@types';
 import { escapeHtml } from '@utils/format';
 
 interface HotspotTabDefinition {
   tab: HotspotTabName;
-  label: string;
+  labelKey: TranslationKey;
   icon: IconName;
 }
 
 const TABS: readonly HotspotTabDefinition[] = [
-  { tab: 'users', label: 'Users', icon: 'group' },
-  { tab: 'profiles', label: 'User Profile', icon: 'badge' },
-  { tab: 'active', label: 'Active', icon: 'wifi_tethering' },
-  { tab: 'hosts', label: 'Hosts', icon: 'lan' },
+  { tab: 'users', labelKey: 'hotspot.users', icon: 'group' },
+  { tab: 'profiles', labelKey: 'hotspot.profiles', icon: 'badge' },
+  { tab: 'active', labelKey: 'hotspot.active', icon: 'wifi_tethering' },
+  { tab: 'hosts', labelKey: 'hotspot.hosts', icon: 'lan' },
 ];
 
 export class HotspotTabsComponent {
@@ -30,7 +32,7 @@ export class HotspotTabsComponent {
             <button type="button" data-tab="${tab.tab}" role="tab" aria-selected="false"
               class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center gap-1.5 shrink-0">
               ${icon(tab.icon, 'text-[15px]')}
-              <span>${escapeHtml(tab.label)}</span>
+              <span>${escapeHtml(t(tab.labelKey))}</span>
               <span data-badge class="px-1.5 rounded-full bg-surface-container-highest text-[10px] font-mono">0</span>
             </button>`,
         ).join('')}

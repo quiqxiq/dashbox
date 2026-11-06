@@ -70,6 +70,9 @@ function isHost(entry: HotspotEntry): entry is HotspotHost {
 }
 
 export class HotspotView implements View {
+  constructor(initialTab: HotspotTabName = 'users') {
+    this.activeTab = initialTab;
+  }
   private root: HTMLElement | null = null;
   private listPanel: HTMLElement | null = null;
   private listLabel: HTMLElement | null = null;

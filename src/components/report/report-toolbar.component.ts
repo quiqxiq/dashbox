@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import { toast } from '@store/ui.store';
 import type { ReportFilter, ReportTab } from '@types';
 
@@ -38,12 +39,12 @@ export class ReportToolbarComponent {
         <button type="button" data-report-tab="sales"
           class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary/15 text-primary shadow-[0_0_12px_rgba(125,211,252,0.18)] transition-colors flex items-center gap-1.5 shrink-0">
           ${icon('receipt_long', 'text-[15px]')}
-          <span>Detail Penjualan</span>
+          <span>${escapeHtmlLocal(t('report.detail'))}</span>
         </button>
         <button type="button" data-report-tab="resume"
           class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center gap-1.5 shrink-0">
           ${icon('show_chart', 'text-[15px]')}
-          <span>Resume &amp; Grafik</span>
+          <span>${escapeHtmlLocal(t('report.resume'))}</span>
         </button>
       </div>
 
@@ -164,4 +165,8 @@ export class ReportToolbarComponent {
     this.el?.remove();
     this.el = null;
   }
+}
+
+function escapeHtmlLocal(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

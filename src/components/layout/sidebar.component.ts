@@ -8,7 +8,10 @@ import {
 import type { PppStoreApi } from '@store/ppp.store';
 import { closeDrawer, toast, uiStore } from '@store/ui.store';
 import type { ViewRouter } from '@router/view-router';
-import type { MonitorSection, PppTabName, ViewName } from '@types';
+import type { HotspotTabName, MonitorSection, PppTabName, ViewName } from '@types';
+import { LOCALE_OPTIONS } from '@config/locale.config';
+import { subscribeLocale, t } from '@i18n/translate';
+import { getLocale, setLocale } from '@store/locale.store';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
 
@@ -75,6 +78,10 @@ export class SidebarComponent {
 
     this.router.subscribe(() => this.refreshActive());
     this.ppp.store.subscribe(() => this.refreshActive());
+    subscribeLocale(() => {
+      el.innerHTML = this.markup();
+      this.refreshActive();
+    });
 
     const routerSelect = el.querySelector<HTMLSelectElement>('[data-router-select]');
     routerSelect?.addEventListener('change', () => {
@@ -93,6 +100,12 @@ export class SidebarComponent {
       return;
     }
 
+    const localeBtn = target.closest<HTMLButtonElement>('[data-locale]');
+    if (localeBtn?.dataset.locale) {
+      setLocale(localeBtn.dataset.locale as 'id' | 'en');
+      return;
+    }
+
     const link = target.closest<HTMLAnchorElement>('a[data-view]');
     if (!link) return;
 
@@ -103,8 +116,11 @@ export class SidebarComponent {
     if (!view) return;
 
     const tab = link.dataset.pppTab as PppTabName | undefined;
+    const hotspotTab = link.dataset.hotspotTab as HotspotTabName | undefined;
     if (view === 'ppp' && tab) {
       this.router.navigate(view, { tab });
+    } else if (view === 'hotspot' && hotspotTab) {
+      this.router.navigate(view, { hotspotTab });
     } else if (view === 'monitor' && isMonitorSection(link.dataset.monitorSection)) {
       this.router.navigate(view, {
         monitorSection: link.dataset.monitorSection,
@@ -175,7 +191,7 @@ export class SidebarComponent {
         <a href="#" data-view="${link.view}"
           class="side-link flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium">
           ${icon(link.icon, 'text-[18px]')}
-          <span>${escapeHtml(link.label)}</span>
+          <span>${escapeHtml(t(link.labelKey))}</span>
         </a>`,
     ).join('');
 
@@ -185,7 +201,7 @@ export class SidebarComponent {
           <summary class="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-semibold text-on-surface-variant hover:bg-surface-container/50 hover:text-on-surface cursor-pointer list-none select-none transition-colors">
             <div class="flex items-center gap-2.5">
               ${icon(group.icon, `text-[18px] ${ACCENT_TEXT[group.accent]}`)}
-              <span>${escapeHtml(group.label)}</span>
+              <span>${escapeHtml(t(group.labelKey))}</span>
             </div>
             ${icon('expand_more', 'side-chevron text-[16px] text-on-surface-variant/60')}
           </summary>
@@ -207,7 +223,7 @@ export class SidebarComponent {
           <span class="font-headline font-bold text-sm text-on-surface tracking-wide">${APP_META.name}</span>
           <span class="text-[10px] font-mono text-on-surface-variant/70">${APP_META.version}</span>
         </div>
-        <button type="button" data-action="close-drawer" aria-label="Tutup menu"
+        <button type="button" data-action="close-drawer" aria-label="${escapeHtml(t('common.closeMenu'))}"
           class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors">
           ${icon('close', 'text-[18px]')}
         </button>
@@ -225,21 +241,35 @@ export class SidebarComponent {
         <p class="mt-1 px-1 text-[9px] font-mono text-on-surface-variant/70">192.168.1.1 · RouterOS 7.14.3</p>
       </div>
 
-      <nav class="flex-1 overflow-y-auto px-2 py-1" aria-label="Navigasi modul">
+      <nav class="flex-1 overflow-y-auto px-2 py-1" aria-label="${escapeHtml(t('nav.mainNavigation'))}">
         <div class="mb-2">
-          <p class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant/60">Ikhtisar</p>
+          <p class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant/60">${escapeHtml(t('nav.overview'))}</p>
           ${overview}
         </div>
         <div>
-          <p class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant/60">Manajemen &amp; Monitor</p>
+          <p class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant/60">${escapeHtml(t('nav.managementMonitor'))}</p>
           ${groups}
         </div>
       </nav>
 
       <div class="px-4 py-3 shrink-0 border-t border-outline-variant/15">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 mb-2.5">
           <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
           <span class="text-[10px] font-mono text-on-surface-variant">${APP_META.connectedLabel}</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-on-surface-variant flex items-center gap-1 text-[10px] font-medium shrink-0">${icon('language', 'text-[14px]')}</span>
+          ${LOCALE_OPTIONS.map(
+            (opt) => `
+            <button type="button" data-locale="${opt.value}"
+              class="flex-1 px-2 py-1 rounded-md text-[10px] font-bold transition-colors ${
+                getLocale() === opt.value
+                  ? 'bg-primary/15 text-primary ring-1 ring-primary/30'
+                  : 'text-on-surface-variant bg-surface-container/50 hover:text-on-surface'
+              }">
+              ${opt.value === 'id' ? 'ID' : 'EN'}
+            </button>`,
+          ).join('')}
         </div>
       </div>`;
   }
@@ -249,15 +279,16 @@ export class SidebarComponent {
     const dataMonitorSection = child.monitorSection
       ? `data-monitor-section="${child.monitorSection}"`
       : '';
+    const dataHotspotTab = child.hotspotTab ? `data-hotspot-tab="${child.hotspotTab}"` : '';
     const badge = child.badge
       ? `<span class="text-[9px] font-mono text-on-surface-variant/70">${escapeHtml(child.badge)}</span>`
       : '';
 
     return `
-      <a href="#" data-view="${child.view}" ${dataTab} ${dataMonitorSection}
+      <a href="#" data-view="${child.view}" ${dataTab} ${dataMonitorSection} ${dataHotspotTab}
         class="side-link flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium">
         ${icon(child.icon, `text-[15px] ${ACCENT_TEXT[accent]}`)}
-        <span class="flex-1">${escapeHtml(child.label)}</span>
+        <span class="flex-1">${escapeHtml(t(child.labelKey))}</span>
         ${badge}
       </a>`;
   }

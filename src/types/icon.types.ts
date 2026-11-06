@@ -77,4 +77,8 @@ export type IconName =
   | 'receipt_long'
   | 'paid'
   | 'calendar_month'
+  | 'language'
+  | 'more_horiz'
+  | 'radio_button_unchecked'
+  | 'translate'
   | 'minimize';

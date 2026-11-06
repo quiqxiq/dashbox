@@ -1,20 +1,22 @@
 import type { IconName, PppTabName } from '@types';
+import type { TranslationKey } from '@i18n/translate';
+import { t } from '@i18n/translate';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
 
 interface PppTabDefinition {
   tab: PppTabName;
-  label: string;
+  labelKey: TranslationKey;
   icon: IconName;
   badge?: string;
 }
 
 const TABS: readonly PppTabDefinition[] = [
-  { tab: 'interface', label: 'Interface', icon: 'lan', badge: '8' },
-  { tab: 'servers', label: 'PPPoE Servers', icon: 'dns', badge: '2' },
-  { tab: 'secrets', label: 'Secrets', icon: 'key', badge: '48' },
-  { tab: 'profiles', label: 'Profiles', icon: 'badge', badge: '7' },
-  { tab: 'active', label: 'Active', icon: 'bolt', badge: '32' },
+  { tab: 'interface', labelKey: 'ppp.interface', icon: 'lan', badge: '8' },
+  { tab: 'servers', labelKey: 'ppp.servers', icon: 'dns', badge: '2' },
+  { tab: 'secrets', labelKey: 'ppp.secrets', icon: 'key', badge: '48' },
+  { tab: 'profiles', labelKey: 'ppp.profiles', icon: 'badge', badge: '7' },
+  { tab: 'active', labelKey: 'ppp.active', icon: 'bolt', badge: '32' },
 ];
 
 export class PppTabsComponent {
@@ -32,7 +34,7 @@ export class PppTabsComponent {
             <button type="button" data-tab="${tab.tab}" role="tab" aria-selected="false"
               class="ppp-tab px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center gap-1.5 shrink-0">
               ${icon(tab.icon, 'text-[15px]')}
-              <span>${escapeHtml(tab.label)}</span>
+              <span>${escapeHtml(t(tab.labelKey))}</span>
               ${
                 tab.badge
                   ? `<span data-badge class="px-1.5 rounded-full bg-surface-container-highest text-[10px] font-mono">${escapeHtml(tab.badge)}</span>`

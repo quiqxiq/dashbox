@@ -1,4 +1,5 @@
 import { VIEW_META } from '@config/navigation.config';
+import { t } from '@i18n/translate';
 import { createStore } from '@store/create-store';
 import type { ViewName, ViewParams } from '@types';
 import { logger } from '@utils/logger';
@@ -56,12 +57,12 @@ export class ViewRouter {
   }
 
   get currentTitle(): string {
-    return VIEW_META[this.current].title;
+    return t(VIEW_META[this.current].titleKey);
   }
 
   subscribe(listener: (view: ViewName, title: string, params: ViewParams) => void): () => void {
     return this.store.subscribe((state) => {
-      listener(state.current, VIEW_META[state.current].title, state.params);
+      listener(state.current, t(VIEW_META[state.current].titleKey), state.params);
     });
   }
 }

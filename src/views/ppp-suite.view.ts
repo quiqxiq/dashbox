@@ -67,6 +67,7 @@ export class PppSuiteView implements View {
     private readonly ppp: PppStoreApi,
     private readonly router: ViewRouter,
     private readonly inspector: PppInspectorModal,
+    private readonly initialTab?: PppTabName,
   ) {}
 
   mount(container: HTMLElement): this {
@@ -79,6 +80,7 @@ export class PppSuiteView implements View {
       void this.ppp.setTab(tab);
     });
     tabs.mount(root);
+    if (this.initialTab) void this.ppp.setTab(this.initialTab);
 
     const listPanel = document.createElement('div');
     listPanel.className = 'space-y-2.5';

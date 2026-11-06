@@ -7,6 +7,7 @@ import { RouterService } from '@services/router.service';
 import { PppSecretRepository } from '@repositories/ppp-secret.repository';
 import { RouterRepository } from '@repositories/router.repository';
 import { createPppStore } from '@store/ppp.store';
+import { getLocale } from '@store/locale.store';
 import { ViewRouter } from '@router/view-router';
 import { HeaderComponent } from '@components/layout/header.component';
 import { SidebarComponent } from '@components/layout/sidebar.component';
@@ -66,8 +67,12 @@ function bootstrap(): void {
   inspector.mount(document.body);
 
   router.register('dashboard', (container) => new DashboardView(router).mount(container));
-  router.register('ppp', (container) => new PppSuiteView(ppp, router, inspector).mount(container));
-  router.register('hotspot', (container) => new HotspotView().mount(container));
+  router.register('ppp', (container, params) =>
+    new PppSuiteView(ppp, router, inspector, params.tab).mount(container),
+  );
+  router.register('hotspot', (container, params) =>
+    new HotspotView(params.hotspotTab).mount(container),
+  );
   router.register('report', (container) => new ReportView().mount(container));
   router.register('monitor', (container, params) =>
     new MonitorView(params.monitorSection).mount(container),
@@ -77,6 +82,8 @@ function bootstrap(): void {
   router.subscribe((_view, title) => {
     document.title = `Dashbox · ${title}`;
   });
+
+  document.documentElement.lang = getLocale();
 
   router.navigate('dashboard');
 }

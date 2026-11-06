@@ -17,6 +17,8 @@ import {
   toggleSimpleQueue,
 } from '@mock/monitor.mock';
 import type { FirewallTab, MonitorSection, ViewParams } from '@types';
+import { t } from '@i18n/translate';
+import { escapeHtml } from '@utils/format';
 import type { View } from './base.view';
 
 const LIVE_TICK_MS = 1_800;
@@ -53,8 +55,8 @@ export class MonitorView implements View {
     root.innerHTML = `
       <header class="flex items-center justify-between gap-3 px-1 pt-1">
         <div class="min-w-0">
-          <h1 class="text-base font-bold font-headline text-on-surface">System Monitor</h1>
-          <p class="mt-0.5 text-[11px] text-on-surface-variant">Pemantauan real-time lalu lintas, firewall, antrean bandwidth, dan log</p>
+          <h1 class="text-base font-bold font-headline text-on-surface">${escapeHtml(t('monitor.title'))}</h1>
+          <p class="mt-0.5 text-[11px] text-on-surface-variant">${escapeHtml(t('monitor.subtitle'))}</p>
         </div>
       </header>
       <div data-tabs-container class="w-full"></div>

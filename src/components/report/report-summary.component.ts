@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import type { ReportSummary } from '@types';
 import { formatRupiah } from '@mock/report.mock';
 
@@ -11,7 +12,7 @@ export class ReportSummaryComponent {
     el.innerHTML = `
       <div class="p-3.5 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between min-h-[88px]">
         <div class="flex items-center justify-between text-on-surface-variant text-[11px] font-medium">
-          <span>Hari Ini</span>
+          <span>${escapeHtmlLocal(t('report.today'))}</span>
           ${icon('receipt_long', 'text-primary text-[16px]')}
         </div>
         <div class="mt-2">
@@ -21,7 +22,7 @@ export class ReportSummaryComponent {
       </div>
       <div class="p-3.5 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between min-h-[88px]">
         <div class="flex items-center justify-between text-on-surface-variant text-[11px] font-medium">
-          <span>Bulan Ini</span>
+          <span>${escapeHtmlLocal(t('report.thisMonth'))}</span>
           ${icon('calendar_month', 'text-secondary text-[16px]')}
         </div>
         <div class="mt-2">
@@ -31,7 +32,7 @@ export class ReportSummaryComponent {
       </div>
       <div class="p-3.5 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between min-h-[88px] col-span-2 lg:col-span-1">
         <div class="flex items-center justify-between text-on-surface-variant text-[11px] font-medium">
-          <span>Total Difilter</span>
+          <span>${escapeHtmlLocal(t('report.filteredTotal'))}</span>
           ${icon('paid', 'text-tertiary text-[16px]')}
         </div>
         <div class="mt-2">
@@ -41,7 +42,7 @@ export class ReportSummaryComponent {
       </div>
       <div class="p-3.5 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between min-h-[88px] col-span-2 lg:col-span-1">
         <div class="flex items-center justify-between text-on-surface-variant text-[11px] font-medium">
-          <span>Profil Terlaris (Difilter)</span>
+          <span>${escapeHtmlLocal(t('report.topProfile'))}</span>
           ${icon('confirmation_number', 'text-emerald-400 text-[16px]')}
         </div>
         <div class="mt-2">
@@ -77,4 +78,8 @@ export class ReportSummaryComponent {
     this.el?.remove();
     this.el = null;
   }
+}
+
+function escapeHtmlLocal(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

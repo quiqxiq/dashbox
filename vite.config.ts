@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': resolvePath('./src'),
         '@config': resolvePath('./src/config'),
+        '@i18n': resolvePath('./src/i18n'),
         '@types': resolvePath('./src/types/index.ts'),
         '@services': resolvePath('./src/services'),
         '@store': resolvePath('./src/store'),

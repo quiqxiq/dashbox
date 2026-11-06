@@ -1,5 +1,7 @@
 import type { RouterRepository } from '@repositories/router.repository';
 import type { ViewRouter } from '@router/view-router';
+import { setLocale, getLocale } from '@store/locale.store';
+import { subscribeLocale, t } from '@i18n/translate';
 import { openDrawer } from '@store/ui.store';
 import { logger } from '@utils/logger';
 import { icon } from '@components/ui/icon';
@@ -17,12 +19,12 @@ export class HeaderComponent {
     el.innerHTML = `
       <div class="h-16 px-3 flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 min-w-0">
-          <button type="button" data-action="open-drawer" aria-label="Buka menu"
+          <button type="button" data-action="open-drawer" aria-label="${escapeLabel(t('common.openMenu'))}"
             class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary active:bg-surface-container/60 transition-colors">
             ${icon('menu', 'text-[24px]')}
           </button>
           <div class="flex flex-col min-w-0">
-            <h1 data-title class="text-[13px] font-headline font-bold tracking-tight text-on-surface truncate leading-tight">Dasbor</h1>
+            <h1 data-title class="text-[13px] font-headline font-bold tracking-tight text-on-surface truncate leading-tight">${escapeLabel(t('nav.dashboard'))}</h1>
             <div class="flex items-center gap-1.5 mt-0.5 min-w-0">
               <span class="relative flex h-1.5 w-1.5 shrink-0">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -37,6 +39,11 @@ export class HeaderComponent {
             ${icon('network_ping', 'text-[13px] text-primary')}
             <span data-latency class="text-[11px] font-mono font-bold text-primary tracking-wide">14 ms</span>
           </div>
+          <button type="button" data-locale-toggle aria-label="${escapeLabel(t('common.language'))}" title="${escapeLabel(t('common.language'))}"
+            class="h-8 px-2 rounded-full bg-surface-container-high/80 ring-1 ring-outline-variant/30 text-[11px] font-bold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+            ${icon('language', 'text-[14px]')}
+            <span data-locale-label>${getLocale().toUpperCase()}</span>
+          </button>
           <div role="img" aria-label="Profil administrator"
             class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(125,211,252,0.3)]">
             ${icon('person', 'text-on-primary text-[17px]')}
@@ -49,6 +56,18 @@ export class HeaderComponent {
       'click',
       () => openDrawer(),
     );
+    el.querySelector<HTMLButtonElement>('[data-locale-toggle]')?.addEventListener('click', () => {
+      setLocale(getLocale() === 'id' ? 'en' : 'id');
+    });
+    subscribeLocale(() => {
+      const label = el.querySelector<HTMLElement>('[data-locale-label]');
+      if (label) label.textContent = getLocale().toUpperCase();
+      const btn = el.querySelector<HTMLButtonElement>('[data-locale-toggle]');
+      if (btn) btn.setAttribute('aria-label', t('common.language'));
+      // Refresh title to current view's translated title
+      const titleEl = el.querySelector<HTMLElement>('[data-title]');
+      if (titleEl) titleEl.textContent = this.router.currentTitle;
+    });
 
     this.router.subscribe((_view, title) => {
       const titleEl = el.querySelector<HTMLElement>('[data-title]');
@@ -78,4 +97,8 @@ export class HeaderComponent {
       logger.warn('[header] gagal memuat ringkasan router', error);
     }
   }
+}
+
+function escapeLabel(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

@@ -23,6 +23,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@config/*": ["src/config/*"],
+      "@i18n/*": ["src/i18n/*"],
       "@types": ["src/types/index.ts"],
       "@types/*": ["src/types/*"],
       "@services/*": ["src/services/*"],

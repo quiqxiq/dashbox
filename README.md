@@ -73,7 +73,15 @@ Dashbox dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web
 - **Resume & Grafik**: tab kedua berisi ringkasan per profil (count + income + kontribusi %), dan bar chart pendapatan 7 hari terakhir (pola bar Dashboard).
 - **Export**: tombol **CSV** & **XLS** mengunduh hasil filter saat ini (client-side Blob, tanpa upload server).
 
-### 6. Arsitektur & Keamanan
+### 6. Dua Bahasa (EN / ID) & Navigasi Dinamis
+
+- **i18n dua bahasa**: seluruh label navigasi, judul halaman, tab, dan aksi utama bisa diganti antara **Bahasa Indonesia (default)** dan **English (US)** — disimpan di `localStorage` (`dashbox.locale`), deteksi awal dari `navigator.language`, fallback otomatis ke `id`, dan `document.lang` diperbarui.
+- **Titik akses**: pemilih bahasa di **Settings** (radio ID/EN) dan tombol cepat **ID/EN** di Header + Sidebar footer. Perubahan langsung me-render ulang label tanpa reload.
+- **Bottom Navigation data-driven**: konfigurasi tunggal di `src/config/navigation.config.ts` (`NavBarItem` + `NavSubItem`). Untuk menyesuaikan menu cukup ubah array `BOTTOM_NAV` — tambah/hapus, urutkan ulang, set `enabled: false`, atau tambahkan `subItems`. Komponen `BottomNavComponent` tidak perlu diubah.
+- **Submenu turunan (PPP / Hotspot / Monitor)**: item induk yang punya `subItems` membuka **Bottom Sheet** modern (drag handle, header icon + judul + tombol close, grid 2 kolom dengan badge count, highlight item aktif). Klik kedua pada item aktif yang sama akan membuka sheet; klik pertama mengarah ke tab default. Contoh: PPP → Secrets (48), Active (32), Profiles (7), PPPoE Servers (2).
+- **Tombol "More" untuk item ke-7+**: jika jumlah item aktif melebihi `BOTTOM_NAV_MAX_VISIBLE` (6), bar menampilkan 5 item utama + tombol **More** (dengan badge jumlah sisanya) yang membuka sheet daftar item yang terpotong. Perilaku ini otomatis.
+
+### 7. Arsitektur & Keamanan
 
 - **Glacier Design System**: Palet warna dark mode modern dengan kontras tinggi, aksen neon cyan/sky, dan efek translucent backdrop blur.
 - **Responsif Desktop & Mobile**: Sidebar navigasi collapsible untuk desktop dan bottom navigation bar ergonomis untuk mobile.
