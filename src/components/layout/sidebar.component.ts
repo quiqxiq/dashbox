@@ -203,7 +203,7 @@ export class SidebarComponent {
     return `
       <div class="h-14 px-4 flex items-center justify-between shrink-0 border-b border-outline-variant/15">
         <div class="flex items-center gap-2 min-w-0">
-          ${icon('router', 'text-primary text-[20px]')}
+          <img src="/favicon.svg" alt="Dashbox" width="26" height="26" class="rounded-md shrink-0 ring-1 ring-outline-variant/30" />
           <span class="font-headline font-bold text-sm text-on-surface tracking-wide">${APP_META.name}</span>
           <span class="text-[10px] font-mono text-on-surface-variant/70">${APP_META.version}</span>
         </div>

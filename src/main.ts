@@ -18,6 +18,7 @@ import { PppInspectorModal } from '@components/ppp/ppp-inspector.modal';
 import { DashboardView } from '@views/dashboard.view';
 import { PppSuiteView } from '@views/ppp-suite.view';
 import { HotspotView } from '@views/hotspot.view';
+import { ReportView } from '@views/report.view';
 import { MonitorView } from '@views/monitor.view';
 import { SettingsView } from '@views/settings.view';
 import { logger } from '@utils/logger';
@@ -67,13 +68,14 @@ function bootstrap(): void {
   router.register('dashboard', (container) => new DashboardView(router).mount(container));
   router.register('ppp', (container) => new PppSuiteView(ppp, router, inspector).mount(container));
   router.register('hotspot', (container) => new HotspotView().mount(container));
+  router.register('report', (container) => new ReportView().mount(container));
   router.register('monitor', (container, params) =>
     new MonitorView(params.monitorSection).mount(container),
   );
   router.register('settings', (container) => new SettingsView().mount(container));
 
   router.subscribe((_view, title) => {
-    document.title = `NetOS · ${title}`;
+    document.title = `Dashbox · ${title}`;
   });
 
   router.navigate('dashboard');

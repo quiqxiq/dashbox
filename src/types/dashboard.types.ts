@@ -49,6 +49,6 @@ export interface DashboardSearchItem {
 export interface DashboardShortcut {
   label: string;
   icon: IconName;
-  view: 'ppp' | 'hotspot' | 'monitor' | 'settings';
+  view: 'ppp' | 'hotspot' | 'report' | 'monitor' | 'settings';
   tone: AccentTone;
 }

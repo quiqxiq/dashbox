@@ -2,7 +2,7 @@ import type { IconName } from './icon.types';
 import type { MonitorSection } from './monitor.types';
 import type { PppTabName } from './ppp.types';
 
-export type ViewName = 'dashboard' | 'ppp' | 'hotspot' | 'monitor' | 'settings';
+export type ViewName = 'dashboard' | 'ppp' | 'hotspot' | 'report' | 'monitor' | 'settings';
 
 export interface ViewMeta {
   name: ViewName;

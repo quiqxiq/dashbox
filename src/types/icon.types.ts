@@ -73,4 +73,8 @@ export type IconName =
   | 'power_off'
   | 'content_copy'
   | 'clear_all'
+  | 'download'
+  | 'receipt_long'
+  | 'paid'
+  | 'calendar_month'
   | 'minimize';

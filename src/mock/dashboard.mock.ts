@@ -176,6 +176,7 @@ export const DASHBOARD_SEARCH_ITEMS: DashboardSearchItem[] = [
 export const DASHBOARD_SHORTCUTS: DashboardShortcut[] = [
   { label: 'Secrets', icon: 'key', view: 'ppp', tone: 'primary' },
   { label: 'Hotspot', icon: 'wifi_tethering', view: 'hotspot', tone: 'tertiary' },
+  { label: 'Report', icon: 'receipt_long', view: 'report', tone: 'secondary' },
   { label: 'Trafik', icon: 'swap_calls', view: 'monitor', tone: 'secondary' },
   { label: 'Log', icon: 'terminal', view: 'monitor', tone: 'primary' },
   { label: 'Firewall', icon: 'security', view: 'monitor', tone: 'tertiary' },

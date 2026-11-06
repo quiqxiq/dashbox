@@ -6,3 +6,4 @@ export type * from './view.types';
 export type * from './icon.types';
 export type * from './dashboard.types';
 export type * from './monitor.types';
+export type * from './report.types';

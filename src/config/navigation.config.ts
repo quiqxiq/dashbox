@@ -29,21 +29,23 @@ export interface RouterOption {
 }
 
 export const APP_META = {
-  name: 'NetOS',
-  version: 'v7.14.3',
-  connectedLabel: 'Terhubung · API 8728',
+  name: 'Dashbox',
+  version: 'v1.0.0',
+  connectedLabel: 'Terhubung · API 8728 · Dashbox v1.0.0',
 } as const;
 
 export const VIEW_META: Record<ViewName, ViewMeta> = {
   dashboard: { name: 'dashboard', title: 'Dasbor', icon: 'dashboard' },
   ppp: { name: 'ppp', title: 'PPP Suite', icon: 'hub' },
   hotspot: { name: 'hotspot', title: 'Hotspot', icon: 'wifi_tethering' },
+  report: { name: 'report', title: 'Report', icon: 'receipt_long' },
   monitor: { name: 'monitor', title: 'Monitor', icon: 'monitoring' },
   settings: { name: 'settings', title: 'Pengaturan', icon: 'tune' },
 };
 
 export const OVERVIEW_LINKS: NavFlatLink[] = [
   { label: 'Dasbor', icon: 'dashboard', view: 'dashboard' },
+  { label: 'Report Penjualan', icon: 'receipt_long', view: 'report' },
   { label: 'Pengaturan Cepat', icon: 'tune', view: 'settings' },
 ];
 
@@ -66,6 +68,7 @@ export const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: 'Users', icon: 'group', view: 'hotspot', badge: '128' },
       { label: 'Active Sessions', icon: 'timer', view: 'hotspot' },
+      { label: 'Report Penjualan', icon: 'receipt_long', view: 'report', badge: '99' },
     ],
   },
   {
@@ -103,6 +106,7 @@ export const BOTTOM_NAV: NavFlatLink[] = [
   { label: 'Dasbor', icon: 'dashboard', view: 'dashboard' },
   { label: 'PPP', icon: 'hub', view: 'ppp' },
   { label: 'Hotspot', icon: 'wifi_tethering', view: 'hotspot' },
+  { label: 'Report', icon: 'receipt_long', view: 'report' },
   { label: 'Monitor', icon: 'monitoring', view: 'monitor' },
   { label: 'Pengaturan', icon: 'tune', view: 'settings' },
 ];

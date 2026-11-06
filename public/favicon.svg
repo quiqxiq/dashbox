@@ -1,6 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="64" height="64">
-  <rect width="960" height="960" rx="220" fill="#0a0e1a" />
-  <g transform="translate(120 120) scale(0.75)" fill="#7dd3fc">
-    <path d="M180-120q-24 0-42-18t-18-42v-204q0-24 18-42t42-18h436v-176h60v176h104q24 0 42 18t18 42v204q0 24-18 42t-42 18H180Zm0-60h600v-204H180v204Zm132-72.11q12-12.1 12-30Q324-300 311.89-312q-12.1-12-30-12Q264-324 252-311.89q-12 12.1-12 30Q240-264 252.11-252q12.1 12 30 12Q300-240 312-252.11Zm148 0q12-12.1 12-30Q472-300 459.89-312q-12.1-12-30-12Q412-324 400-311.89q-12 12.1-12 30Q388-264 400.11-252q12.1 12 30 12Q448-240 460-252.11Zm148 0q12-12.1 12-30Q620-300 607.89-312q-12.1-12-30-12Q560-324 548-311.89q-12 12.1-12 30Q536-264 548.11-252q12.1 12 30 12Q596-240 608-252.11ZM566-667l-41-41q24-24 54.43-38T646-760q36.14 0 66.57 14Q743-732 767-708l-41 41q-14-14-35-23.5t-44.5-9.5q-23.5 0-45 9.5T566-667Zm-85-85-44-44q33-33 88-58.5T646-880q66 0 121 25.5t88 58.5l-44 44q-26-29-68.5-48.5T646-820q-54 0-96.5 19.5T481-752ZM180-180v-204 204Z" />
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="16" fill="#0a0e1a" />
+  <rect x="2.5" y="2.5" width="59" height="59" rx="14.5" fill="none" stroke="#4a6070" stroke-opacity="0.45" stroke-width="1.5" />
+  <!-- Dash bar -->
+  <rect x="12" y="13" width="18" height="6" rx="3" fill="#7dd3fc" />
+  <!-- Box grid: 2x2 dashboard tiles -->
+  <rect x="12" y="24" width="18" height="14" rx="3" fill="#7dd3fc" fill-opacity="0.9" />
+  <rect x="35" y="24" width="17" height="14" rx="3" fill="#88b4cc" fill-opacity="0.9" />
+  <rect x="12" y="42" width="18" height="9" rx="3" fill="#88b4cc" fill-opacity="0.45" stroke="#7dd3fc" stroke-opacity="0.35" stroke-width="1" />
+  <rect x="35" y="42" width="17" height="9" rx="3" fill="#c8a0f0" fill-opacity="0.55" />
 </svg>

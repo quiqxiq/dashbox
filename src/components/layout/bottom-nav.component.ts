@@ -13,13 +13,13 @@ export class BottomNavComponent {
       'fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-2px_16px_rgba(0,0,0,0.35)]';
     el.setAttribute('aria-label', 'Navigasi utama');
     el.innerHTML = `
-      <div class="flex justify-around items-center h-16 px-1">
+      <div class="flex justify-around items-center h-16 px-1 gap-0.5">
         ${BOTTOM_NAV.map(
           (item) => `
             <a href="#" data-nav="${item.view}"
-              class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant transition-colors">
+              class="flex flex-col items-center justify-center gap-1 flex-1 min-w-0 h-12 text-on-surface-variant transition-colors">
               ${icon(item.icon, 'text-[22px]')}
-              <span class="text-[10px] tracking-tight">${escapeHtml(item.label)}</span>
+              <span class="text-[10px] leading-none tracking-tight truncate max-w-full">${escapeHtml(item.label)}</span>
             </a>`,
         ).join('')}
       </div>`;

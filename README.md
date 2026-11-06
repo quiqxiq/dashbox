@@ -1,8 +1,8 @@
-# NetOS · Modern RouterOS Management Dashboard
+# Dashbox · Modern RouterOS Management Dashboard
 
 Dashboard manajemen MikroTik RouterOS modern, responsif, dan ultra-ringan berbasis **Vanilla TypeScript + Vite + Tailwind CSS**.
 
-NetOS dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web dashboard bergaya _Glacier Dark Theme_. Dibangun murni dengan TypeScript tanpa overhead framework (tanpa React/Vue/Angular), menghasilkan performa instan, konsumsi memori minim, dan type-safety yang ketat.
+Dashbox dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web dashboard bergaya _Glacier Dark Theme_. Dibangun murni dengan TypeScript tanpa overhead framework (tanpa React/Vue/Angular), menghasilkan performa instan, konsumsi memori minim, dan type-safety yang ketat.
 
 ---
 
@@ -65,7 +65,15 @@ NetOS dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web d
   - **Winbox Color-Coded Usage Meter**: Progress bar dwiarah (Upload & Download) dengan indikator warna berbasis persentase batas maksimum (_Hijau <50%, Kuning 50–85%, Merah >85% / Jenuh_).
   - Reset counter pemakaian data dan toggle status antrean.
 
-### 5. Arsitektur & Keamanan
+### 5. Sales Report (Hotspot Voucher)
+
+- **Referensi**: halaman `report.php` & `live_report.php` pada Mikhmon v4 — ditulis ulang dengan styling Glacier & arsitektur komponen Dashbox.
+- **KPI Ringkasan**: Pendapatan hari ini & bulan ini (jumlah voucher + Rp, seperti `_live_report`), total difilter, rata-rata transaksi, profil terlaris.
+- **Filter + Tabel**: filter tanggal / bulan / tahun + pencarian username/IP/profil; tabel `Date · Time · Username · IP · MAC · Profile · Comment · Price` (desktop table & mobile cards), `escapeHtml` untuk semua data dinamis.
+- **Resume & Grafik**: tab kedua berisi ringkasan per profil (count + income + kontribusi %), dan bar chart pendapatan 7 hari terakhir (pola bar Dashboard).
+- **Export**: tombol **CSV** & **XLS** mengunduh hasil filter saat ini (client-side Blob, tanpa upload server).
+
+### 6. Arsitektur & Keamanan
 
 - **Glacier Design System**: Palet warna dark mode modern dengan kontras tinggi, aksen neon cyan/sky, dan efek translucent backdrop blur.
 - **Responsif Desktop & Mobile**: Sidebar navigasi collapsible untuk desktop dan bottom navigation bar ergonomis untuk mobile.
@@ -76,7 +84,7 @@ NetOS dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web d
 
 ## 🏗️ Arsitektur Proyek
 
-NetOS menerapkan pola pemisahan modular yang bersih (_unidirectional data flow & decoupled repositories_):
+Dashbox menerapkan pola pemisahan modular yang bersih (_unidirectional data flow & decoupled repositories_):
 
 ```text
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -111,7 +119,7 @@ dashbox/
 ├── public/                     # Aset statis & favicon
 ├── src/
 │   ├── config/                 # Konfigurasi aplikasi & definisi navigasi
-│   ├── types/                  # Kontrak TypeScript global (API, PPP, Hotspot, Router, UI)
+│   ├── types/                  # Kontrak TypeScript global (API, PPP, Hotspot, Router, UI, Monitor, Report)
 │   ├── services/               # REST HTTP Client, Endpoint, dan Domain Services
 │   │   └── api/                # HttpClient, Token Store, dan Error Handling
 │   ├── repositories/           # Abstraksi data (switcher Mock ⇄ REST API)
@@ -121,8 +129,10 @@ dashbox/
 │   │   ├── layout/             # Header, Sidebar, BottomNav, DrawerBackdrop
 │   │   ├── ui/                 # Icon helper, Toast, ConfirmDialog
 │   │   ├── ppp/                # Tabel PPP, Cards, Toolbar, Tabs, Modal Inspector
-│   │   └── hotspot/            # Tabel Hotspot, Cards, Toolbar, Filter, Dialog Voucher
-│   ├── views/                  # Rakitan halaman: Dashboard, PPP, Hotspot, Monitor, Settings
+│   │   ├── hotspot/            # Tabel Hotspot, Cards, Toolbar, Filter, Dialog Voucher
+│   │   ├── monitor/            # Tabs, Traffic, Firewall, Queue, Log Stream
+│   │   └── report/             # Summary, Toolbar, Table, Resume/Grafik
+│   ├── views/                  # Rakitan halaman: Dashboard, PPP, Hotspot, Report, Monitor, Settings
 │   ├── mock/                   # In-memory fixture & simulasi latency untuk development/demo
 │   ├── utils/                  # Utilitas murni: DOM helper, formatters, debounce, logger
 │   ├── main.ts                 # Bootstrap aplikasi
@@ -175,7 +185,7 @@ dashbox/
 
 ## ⚙️ Konfigurasi Environment & Mode Data
 
-NetOS dapat beroperasi dalam dua mode data:
+Dashbox dapat beroperasi dalam dua mode data:
 
 ### 1. Mode Mock (Default)
 

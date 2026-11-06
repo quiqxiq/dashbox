@@ -6,6 +6,7 @@ import iconArrowUpward from '@material-symbols/svg-400/outlined/arrow_upward.svg
 import iconBadge from '@material-symbols/svg-400/outlined/badge.svg?raw';
 import iconBlock from '@material-symbols/svg-400/outlined/block.svg?raw';
 import iconBolt from '@material-symbols/svg-400/outlined/bolt.svg?raw';
+import iconCalendarMonth from '@material-symbols/svg-400/outlined/calendar_month.svg?raw';
 import iconCancel from '@material-symbols/svg-400/outlined/cancel.svg?raw';
 import iconChatBubble from '@material-symbols/svg-400/outlined/chat_bubble.svg?raw';
 import iconCheck from '@material-symbols/svg-400/outlined/check.svg?raw';
@@ -20,6 +21,7 @@ import iconCottage from '@material-symbols/svg-400/outlined/cottage.svg?raw';
 import iconDashboard from '@material-symbols/svg-400/outlined/dashboard.svg?raw';
 import iconDataUsage from '@material-symbols/svg-400/outlined/data_usage.svg?raw';
 import iconDelete from '@material-symbols/svg-400/outlined/delete.svg?raw';
+import iconDownload from '@material-symbols/svg-400/outlined/download.svg?raw';
 import iconDeviceThermostat from '@material-symbols/svg-400/outlined/device_thermostat.svg?raw';
 import iconDns from '@material-symbols/svg-400/outlined/dns.svg?raw';
 import iconEdit from '@material-symbols/svg-400/outlined/edit.svg?raw';
@@ -46,10 +48,12 @@ import iconNetworkPing from '@material-symbols/svg-400/outlined/network_ping.svg
 import iconNotificationImportant from '@material-symbols/svg-400/outlined/notification_important.svg?raw';
 import iconPauseCircle from '@material-symbols/svg-400/outlined/pause_circle.svg?raw';
 import iconPerson from '@material-symbols/svg-400/outlined/person.svg?raw';
+import iconPaid from '@material-symbols/svg-400/outlined/paid.svg?raw';
 import iconPlayCircle from '@material-symbols/svg-400/outlined/play_circle.svg?raw';
 import iconPowerOff from '@material-symbols/svg-400/outlined/power_off.svg?raw';
 import iconPowerSettingsNew from '@material-symbols/svg-400/outlined/power_settings_new.svg?raw';
 import iconRefresh from '@material-symbols/svg-400/outlined/refresh.svg?raw';
+import iconReceiptLong from '@material-symbols/svg-400/outlined/receipt_long.svg?raw';
 import iconRemove from '@material-symbols/svg-400/outlined/remove.svg?raw';
 import iconRestartAlt from '@material-symbols/svg-400/outlined/restart_alt.svg?raw';
 import iconRouter from '@material-symbols/svg-400/outlined/router.svg?raw';
@@ -84,6 +88,7 @@ const ICON_SVGS: Record<IconName, string> = {
   badge: iconBadge,
   block: iconBlock,
   bolt: iconBolt,
+  calendar_month: iconCalendarMonth,
   cancel: iconCancel,
   chat_bubble: iconChatBubble,
   check: iconCheck,
@@ -100,6 +105,7 @@ const ICON_SVGS: Record<IconName, string> = {
   delete: iconDelete,
   device_thermostat: iconDeviceThermostat,
   dns: iconDns,
+  download: iconDownload,
   edit: iconEdit,
   edit_document: iconEditDocument,
   error: iconError,
@@ -123,10 +129,12 @@ const ICON_SVGS: Record<IconName, string> = {
   network_ping: iconNetworkPing,
   notification_important: iconNotificationImportant,
   pause_circle: iconPauseCircle,
+  paid: iconPaid,
   person: iconPerson,
   play_circle: iconPlayCircle,
   power_off: iconPowerOff,
   power_settings_new: iconPowerSettingsNew,
+  receipt_long: iconReceiptLong,
   refresh: iconRefresh,
   remove: iconRemove,
   restart_alt: iconRestartAlt,
