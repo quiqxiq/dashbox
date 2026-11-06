@@ -1,5 +1,7 @@
 export type ReportTab = 'sales' | 'resume';
 
+export type ReportDatePreset = 'all' | 'today' | 'yesterday' | 'last7days' | 'thisMonth' | 'custom';
+
 export interface ReportEntry {
   id: string;
   date: string; // YYYY-MM-DD
@@ -13,9 +15,9 @@ export interface ReportEntry {
 }
 
 export interface ReportFilter {
-  day: string; // DD (01-31) or 'all'
-  month: string; // YYYY-MM or 'all'
-  year: string; // YYYY or 'all'
+  startDate: string; // YYYY-MM-DD or ''
+  endDate: string; // YYYY-MM-DD or ''
+  preset: ReportDatePreset;
   query: string;
 }
 

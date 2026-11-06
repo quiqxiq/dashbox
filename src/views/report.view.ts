@@ -18,7 +18,12 @@ import type { ReportEntry, ReportFilter, ReportTab } from '@types';
 import { escapeHtml } from '@utils/format';
 import type { View } from './base.view';
 
-const EMPTY_FILTER: ReportFilter = { day: 'all', month: 'all', year: 'all', query: '' };
+const EMPTY_FILTER: ReportFilter = {
+  startDate: '',
+  endDate: '',
+  preset: 'all',
+  query: '',
+};
 
 export class ReportView implements View {
   private root: HTMLElement | null = null;

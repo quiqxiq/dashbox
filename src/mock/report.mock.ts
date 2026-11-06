@@ -143,10 +143,20 @@ export const REPORT_ENTRIES: ReportEntry[] = buildReportEntries([12, 15, 11, 18,
 
 export function filterReportEntries(entries: ReportEntry[], filter: ReportFilter): ReportEntry[] {
   const query = filter.query.trim().toLowerCase();
+  const start = filter.startDate.trim();
+  const end = filter.endDate.trim();
+
   return entries.filter((e) => {
-    if (filter.day !== 'all' && !e.date.endsWith(`-${filter.day}`)) return false;
-    if (filter.month !== 'all' && !e.date.startsWith(filter.month)) return false;
-    if (filter.year !== 'all' && !e.date.startsWith(filter.year)) return false;
+    if (start && end) {
+      const min = start <= end ? start : end;
+      const max = start <= end ? end : start;
+      if (e.date < min || e.date > max) return false;
+    } else if (start) {
+      if (e.date !== start) return false;
+    } else if (end) {
+      if (e.date !== end) return false;
+    }
+
     if (!query) return true;
     const haystack = `${e.username} ${e.ip} ${e.mac} ${e.profile} ${e.comment}`.toLowerCase();
     return haystack.includes(query);

@@ -69,7 +69,7 @@ Dashbox dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web
 
 - **Referensi**: halaman `report.php` & `live_report.php` pada Mikhmon v4 — ditulis ulang dengan styling Glacier & arsitektur komponen Dashbox.
 - **KPI Ringkasan**: Pendapatan hari ini & bulan ini (jumlah voucher + Rp, seperti `_live_report`), total difilter, rata-rata transaksi, profil terlaris.
-- **Filter + Tabel**: filter tanggal / bulan / tahun + pencarian username/IP/profil; tabel `Date · Time · Username · IP · MAC · Profile · Comment · Price` (desktop table & mobile cards), `escapeHtml` untuk semua data dinamis.
+- **Filter Rentang Tanggal + Date Picker**: Filter tanggal fleksibel berbasis date picker ganda (Dari Tanggal s/d Sampai Tanggal) yang mendukung filter 1 hari spesifik maupun rentang periode, dilengkapi preset cepat (_Semua Waktu, Hari Ini, Kemarin, 7 Hari Terakhir, Bulan Ini, Kustom_) serta pencarian cepat username/IP/profil. Tabel data menyajikan `Date · Time · Username · IP · MAC · Profile · Comment · Price` (desktop table & mobile cards) dengan proteksi sanitasi XSS penuh (`escapeHtml`).
 - **Resume & Grafik**: tab kedua berisi ringkasan per profil (count + income + kontribusi %), dan bar chart pendapatan 7 hari terakhir (pola bar Dashboard).
 - **Export**: tombol **CSV** & **XLS** mengunduh hasil filter saat ini (client-side Blob, tanpa upload server).
 
