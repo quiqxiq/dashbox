@@ -11,7 +11,7 @@ export interface DashboardLocalizedText {
 }
 
 export interface TelemetryMetric {
-  key: 'cpu' | 'ram' | 'temp' | 'fan';
+  key: 'cpu' | 'ram' | 'temp' | 'fan' | 'voltage';
   icon: IconName;
   labelKey: TranslationKey;
   value: string;

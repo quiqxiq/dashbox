@@ -3,6 +3,7 @@ import type { ViewRouter } from '@router/view-router';
 import { ConfirmDialogComponent } from '@components/ui/confirm-dialog.component';
 import { logout } from '@store/auth.store';
 import { setLocale, getLocale } from '@store/locale.store';
+import { themeStore, toggleTheme, isEffectiveDark } from '@store/theme.store';
 import { subscribeLocale, t } from '@i18n/translate';
 import { openDrawer, toast } from '@store/ui.store';
 import { logger } from '@utils/logger';
@@ -12,6 +13,7 @@ export class HeaderComponent {
   private el: HTMLElement | null = null;
   private unsubscribeLocale: (() => void) | null = null;
   private unsubscribeRouter: (() => void) | null = null;
+  private unsubscribeTheme: (() => void) | null = null;
 
   constructor(
     private readonly router: ViewRouter,
@@ -29,7 +31,8 @@ export class HeaderComponent {
             class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary active:bg-surface-container/60 transition-colors shrink-0">
             ${icon('menu', 'text-[22px]')}
           </button>
-          <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="24" height="24" class="shrink-0 object-contain drop-shadow-[0_1px_4px_rgba(63,169,240,0.3)] hidden sm:block" />
+          <img src="/dashbox-mark-light.svg" alt="Dashbox" width="24" height="24" class="shrink-0 object-contain drop-shadow-[0_1px_4px_rgba(63,169,240,0.3)] hidden sm:block dark:hidden" />
+          <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="24" height="24" class="shrink-0 object-contain drop-shadow-[0_1px_4px_rgba(63,169,240,0.3)] hidden sm:dark:block" />
           <div class="flex flex-col min-w-0">
             <h1 data-title class="text-[13px] font-headline font-bold tracking-tight text-on-surface truncate leading-tight">${escapeLabel(t('nav.dashboard'))}</h1>
             <div class="flex items-center gap-1.5 mt-0.5 min-w-0">
@@ -46,6 +49,10 @@ export class HeaderComponent {
             ${icon('network_ping', 'text-[13px] text-primary')}
             <span data-latency class="text-[11px] font-mono font-bold text-primary tracking-wide">14 ms</span>
           </div>
+          <button type="button" data-theme-toggle aria-label="${escapeLabel(t('settings.themeSection'))}" title="${escapeLabel(t('settings.themeSection'))}"
+            class="h-8 w-8 rounded-full bg-surface-container-high/80 ring-1 ring-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+            <span data-theme-icon>${icon(isEffectiveDark() ? 'light_mode' : 'dark_mode', 'text-[15px]')}</span>
+          </button>
           <button type="button" data-locale-toggle aria-label="${escapeLabel(t('common.language'))}" title="${escapeLabel(t('common.language'))}"
             class="h-8 px-2 rounded-full bg-surface-container-high/80 ring-1 ring-outline-variant/30 text-[11px] font-bold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
             ${icon('language', 'text-[14px]')}
@@ -65,6 +72,9 @@ export class HeaderComponent {
       'click',
       () => openDrawer(),
     );
+    el.querySelector<HTMLButtonElement>('[data-theme-toggle]')?.addEventListener('click', () => {
+      toggleTheme();
+    });
     el.querySelector<HTMLButtonElement>('[data-locale-toggle]')?.addEventListener('click', () => {
       setLocale(getLocale() === 'id' ? 'en' : 'id');
     });
@@ -85,6 +95,16 @@ export class HeaderComponent {
       },
     );
 
+    this.unsubscribeTheme = themeStore.subscribe((state) => {
+      const themeIconEl = el.querySelector<HTMLElement>('[data-theme-icon]');
+      if (themeIconEl) {
+        themeIconEl.innerHTML = icon(
+          state.effectiveDark ? 'light_mode' : 'dark_mode',
+          'text-[15px]',
+        );
+      }
+    });
+
     this.unsubscribeLocale = subscribeLocale(() => {
       const label = el.querySelector<HTMLElement>('[data-locale-label]');
       if (label) label.textContent = getLocale().toUpperCase();
@@ -92,6 +112,11 @@ export class HeaderComponent {
       if (btn) {
         btn.setAttribute('aria-label', t('common.language'));
         btn.setAttribute('title', t('common.language'));
+      }
+      const themeBtn = el.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-label', t('settings.themeSection'));
+        themeBtn.setAttribute('title', t('settings.themeSection'));
       }
       const logoutBtn = el.querySelector<HTMLButtonElement>('[data-action="logout"]');
       if (logoutBtn) {
@@ -114,6 +139,10 @@ export class HeaderComponent {
   }
 
   destroy(): void {
+    if (this.unsubscribeTheme) {
+      this.unsubscribeTheme();
+      this.unsubscribeTheme = null;
+    }
     if (this.unsubscribeLocale) {
       this.unsubscribeLocale();
       this.unsubscribeLocale = null;

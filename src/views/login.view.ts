@@ -2,12 +2,14 @@ import { icon } from '@components/ui/icon';
 import { subscribeLocale, t } from '@i18n/translate';
 import { login } from '@store/auth.store';
 import { getLocale, setLocale } from '@store/locale.store';
+import { isEffectiveDark, themeStore, toggleTheme } from '@store/theme.store';
 import { escapeHtml } from '@utils/format';
 import type { View } from './base.view';
 
 export class LoginView implements View {
   private root: HTMLElement | null = null;
   private unsubscribeLocale: (() => void) | null = null;
+  private unsubscribeTheme: (() => void) | null = null;
   private showPassword = false;
 
   constructor(private readonly onLoginSuccess?: () => void) {}
@@ -22,6 +24,16 @@ export class LoginView implements View {
         this.render(container);
         if (this.getUsernameInput()) this.getUsernameInput()!.value = usernameVal;
         if (this.getPasswordInput()) this.getPasswordInput()!.value = passwordVal;
+      }
+    });
+
+    this.unsubscribeTheme = themeStore.subscribe((state) => {
+      const themeIconEl = this.root?.querySelector<HTMLElement>('[data-theme-icon]');
+      if (themeIconEl) {
+        themeIconEl.innerHTML = icon(
+          state.effectiveDark ? 'light_mode' : 'dark_mode',
+          'text-[15px]',
+        );
       }
     });
 
@@ -47,8 +59,17 @@ export class LoginView implements View {
       <div class="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
       <div class="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-secondary/10 blur-[120px] pointer-events-none"></div>
 
-      <!-- Top bar with language switcher -->
-      <div class="absolute top-4 right-4 z-20">
+      <!-- Top bar with language & theme switcher -->
+      <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+        <button
+          type="button"
+          data-action="toggle-theme"
+          aria-label="${escapeHtml(t('settings.themeSection'))}"
+          title="${escapeHtml(t('settings.themeSection'))}"
+          class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container/70 backdrop-blur-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface ring-1 ring-outline-variant/25 transition-all shadow-sm active:scale-95"
+        >
+          <span data-theme-icon>${icon(isEffectiveDark() ? 'light_mode' : 'dark_mode', 'text-[15px]')}</span>
+        </button>
         <button
           type="button"
           data-action="toggle-locale"
@@ -65,7 +86,8 @@ export class LoginView implements View {
         <!-- Logo & Branding -->
         <div class="flex flex-col items-center text-center">
           <div class="size-16 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent ring-1 ring-primary/30 shadow-[0_0_28px_rgba(125,211,252,0.22)] flex items-center justify-center mb-3.5 p-2.5">
-            <img src="/dashbox-mark-dark.svg" alt="Dashbox" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(63,169,240,0.35)]" />
+            <img src="/dashbox-mark-light.svg" alt="Dashbox" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(63,169,240,0.35)] dark:hidden" />
+            <img src="/dashbox-mark-dark.svg" alt="Dashbox" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(63,169,240,0.35)] hidden dark:block" />
           </div>
           <h1 class="text-2xl font-extrabold tracking-tight font-headline text-on-surface">Dashbox</h1>
           <p class="text-xs text-on-surface-variant mt-1 font-medium">${escapeHtml(t('auth.loginSubtitle'))}</p>
@@ -157,6 +179,13 @@ export class LoginView implements View {
   private attachEvents(): void {
     if (!this.root) return;
 
+    // Theme switcher
+    this.root
+      .querySelector<HTMLButtonElement>('[data-action="toggle-theme"]')
+      ?.addEventListener('click', () => {
+        toggleTheme();
+      });
+
     // Language switcher
     this.root
       .querySelector<HTMLButtonElement>('[data-action="toggle-locale"]')
@@ -230,6 +259,10 @@ export class LoginView implements View {
   }
 
   destroy(): void {
+    if (this.unsubscribeTheme) {
+      this.unsubscribeTheme();
+      this.unsubscribeTheme = null;
+    }
     if (this.unsubscribeLocale) {
       this.unsubscribeLocale();
       this.unsubscribeLocale = null;

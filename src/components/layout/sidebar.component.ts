@@ -214,7 +214,8 @@ export class SidebarComponent {
     return `
       <div class="h-14 px-4 flex items-center justify-between shrink-0 border-b border-outline-variant/15">
         <div class="flex items-center gap-2.5 min-w-0">
-          <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="28" height="28" class="shrink-0 object-contain drop-shadow-[0_1px_6px_rgba(63,169,240,0.3)]" />
+          <img src="/dashbox-mark-light.svg" alt="Dashbox" width="28" height="28" class="shrink-0 object-contain drop-shadow-[0_1px_6px_rgba(63,169,240,0.3)] dark:hidden" />
+          <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="28" height="28" class="shrink-0 object-contain drop-shadow-[0_1px_6px_rgba(63,169,240,0.3)] hidden dark:block" />
           <span class="font-headline font-bold text-sm text-on-surface tracking-wide">${APP_META.name}</span>
           <span class="text-[10px] font-mono text-on-surface-variant/70">${APP_META.version}</span>
         </div>

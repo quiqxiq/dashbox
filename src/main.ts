@@ -9,6 +9,7 @@ import { RouterRepository } from '@repositories/router.repository';
 import { authStore } from '@store/auth.store';
 import { createPppStore } from '@store/ppp.store';
 import { getLocale } from '@store/locale.store';
+import '@store/theme.store';
 import { ViewRouter } from '@router/view-router';
 import { HeaderComponent } from '@components/layout/header.component';
 import { SidebarComponent } from '@components/layout/sidebar.component';

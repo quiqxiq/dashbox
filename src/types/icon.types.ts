@@ -84,4 +84,7 @@ export type IconName =
   | 'minimize'
   | 'lock'
   | 'login'
-  | 'logout';
+  | 'logout'
+  | 'light_mode'
+  | 'dark_mode'
+  | 'desktop_windows';

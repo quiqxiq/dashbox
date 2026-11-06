@@ -1,7 +1,6 @@
 import {
   DASHBOARD_KPIS,
   DASHBOARD_SEARCH_ITEMS,
-  DASHBOARD_SHORTCUTS,
   DASHBOARD_TELEMETRY,
   THROUGHPUT_BARS,
 } from '@mock/dashboard.mock';
@@ -11,7 +10,6 @@ import type {
   DashboardKpi,
   DashboardSearchFilter,
   DashboardSearchItem,
-  DashboardShortcut,
   TelemetryMetric,
   ThroughputBar,
   ViewName,
@@ -19,7 +17,7 @@ import type {
 import { debounce } from '@utils/debounce';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
-import { t } from '@i18n/translate';
+import { subscribeLocale, t } from '@i18n/translate';
 import type { TranslationKey } from '@i18n/translate';
 import type { View } from './base.view';
 
@@ -42,13 +40,6 @@ const TONE_BAR: Record<AccentTone, string> = {
   secondary: 'bg-secondary',
   tertiary: 'bg-tertiary',
   error: 'bg-error',
-};
-
-const BADGE_TONE: Record<AccentTone, string> = {
-  primary: 'bg-primary/15 text-primary',
-  secondary: 'bg-secondary/15 text-secondary',
-  tertiary: 'bg-tertiary/15 text-tertiary',
-  error: 'bg-error-container/70 text-error',
 };
 
 const FILTERS: ReadonlyArray<{
@@ -76,154 +67,233 @@ function throughputBarClass(bar: ThroughputBar): string {
 
 export class DashboardView implements View {
   private root: HTMLElement | null = null;
+  private unsubscribeLocale: (() => void) | null = null;
   private filter: DashboardSearchFilter = 'all';
   private query = '';
 
   constructor(private readonly router: ViewRouter) {}
 
   mount(container: HTMLElement): this {
+    this.render(container);
+
+    this.unsubscribeLocale = subscribeLocale(() => {
+      if (this.root && this.root.isConnected) {
+        const queryVal = this.query;
+        this.render(container);
+        const input = this.root?.querySelector<HTMLInputElement>('[data-dashboard-search]');
+        if (input) {
+          input.value = queryVal;
+          this.query = queryVal;
+          const clearButton = this.root?.querySelector<HTMLButtonElement>('[data-clear-search]');
+          if (clearButton) clearButton.classList.toggle('hidden', queryVal.length === 0);
+          this.renderContent();
+        }
+      }
+    });
+
+    return this;
+  }
+
+  private render(container: HTMLElement): void {
+    if (this.root) {
+      this.root.remove();
+      this.root = null;
+    }
+
     const root = document.createElement('section');
     root.className = 'view flex flex-col pb-8 space-y-4';
     root.innerHTML = `
-      <div class="w-full rounded-2xl bg-surface-container/70 backdrop-blur-xl p-4 shadow-xl relative overflow-hidden ring-1 ring-outline-variant/30">
+      <!-- Search & Filter Card (Primary Interface) -->
+      <div class="w-full rounded-2xl bg-surface-container/70 backdrop-blur-xl p-4 shadow-lg space-y-3 ring-1 ring-outline-variant/20 relative overflow-hidden">
         <div class="absolute -right-12 -top-12 w-44 h-44 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 bottom-0 w-36 h-36 rounded-full bg-tertiary/10 blur-2xl pointer-events-none"></div>
+        <div class="absolute -left-10 bottom-0 w-36 h-36 rounded-full bg-secondary/10 blur-2xl pointer-events-none"></div>
 
-        <div class="relative z-10 flex items-center justify-between gap-2 pb-2.5 border-b border-outline-variant/20">
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="px-2 py-0.5 rounded-full bg-primary-container/80 text-primary text-[10px] font-bold tracking-wider uppercase">${escapeHtml(t('dashboard.coreRouter'))}</span>
-            <span class="px-2 py-0.5 rounded-full bg-surface-variant/80 text-on-surface-variant text-[10px] font-mono font-medium">v7.14.3</span>
-          </div>
-          <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-high/80 shrink-0">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-on-surface-variant">WAN</span>
-            <span class="flex items-center text-[11px] font-bold text-primary font-mono">
-              ${icon('arrow_downward', 'text-[13px]')}184M
+        <div class="relative z-10 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
+              ${icon('travel_explore', 'text-[18px]')}
             </span>
-            <span class="text-outline-variant text-[10px]">/</span>
-            <span class="flex items-center text-[11px] font-bold text-secondary font-mono">
-              ${icon('arrow_upward', 'text-[13px]')}46M
-            </span>
-          </div>
-        </div>
-
-        <div class="relative z-10 pt-2.5 pb-3">
-          <h2 class="text-[15px] sm:text-base font-bold font-headline text-on-surface tracking-tight leading-snug break-words">MikroTik CCR1009-7G-1C-1S+</h2>
-          <div class="flex items-center justify-between flex-wrap gap-y-1 gap-x-2 mt-1">
-            <div class="flex items-center gap-1.5">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span class="text-[11px] text-on-surface font-medium">${escapeHtml(t('dashboard.systemRunning'))}</span>
-            </div>
-            <div class="flex items-center gap-1 text-[11px] text-primary font-mono font-medium bg-primary/10 px-2 py-0.5 rounded-full">
-              ${icon('schedule', 'text-[13px]')}
-              <span>${escapeHtml(t('dashboard.uptime', { value: '48h 14m' }))}</span>
+            <div>
+              <h2 class="text-sm font-bold font-headline text-on-surface tracking-tight">${escapeHtml(t('dashboard.quickSearch'))}</h2>
+              <p class="text-[10px] text-on-surface-variant font-medium">${escapeHtml(t('dashboard.searchScope'))}</p>
             </div>
           </div>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 relative z-10 pt-1">
-          ${DASHBOARD_TELEMETRY.map((metric) => this.telemetryCard(metric)).join('')}
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        ${DASHBOARD_KPIS.map((kpi) => this.kpiCard(kpi)).join('')}
-      </div>
-
-      <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 ring-1 ring-outline-variant/20">
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-1.5">
-            ${icon('show_chart', 'text-primary text-[17px]')}
-            <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">${escapeHtml(t('dashboard.wanThroughput'))}</h3>
+          <div class="flex items-center gap-1.5 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-surface-container-high/80 text-on-surface-variant">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            <span>CCR1009</span>
           </div>
-          <span class="text-[10px] font-mono text-on-surface-variant">${escapeHtml(t('dashboard.last60s'))}</span>
-        </div>
-        <div class="flex items-end gap-[3px] h-16">
-          ${THROUGHPUT_BARS.map(
-            (bar) =>
-              `<div class="flex-1 rounded-sm ${throughputBarClass(bar)}" style="height:${bar.height}%"></div>`,
-          ).join('')}
-        </div>
-        <div class="flex items-center justify-between mt-2 text-[10px] font-mono text-on-surface-variant">
-          <span class="flex items-center gap-1">${icon('arrow_downward', 'text-[13px]')}184 Mbps</span>
-          <span class="flex items-center gap-1">${icon('arrow_upward', 'text-[13px]')}46 Mbps</span>
-        </div>
-      </div>
-
-      <div class="w-full rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 shadow-lg space-y-3 ring-1 ring-outline-variant/20">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1.5">
-            ${icon('travel_explore', 'text-primary text-[18px]')}
-            <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">${escapeHtml(t('dashboard.quickSearch'))}</h3>
-          </div>
-          <span class="text-[11px] text-on-surface-variant">${escapeHtml(t('dashboard.searchScope'))}</span>
         </div>
 
-        <div class="relative w-full">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            ${icon('search', 'text-[20px] text-primary')}
+        <div class="relative z-10 w-full">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            ${icon('search', 'text-[18px] text-primary')}
           </div>
           <input data-dashboard-search type="text" aria-label="${escapeHtml(t('dashboard.searchAria'))}"
             placeholder="${escapeHtml(t('dashboard.searchPlaceholder'))}"
-            class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-variant/70 text-on-surface placeholder:text-on-surface-variant/60 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary/60 focus:bg-surface-variant/90 transition-all" />
+            class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-variant/70 text-on-surface placeholder:text-on-surface-variant/60 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-surface-variant/90 transition-all shadow-inner" />
           <button data-clear-search type="button" aria-label="${escapeHtml(t('dashboard.clearSearch'))}"
-            class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-on-surface">
+            class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-on-surface-variant hover:text-on-surface cursor-pointer">
             ${icon('cancel', 'text-[18px]')}
           </button>
         </div>
 
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1" role="group" aria-label="${escapeHtml(t('dashboard.filterAria'))}">
+        <div class="relative z-10 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 -mx-1 px-1" role="group" aria-label="${escapeHtml(t('dashboard.filterAria'))}">
           ${FILTERS.map((filter) => this.filterChip(filter)).join('')}
         </div>
-
-        <div class="space-y-2.5 pt-1" data-results></div>
       </div>
 
-      <div class="w-full rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 ring-1 ring-outline-variant/20">
-        <div class="flex items-center gap-1.5 mb-3">
-          ${icon('bolt', 'text-primary text-[18px]')}
-          <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">${escapeHtml(t('dashboard.shortcuts'))}</h3>
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          ${DASHBOARD_SHORTCUTS.map((shortcut) => this.shortcut(shortcut)).join('')}
-        </div>
-      </div>`;
+      <!-- Dynamic Content Area:
+           - Query empty: Displays System Status & Telemetry + Hotspot & PPPoE KPIs + WAN Throughput
+           - Query non-empty: Displays Interactive Search Results with Pulsing Dots (no text status)
+      -->
+      <div data-dashboard-content class="space-y-4"></div>
+    `;
 
     container.appendChild(root);
     this.root = root;
 
     this.bindSearch(root);
-    this.bindShortcuts(root);
-    this.renderResults();
-
-    return this;
+    this.renderContent();
   }
 
-  destroy(): void {
-    this.root?.remove();
-    this.root = null;
+  private renderContent(): void {
+    const content = this.root?.querySelector<HTMLElement>('[data-dashboard-content]');
+    if (!content) return;
+
+    const query = this.query.trim().toLowerCase();
+
+    if (!query) {
+      // Empty Query State: System Status & Telemetry, KPIs, WAN Throughput
+      content.innerHTML = `
+        <!-- MikroTik System Status & Telemetry -->
+        <div class="w-full rounded-2xl bg-surface-container/60 backdrop-blur-xl p-4 shadow-md ring-1 ring-outline-variant/20 relative overflow-hidden">
+          <div class="flex items-center justify-between gap-2 pb-3 border-b border-outline-variant/15 flex-wrap">
+            <div class="flex items-center gap-2">
+              <div class="p-1.5 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center">
+                ${icon('router', 'text-[18px]')}
+              </div>
+              <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">${escapeHtml(t('dashboard.systemStatus'))}</h3>
+                <p class="text-[10px] text-on-surface-variant">${escapeHtml(t('dashboard.systemStatusDesc'))}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-mono font-bold">CCR1009-7G-1C-1S+</span>
+              <span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-mono">v7.14.3</span>
+              <span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-mono">${escapeHtml(t('dashboard.uptime', { value: '48h 14m' }))}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 pt-3">
+            ${DASHBOARD_TELEMETRY.map((metric) => this.telemetryCard(metric)).join('')}
+          </div>
+        </div>
+
+        <!-- Hotspot & PPPoE KPIs Overview -->
+        <div>
+          <div class="flex items-center gap-1.5 mb-2 px-1">
+            ${icon('monitoring', 'text-primary text-[16px]')}
+            <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">${escapeHtml(t('dashboard.kpiOverview'))}</h3>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            ${DASHBOARD_KPIS.map((kpi) => this.kpiCard(kpi)).join('')}
+          </div>
+        </div>
+
+        <!-- WAN Live Throughput -->
+        <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 ring-1 ring-outline-variant/20">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-1.5">
+              ${icon('show_chart', 'text-primary text-[17px]')}
+              <h3 class="text-xs font-bold uppercase tracking-wider font-headline text-on-surface">${escapeHtml(t('dashboard.wanThroughput'))}</h3>
+            </div>
+            <span class="text-[10px] font-mono text-on-surface-variant">${escapeHtml(t('dashboard.last60s'))}</span>
+          </div>
+          <div class="flex items-end gap-[3px] h-16">
+            ${THROUGHPUT_BARS.map(
+              (bar) =>
+                `<div class="flex-1 rounded-sm ${throughputBarClass(bar)}" style="height:${bar.height}%"></div>`,
+            ).join('')}
+          </div>
+          <div class="flex items-center justify-between mt-2 text-[10px] font-mono text-on-surface-variant">
+            <span class="flex items-center gap-1 font-bold text-primary">${icon('arrow_downward', 'text-[13px]')}184 Mbps Down</span>
+            <span class="flex items-center gap-1 font-bold text-secondary">${icon('arrow_upward', 'text-[13px]')}46 Mbps Up</span>
+          </div>
+        </div>
+
+        <!-- Search Hint Footer -->
+        <div class="p-3 rounded-xl bg-surface-container/40 ring-1 ring-outline-variant/15 flex items-center gap-2.5 text-on-surface-variant text-xs">
+          ${icon('info', 'text-primary text-[18px] shrink-0')}
+          <span class="leading-relaxed text-[11px]">${escapeHtml(t('dashboard.searchEmptyHint'))}</span>
+        </div>
+      `;
+      return;
+    }
+
+    // Active Query State: Display Interactive Search Results
+    const items = DASHBOARD_SEARCH_ITEMS.filter((item) => {
+      if (!item.searchText.toLowerCase().includes(query)) return false;
+      if (this.filter === 'ppp') return item.type === 'ppp';
+      if (this.filter === 'hotspot') return item.type === 'hotspot';
+      if (this.filter === 'online') return item.status === 'online';
+      if (this.filter === 'offline') return item.status !== 'online';
+      return true;
+    });
+
+    if (!items.length) {
+      content.innerHTML = `
+        <div class="p-8 rounded-2xl bg-surface-container/60 backdrop-blur-xl ring-1 ring-outline-variant/20 text-center flex flex-col items-center justify-center">
+          <div class="w-12 h-12 rounded-2xl bg-surface-variant/60 flex items-center justify-center text-on-surface-variant/60 mb-2">
+            ${icon('travel_explore', 'text-[24px]')}
+          </div>
+          <p class="text-xs font-semibold text-on-surface">${escapeHtml(t('dashboard.noResults'))}</p>
+          <p class="text-[11px] text-on-surface-variant mt-1">"${escapeHtml(this.query)}"</p>
+        </div>`;
+      return;
+    }
+
+    content.innerHTML = `
+      <div class="flex items-center justify-between px-1">
+        <span class="text-xs font-bold text-on-surface font-headline">${escapeHtml(t('dashboard.resultsCount', { count: items.length }))}</span>
+        <span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-wider">${escapeHtml(t('dashboard.searchScope'))}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" data-results-list>
+        ${items.map((item) => this.searchResultCard(item)).join('')}
+      </div>
+    `;
+
+    // Bind navigation click to cards
+    content.querySelectorAll<HTMLElement>('[data-detail-view]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const view = card.dataset.detailView as ViewName | undefined;
+        if (!view) return;
+        if (view === 'ppp') this.router.navigate('ppp', { tab: 'secrets' });
+        else this.router.navigate(view);
+      });
+    });
   }
 
   private telemetryCard(metric: TelemetryMetric): string {
     const percent = Math.min(100, Math.max(0, metric.percent));
 
     return `
-      <div class="p-2.5 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between ring-1 ring-outline-variant/20">
+      <div class="p-3 rounded-xl bg-surface-container-high/60 backdrop-blur-md flex flex-col justify-between ring-1 ring-outline-variant/20 relative overflow-hidden group">
         <div class="flex items-center justify-between text-on-surface-variant">
-          <span class="text-[11px] font-medium flex items-center gap-1">
-            ${icon(metric.icon, `text-[14px] ${TONE_TEXT[metric.tone]}`)}
+          <span class="text-[11px] font-medium flex items-center gap-1.5">
+            ${icon(metric.icon, `text-[15px] ${TONE_TEXT[metric.tone]}`)}
             ${escapeHtml(t(metric.labelKey))}
           </span>
           <span class="text-[10px] font-mono ${TONE_TEXT[metric.tone]} font-semibold">${escapeHtml(t(metric.statusKey))}</span>
         </div>
-        <div class="mt-1.5 flex items-baseline justify-between">
+        <div class="mt-2 flex items-baseline justify-between">
           <span class="text-lg font-bold font-headline text-on-surface tracking-tight">${escapeHtml(metric.value)}</span>
           <span class="text-[10px] text-on-surface-variant font-mono">${escapeHtml(metric.meta)}</span>
         </div>
-        <div class="w-full bg-surface-container-lowest/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
-          <div class="${TONE_BAR[metric.tone]} h-full rounded-full" style="width:${percent}%"></div>
+        <div class="mt-2 w-full h-1 rounded-full bg-surface-variant/80 overflow-hidden">
+          <div class="h-full rounded-full ${TONE_BAR[metric.tone]} transition-all duration-500" style="width: ${percent}%"></div>
         </div>
       </div>`;
   }
@@ -231,10 +301,10 @@ export class DashboardView implements View {
   private kpiCard(kpi: DashboardKpi): string {
     const badgeClass =
       kpi.badgeTone === 'accent'
-        ? BADGE_TONE[kpi.tone]
+        ? 'bg-primary/20 text-primary'
         : kpi.badgeTone === 'error'
           ? 'bg-error-container/70 text-error'
-          : 'text-on-surface-variant';
+          : 'bg-surface-variant text-on-surface-variant';
 
     const denominator = kpi.denominator
       ? `<span class="text-xs text-on-surface-variant font-medium">${kpi.denominator === 'TB' ? ' ' : '/'}${escapeHtml(kpi.denominator)}</span>`
@@ -242,14 +312,14 @@ export class DashboardView implements View {
     const badge = kpi.badgeKey ? t(kpi.badgeKey, kpi.badgeParams) : (kpi.badge ?? '');
 
     return `
-      <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3 ring-1 ring-outline-variant/20 relative overflow-hidden">
+      <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 ring-1 ring-outline-variant/20 relative overflow-hidden">
         <div class="absolute -right-6 -top-6 w-20 h-20 rounded-full ${TONE_GLOW[kpi.tone]} blur-2xl"></div>
         <div class="flex items-center justify-between">
-          ${icon(kpi.icon, `text-[18px] ${TONE_TEXT[kpi.tone]}`)}
-          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${badgeClass}">${escapeHtml(badge)}</span>
+          <span class="p-1.5 rounded-lg bg-surface-container-high/60 ${TONE_TEXT[kpi.tone]}">${icon(kpi.icon, 'text-[18px]')}</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${badgeClass}">${escapeHtml(badge)}</span>
         </div>
-        <p class="mt-2 text-xl font-bold font-headline tracking-tight text-on-surface leading-none">${escapeHtml(kpi.value)}${denominator}</p>
-        <p class="text-[10px] text-on-surface-variant mt-1">${escapeHtml(t(kpi.labelKey))}</p>
+        <p class="mt-2.5 text-xl font-bold font-headline tracking-tight text-on-surface leading-none">${escapeHtml(kpi.value)}${denominator}</p>
+        <p class="text-[10px] text-on-surface-variant mt-1.5 font-medium">${escapeHtml(t(kpi.labelKey))}</p>
       </div>`;
   }
 
@@ -260,37 +330,90 @@ export class DashboardView implements View {
   }): string {
     const active = filter.value === this.filter;
     const classes = active
-      ? 'bg-primary text-on-primary font-semibold'
-      : 'bg-surface-variant/80 text-on-surface-variant font-medium';
+      ? 'bg-primary text-on-primary font-semibold shadow-sm'
+      : 'bg-surface-variant/80 text-on-surface-variant font-medium hover:bg-surface-variant';
 
     return `
       <button type="button" data-filter="${filter.value}"
-        class="filter-chip px-3 py-1 rounded-full ${classes} shrink-0 text-xs transition-transform active:scale-95 ${
-          filter.dot ? 'flex items-center gap-1' : ''
+        class="filter-chip px-3 py-1 rounded-full ${classes} shrink-0 text-xs transition-all active:scale-95 cursor-pointer ${
+          filter.dot ? 'flex items-center gap-1.5' : ''
         }" aria-pressed="${active}">
-        ${filter.dot ? '<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>' : ''}
+        ${filter.dot ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>' : ''}
         ${escapeHtml(t(filter.labelKey))}
       </button>`;
   }
 
-  private shortcut(shortcut: DashboardShortcut): string {
+  private searchResultCard(item: DashboardSearchItem): string {
+    const isOnline = item.status === 'online';
+
+    // Type badge styling
+    const typeBadge =
+      item.type === 'ppp'
+        ? 'bg-primary/15 text-primary ring-1 ring-primary/25'
+        : 'bg-tertiary/15 text-tertiary ring-1 ring-tertiary/25';
+
+    // Pulsing Dot Indicator ONLY (No status text online/offline!)
+    const statusIndicator = isOnline
+      ? `
+        <span class="relative flex h-2.5 w-2.5 shrink-0" title="Online / Aktif">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>`
+      : `
+        <span class="relative flex h-2.5 w-2.5 shrink-0" title="Offline / Nonaktif">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+        </span>`;
+
+    const footerLabel = t(item.footerLabel.key, item.footerLabel.params);
+    const statusNote = t(item.statusNote.key, item.statusNote.params);
+
     return `
-      <button type="button" data-shortcut-view="${shortcut.view}"
-        class="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-surface-container-high/50 hover:bg-surface-container-high/90 ring-1 ring-outline-variant/20 transition-colors active:scale-95">
-        ${icon(shortcut.icon, `text-[20px] ${TONE_TEXT[shortcut.tone]}`)}
-        <span class="text-[10px] text-on-surface-variant font-medium">${escapeHtml(t(shortcut.labelKey))}</span>
-      </button>`;
+      <div class="search-item rounded-xl bg-surface-container/70 backdrop-blur-md p-3.5 ring-1 ring-outline-variant/20 hover:ring-primary/40 hover:bg-surface-container-high/80 transition-all cursor-pointer flex flex-col justify-between group shadow-sm active:scale-[0.99]"
+        data-detail-view="${item.detailView}" data-id="${escapeHtml(item.id)}">
+        <div>
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="px-2 py-0.5 rounded text-[9px] font-bold tracking-wide uppercase ${typeBadge}">
+                ${escapeHtml(t(item.typeLabelKey))}
+              </span>
+              <h4 class="text-xs font-bold text-on-surface truncate group-hover:text-primary transition-colors">
+                ${escapeHtml(item.name)}
+              </h4>
+            </div>
+            <!-- Interactive blinking indicator (Green for Online, Red for Offline/Expired) -->
+            <div class="flex items-center gap-1.5 pt-0.5 shrink-0">
+              ${statusIndicator}
+            </div>
+          </div>
+
+          <div class="mt-2 flex items-center justify-between text-[11px] font-mono text-on-surface-variant flex-wrap gap-1">
+            <span class="text-primary font-semibold">${escapeHtml(item.ip)}</span>
+            <span class="px-1.5 py-0.5 rounded bg-surface-variant/80 text-[10px] text-on-surface-variant">${escapeHtml(item.meta)}</span>
+          </div>
+        </div>
+
+        <div class="mt-2.5 pt-2 border-t border-outline-variant/15 flex items-center justify-between text-[10px] text-on-surface-variant/80">
+          <span class="flex items-center gap-1">
+            ${icon(item.footerIcon, 'text-[13px] text-on-surface-variant')}
+            ${escapeHtml(footerLabel || statusNote)}
+          </span>
+          <span class="flex items-center gap-0.5 text-primary font-semibold group-hover:translate-x-0.5 transition-transform">
+            <span>${escapeHtml(t('common.detail'))}</span>
+            ${icon('chevron_right', 'text-[13px]')}
+          </span>
+        </div>
+      </div>`;
   }
 
   private bindSearch(root: HTMLElement): void {
     const input = root.querySelector<HTMLInputElement>('[data-dashboard-search]');
     const clearButton = root.querySelector<HTMLButtonElement>('[data-clear-search]');
-    const results = root.querySelector<HTMLElement>('[data-results]');
-    if (!input || !clearButton || !results) return;
+    if (!input || !clearButton) return;
 
     const applyInput = debounce(() => {
       this.query = input.value;
-      this.renderResults();
+      this.renderContent();
     }, 120);
 
     input.addEventListener('input', () => {
@@ -302,7 +425,7 @@ export class DashboardView implements View {
       input.value = '';
       this.query = '';
       clearButton.classList.add('hidden');
-      this.renderResults();
+      this.renderContent();
       input.focus();
     });
 
@@ -313,25 +436,7 @@ export class DashboardView implements View {
 
         this.filter = filter;
         this.refreshFilterChips(root);
-        this.renderResults();
-      });
-    });
-
-    results.addEventListener('click', (event) => {
-      const detail = (event.target as HTMLElement).closest<HTMLElement>('[data-detail-view]');
-      const view = detail?.dataset.detailView as ViewName | undefined;
-      if (!view) return;
-
-      if (view === 'ppp') this.router.navigate('ppp', { tab: 'secrets' });
-      else this.router.navigate(view);
-    });
-  }
-
-  private bindShortcuts(root: HTMLElement): void {
-    root.querySelectorAll<HTMLButtonElement>('[data-shortcut-view]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const view = button.dataset.shortcutView as ViewName | undefined;
-        if (view) this.router.navigate(view);
+        this.renderContent();
       });
     });
   }
@@ -344,106 +449,19 @@ export class DashboardView implements View {
       chip.classList.toggle('bg-primary', active);
       chip.classList.toggle('text-on-primary', active);
       chip.classList.toggle('font-semibold', active);
+      chip.classList.toggle('shadow-sm', active);
       chip.classList.toggle('bg-surface-variant/80', !active);
       chip.classList.toggle('text-on-surface-variant', !active);
       chip.classList.toggle('font-medium', !active);
     });
   }
 
-  private renderResults(): void {
-    const results = this.root?.querySelector<HTMLElement>('[data-results]');
-    if (!results) return;
-
-    const query = this.query.trim().toLowerCase();
-    const items = DASHBOARD_SEARCH_ITEMS.filter((item) => {
-      if (query && !item.searchText.toLowerCase().includes(query)) return false;
-      if (this.filter === 'ppp') return item.type === 'ppp';
-      if (this.filter === 'hotspot') return item.type === 'hotspot';
-      if (this.filter === 'online') return item.status === 'online';
-      if (this.filter === 'offline') return item.status !== 'online';
-      return true;
-    });
-
-    if (!items.length) {
-      results.innerHTML = `
-        <div class="p-5 rounded-xl bg-surface-container-high/40 ring-1 ring-outline-variant/20 text-center">
-          ${icon('search_off', 'text-[26px] text-on-surface-variant/60')}
-          <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(t('dashboard.noResults'))}</p>
-        </div>`;
-      return;
+  destroy(): void {
+    if (this.unsubscribeLocale) {
+      this.unsubscribeLocale();
+      this.unsubscribeLocale = null;
     }
-
-    results.innerHTML = items.map((item) => this.searchResult(item)).join('');
-  }
-
-  private searchResult(item: DashboardSearchItem): string {
-    const online = item.status === 'online';
-    const typeBadge = online
-      ? item.type === 'ppp'
-        ? 'bg-primary-container text-on-primary-container'
-        : 'bg-tertiary-container text-on-tertiary-container'
-      : 'bg-surface-variant text-on-surface-variant';
-    const itemClass = online
-      ? 'bg-surface-container-high/60'
-      : 'bg-surface-container-high/40 opacity-90';
-    const nameClass = online ? 'text-on-surface' : 'text-on-surface/90';
-    const ipClass = online
-      ? item.type === 'ppp'
-        ? 'text-primary'
-        : 'text-tertiary'
-      : 'text-on-surface-variant';
-    const statusPill = online
-      ? 'bg-primary/20 text-primary'
-      : 'bg-surface-variant text-on-surface-variant';
-    const statusNoteClass =
-      item.status === 'expired'
-        ? 'text-error/90'
-        : online
-          ? 'text-on-surface-variant'
-          : 'text-on-surface-variant/70';
-
-    const metaMarkup =
-      item.type === 'ppp'
-        ? `<span class="px-1 rounded bg-surface-variant text-[10px] text-secondary">${escapeHtml(item.meta)}</span>`
-        : `<span class="text-[10px] text-on-surface-variant">${escapeHtml(item.meta)}</span>`;
-
-    const footerLabel = t(item.footerLabel.key, item.footerLabel.params);
-    const statusNote = t(item.statusNote.key, item.statusNote.params);
-
-    const footer = online
-      ? `
-        <div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/80 bg-surface-container-lowest/40 rounded-lg px-2 py-1">
-          <span class="flex items-center gap-1">${icon(item.footerIcon, `text-[13px] ${TONE_TEXT[item.type === 'ppp' ? 'primary' : 'tertiary']}`)} ${escapeHtml(footerLabel)}</span>
-          <button type="button" data-detail-view="${item.detailView}" data-id="${escapeHtml(item.id)}"
-            class="flex items-center gap-1 text-primary hover:underline">
-            <span>${escapeHtml(t('common.detail'))}</span>${icon('arrow_forward', 'text-[13px]')}
-          </button>
-        </div>`
-      : '';
-
-    return `
-      <div class="search-item rounded-xl ${itemClass} backdrop-blur-md p-3 transition-colors hover:bg-surface-container-high/90" data-status="${item.status}" data-type="${item.type}">
-        <div class="flex items-start justify-between gap-2">
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="px-1.5 py-0.5 rounded ${typeBadge} text-[9px] font-bold tracking-wide uppercase">${escapeHtml(t(item.typeLabelKey))}</span>
-              <span class="text-xs font-bold ${nameClass} truncate">${escapeHtml(item.name)}</span>
-            </div>
-            <p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
-              <span class="${ipClass} font-mono font-medium">${escapeHtml(item.ip)}</span>
-              <span>·</span>
-              ${metaMarkup}
-            </p>
-          </div>
-          <div class="flex flex-col items-end shrink-0">
-            <span class="px-2 py-0.5 rounded-full ${statusPill} text-[10px] font-bold flex items-center gap-1">
-              ${online ? '<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>' : ''}
-              ${escapeHtml(t(item.statusLabelKey))}
-            </span>
-            <span class="text-[10px] ${statusNoteClass} mt-1">${escapeHtml(statusNote)}</span>
-          </div>
-        </div>
-        ${footer}
-      </div>`;
+    this.root?.remove();
+    this.root = null;
   }
 }

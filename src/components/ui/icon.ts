@@ -19,8 +19,10 @@ import iconConfirmationNumber from '@material-symbols/svg-400/outlined/confirmat
 import iconContentCopy from '@material-symbols/svg-400/outlined/content_copy.svg?raw';
 import iconCottage from '@material-symbols/svg-400/outlined/cottage.svg?raw';
 import iconDashboard from '@material-symbols/svg-400/outlined/dashboard.svg?raw';
+import iconDarkMode from '@material-symbols/svg-400/outlined/dark_mode.svg?raw';
 import iconDataUsage from '@material-symbols/svg-400/outlined/data_usage.svg?raw';
 import iconDelete from '@material-symbols/svg-400/outlined/delete.svg?raw';
+import iconDesktopWindows from '@material-symbols/svg-400/outlined/desktop_windows.svg?raw';
 import iconDownload from '@material-symbols/svg-400/outlined/download.svg?raw';
 import iconDeviceThermostat from '@material-symbols/svg-400/outlined/device_thermostat.svg?raw';
 import iconDns from '@material-symbols/svg-400/outlined/dns.svg?raw';
@@ -38,6 +40,7 @@ import iconInfo from '@material-symbols/svg-400/outlined/info.svg?raw';
 import iconKey from '@material-symbols/svg-400/outlined/key.svg?raw';
 import iconLan from '@material-symbols/svg-400/outlined/lan.svg?raw';
 import iconLanguage from '@material-symbols/svg-400/outlined/language.svg?raw';
+import iconLightMode from '@material-symbols/svg-400/outlined/light_mode.svg?raw';
 import iconLinkOff from '@material-symbols/svg-400/outlined/link_off.svg?raw';
 import iconLock from '@material-symbols/svg-400/outlined/lock.svg?raw';
 import iconLogin from '@material-symbols/svg-400/outlined/login.svg?raw';
@@ -108,8 +111,10 @@ const ICON_SVGS: Record<IconName, string> = {
   content_copy: iconContentCopy,
   cottage: iconCottage,
   dashboard: iconDashboard,
+  dark_mode: iconDarkMode,
   data_usage: iconDataUsage,
   delete: iconDelete,
+  desktop_windows: iconDesktopWindows,
   device_thermostat: iconDeviceThermostat,
   dns: iconDns,
   download: iconDownload,
@@ -127,6 +132,7 @@ const ICON_SVGS: Record<IconName, string> = {
   key: iconKey,
   lan: iconLan,
   language: iconLanguage,
+  light_mode: iconLightMode,
   link_off: iconLinkOff,
   lock: iconLock,
   login: iconLogin,
