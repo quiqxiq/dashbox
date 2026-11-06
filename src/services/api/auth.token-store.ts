@@ -14,6 +14,15 @@ class TokenStore {
     this.token = token;
   }
 
+  restoreBasic(token: string): void {
+    this.strategy = 'basic';
+    this.token = token;
+  }
+
+  getToken(): string | null {
+    return this.token;
+  }
+
   clear(): void {
     this.strategy = 'none';
     this.token = null;

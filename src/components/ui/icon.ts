@@ -39,6 +39,9 @@ import iconKey from '@material-symbols/svg-400/outlined/key.svg?raw';
 import iconLan from '@material-symbols/svg-400/outlined/lan.svg?raw';
 import iconLanguage from '@material-symbols/svg-400/outlined/language.svg?raw';
 import iconLinkOff from '@material-symbols/svg-400/outlined/link_off.svg?raw';
+import iconLock from '@material-symbols/svg-400/outlined/lock.svg?raw';
+import iconLogin from '@material-symbols/svg-400/outlined/login.svg?raw';
+import iconLogout from '@material-symbols/svg-400/outlined/logout.svg?raw';
 import iconMemory from '@material-symbols/svg-400/outlined/memory.svg?raw';
 import iconMenu from '@material-symbols/svg-400/outlined/menu.svg?raw';
 import iconMinimize from '@material-symbols/svg-400/outlined/minimize.svg?raw';
@@ -125,6 +128,9 @@ const ICON_SVGS: Record<IconName, string> = {
   lan: iconLan,
   language: iconLanguage,
   link_off: iconLinkOff,
+  lock: iconLock,
+  login: iconLogin,
+  logout: iconLogout,
   memory: iconMemory,
   menu: iconMenu,
   minimize: iconMinimize,

@@ -1,12 +1,18 @@
 import type { RouterRepository } from '@repositories/router.repository';
 import type { ViewRouter } from '@router/view-router';
+import { ConfirmDialogComponent } from '@components/ui/confirm-dialog.component';
+import { logout } from '@store/auth.store';
 import { setLocale, getLocale } from '@store/locale.store';
 import { subscribeLocale, t } from '@i18n/translate';
-import { openDrawer } from '@store/ui.store';
+import { openDrawer, toast } from '@store/ui.store';
 import { logger } from '@utils/logger';
 import { icon } from '@components/ui/icon';
 
 export class HeaderComponent {
+  private el: HTMLElement | null = null;
+  private unsubscribeLocale: (() => void) | null = null;
+  private unsubscribeRouter: (() => void) | null = null;
+
   constructor(
     private readonly router: ViewRouter,
     private readonly routerRepo: RouterRepository,
@@ -44,13 +50,15 @@ export class HeaderComponent {
             ${icon('language', 'text-[14px]')}
             <span data-locale-label>${getLocale().toUpperCase()}</span>
           </button>
-          <div role="img" aria-label="${escapeLabel(t('common.adminProfile'))}"
-            class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(125,211,252,0.3)]">
-            ${icon('person', 'text-on-primary text-[17px]')}
-          </div>
+          <button type="button" data-action="logout" aria-label="${escapeLabel(t('auth.logout'))}" title="${escapeLabel(t('auth.logout'))}"
+            class="w-8 h-8 rounded-full bg-primary/20 ring-1 ring-primary/40 hover:bg-error/20 hover:ring-error/40 text-primary hover:text-error transition-all flex items-center justify-center shadow-[0_0_12px_rgba(125,211,252,0.2)] group cursor-pointer">
+            <span class="group-hover:hidden">${icon('person', 'text-[17px]')}</span>
+            <span class="hidden group-hover:inline">${icon('logout', 'text-[17px]')}</span>
+          </button>
         </div>
       </div>`;
     parent.appendChild(el);
+    this.el = el;
 
     el.querySelector<HTMLButtonElement>('[data-action="open-drawer"]')?.addEventListener(
       'click',
@@ -59,7 +67,24 @@ export class HeaderComponent {
     el.querySelector<HTMLButtonElement>('[data-locale-toggle]')?.addEventListener('click', () => {
       setLocale(getLocale() === 'id' ? 'en' : 'id');
     });
-    subscribeLocale(() => {
+
+    el.querySelector<HTMLButtonElement>('[data-action="logout"]')?.addEventListener(
+      'click',
+      async () => {
+        const ok = await ConfirmDialogComponent.ask({
+          title: t('auth.logoutConfirmTitle'),
+          message: t('auth.logoutConfirmMessage'),
+          confirmLabel: t('auth.logout'),
+          tone: 'danger',
+        });
+        if (ok) {
+          logout();
+          toast(t('auth.logout'), 'info');
+        }
+      },
+    );
+
+    this.unsubscribeLocale = subscribeLocale(() => {
       const label = el.querySelector<HTMLElement>('[data-locale-label]');
       if (label) label.textContent = getLocale().toUpperCase();
       const btn = el.querySelector<HTMLButtonElement>('[data-locale-toggle]');
@@ -67,14 +92,17 @@ export class HeaderComponent {
         btn.setAttribute('aria-label', t('common.language'));
         btn.setAttribute('title', t('common.language'));
       }
-      const profile = el.querySelector<HTMLElement>('[role="img"]');
-      if (profile) profile.setAttribute('aria-label', t('common.adminProfile'));
+      const logoutBtn = el.querySelector<HTMLButtonElement>('[data-action="logout"]');
+      if (logoutBtn) {
+        logoutBtn.setAttribute('aria-label', t('auth.logout'));
+        logoutBtn.setAttribute('title', t('auth.logout'));
+      }
       // Refresh title to current view's translated title
       const titleEl = el.querySelector<HTMLElement>('[data-title]');
       if (titleEl) titleEl.textContent = this.router.currentTitle;
     });
 
-    this.router.subscribe((_view, title) => {
+    this.unsubscribeRouter = this.router.subscribe((_view, title) => {
       const titleEl = el.querySelector<HTMLElement>('[data-title]');
       if (titleEl) titleEl.textContent = title;
     });
@@ -82,6 +110,19 @@ export class HeaderComponent {
     void this.loadRouterSummary(el);
 
     return this;
+  }
+
+  destroy(): void {
+    if (this.unsubscribeLocale) {
+      this.unsubscribeLocale();
+      this.unsubscribeLocale = null;
+    }
+    if (this.unsubscribeRouter) {
+      this.unsubscribeRouter();
+      this.unsubscribeRouter = null;
+    }
+    this.el?.remove();
+    this.el = null;
   }
 
   private async loadRouterSummary(el: HTMLElement): Promise<void> {

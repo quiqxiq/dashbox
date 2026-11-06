@@ -81,4 +81,7 @@ export type IconName =
   | 'more_horiz'
   | 'radio_button_unchecked'
   | 'translate'
-  | 'minimize';
+  | 'minimize'
+  | 'lock'
+  | 'login'
+  | 'logout';

@@ -82,7 +82,15 @@ Dashbox dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web
 - **Submenu Turunan & Bottom Sheet (Mobile)**: Item navigasi yang memiliki sub-item (seperti PPP, Hotspot, dan Monitor) membuka Bottom Sheet interaktif lengkap dengan penanda item aktif dan badge counter.
 - **Sinkronisasi Tab URL**: Parameter tab/section pada Hotspot, Monitor, dan PPP disinkronkan ke URL router, memastikan pergantian bahasa secara langsung merender ulang view tanpa mengubah posisi tab aktif pengguna.
 
-### 7. Arsitektur & Keamanan
+### 7. Halaman Login Minimalis & Autentikasi Sesi
+
+- **Desain Minimalis & Modern**: Tampilan fullscreen terpusat dengan estetika _Glacier Dark_, card frosted glass melayang (`backdrop-blur-2xl`), logo router beraksen cyan neon, tipografi headline tegas, dan pencahayaan ambient halus di latar belakang.
+- **Form Input Terfokus**: Hanya memuat input username, input password dilengkapi tombol toggle visibilitas intip (_show/hide password_), banner peringatan kesalahan, tombol masuk dengan status verifikasi, serta alih bahasa cepat (ID / EN) di pojok kanan atas.
+- **Kredensial Fleksibel**: Mendukung demo login standar MikroTik (username `admin` dengan password `admin` atau password kosong), serta kredensial kustom via environment variables (`VITE_API_USERNAME` / `VITE_API_PASSWORD`).
+- **Persistensi Sesi & Autentikasi REST**: Status login tersimpan di `localStorage` (`dashbox.auth`) dan otomatis menyinkronkan token _Basic Auth_ pada `authTokenStore` sehingga panggilan REST API tetap terautentikasi setelah halaman dimuat ulang.
+- **Aksi Logout Terintegrasi**: Akses keluar sesi yang mudah via klik avatar profil di **Header** (dengan efek ikon hover) maupun tombol _Keluar_ di menu **Settings**, dilengkapi dialog konfirmasi sebelum keluar.
+
+### 8. Arsitektur & Keamanan
 
 - **Glacier Design System**: Palet warna dark mode modern dengan kontras tinggi, aksen neon cyan/sky, dan efek translucent backdrop blur.
 - **Responsif Desktop & Mobile**: Sidebar navigasi collapsible untuk desktop dan bottom navigation bar ergonomis untuk mobile.
