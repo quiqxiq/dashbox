@@ -1,11 +1,13 @@
 import type { IconName, PppSecret, PppStatus } from '@types';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
+import type { TranslationKey } from '@i18n/translate';
 
 interface PppStatusConfig {
   flagIcon: IconName;
   flagClass: string;
-  label: string;
+  labelKey: TranslationKey;
   pillClass: string;
   dotClass: string;
   ipClass: string;
@@ -18,7 +20,7 @@ export const PPP_STATUS_CONFIG: Record<PppStatus, PppStatusConfig> = {
   running: {
     flagIcon: 'play_circle',
     flagClass: 'bg-primary/15 text-primary',
-    label: 'ONLINE',
+    labelKey: 'status.online',
     pillClass: 'bg-primary/15 text-primary',
     dotClass: 'bg-primary animate-pulse',
     ipClass: 'text-primary',
@@ -29,7 +31,7 @@ export const PPP_STATUS_CONFIG: Record<PppStatus, PppStatusConfig> = {
   standby: {
     flagIcon: 'pause_circle',
     flagClass: 'bg-surface-container-highest text-on-surface-variant',
-    label: 'IDLE',
+    labelKey: 'status.idle',
     pillClass: 'bg-surface-variant text-on-surface-variant',
     dotClass: 'bg-outline',
     ipClass: 'text-on-surface-variant',
@@ -40,7 +42,7 @@ export const PPP_STATUS_CONFIG: Record<PppStatus, PppStatusConfig> = {
   disabled: {
     flagIcon: 'block',
     flagClass: 'bg-error/15 text-error',
-    label: 'DISABLED',
+    labelKey: 'status.disabled',
     pillClass: 'bg-error-container/60 text-error',
     dotClass: 'bg-error',
     ipClass: 'text-on-surface-variant',
@@ -65,8 +67,8 @@ function cardUptime(secret: PppSecret): string {
     return `<span class="w-1.5 h-1.5 rounded-full ${config.dotClass}"></span><span>${escapeHtml(secret.uptime)}</span>`;
   }
 
-  if (secret.status === 'standby') return '<span>Disconnected</span>';
-  return '<span>Stopped</span>';
+  if (secret.status === 'standby') return `<span>${escapeHtml(t('ppp.disconnected'))}</span>`;
+  return `<span>${escapeHtml(t('ppp.stopped'))}</span>`;
 }
 
 export function pppTableRow(secret: PppSecret, selectedId: number | null): string {
@@ -137,7 +139,7 @@ export function pppCard(secret: PppSecret, selectedId: number | null): string {
 
   return `
     <div class="${classes}" data-id="${secret.id}" role="button" tabindex="0"
-      aria-label="Buka detail ${escapeHtml(secret.name)}">
+      aria-label="${escapeHtml(t('ppp.openDetail', { name: secret.name }))}">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
           ${flagMarkup(secret)}
@@ -172,7 +174,7 @@ export function pppEmptyRow(): string {
     <tr>
       <td colspan="7" class="px-3 py-8 text-center text-on-surface-variant text-xs">
         ${icon('search_off', 'text-[22px] block mx-auto text-on-surface-variant/60')}
-        <span class="mt-2 inline-block">Tidak ada data cocok dengan filter.</span>
+        <span class="mt-2 inline-block">${escapeHtml(t('ppp.empty'))}</span>
       </td>
     </tr>`;
 }
@@ -181,6 +183,6 @@ export function pppEmptyCard(): string {
   return `
     <div class="p-6 rounded-xl bg-surface-container/40 ring-1 ring-outline-variant/20 text-center">
       ${icon('search_off', 'text-[26px] text-on-surface-variant/60')}
-      <p class="text-xs text-on-surface-variant mt-2">Tidak ada data cocok dengan filter.</p>
+      <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(t('ppp.empty'))}</p>
     </div>`;
 }

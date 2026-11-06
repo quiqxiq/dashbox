@@ -1,3 +1,4 @@
+import { formatCurrency } from '@i18n/translate';
 import type {
   ReportDayPoint,
   ReportEntry,
@@ -224,7 +225,7 @@ export function computeLast7Days(entries: ReportEntry[]): ReportDayPoint[] {
 }
 
 export function formatRupiah(value: number): string {
-  return `Rp ${new Intl.NumberFormat('id-ID').format(value)}`;
+  return formatCurrency(value);
 }
 
 // ---- Export helpers (diperlukan oleh toolbar view) ----

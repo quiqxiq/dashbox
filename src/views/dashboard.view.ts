@@ -20,6 +20,7 @@ import { debounce } from '@utils/debounce';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
 import { t } from '@i18n/translate';
+import type { TranslationKey } from '@i18n/translate';
 import type { View } from './base.view';
 
 const TONE_TEXT: Record<AccentTone, string> = {
@@ -50,12 +51,16 @@ const BADGE_TONE: Record<AccentTone, string> = {
   error: 'bg-error-container/70 text-error',
 };
 
-const FILTERS: ReadonlyArray<{ value: DashboardSearchFilter; label: string; dot?: boolean }> = [
-  { value: 'all', label: 'Semua' },
-  { value: 'ppp', label: 'PPP Secret' },
-  { value: 'hotspot', label: 'Hotspot Users' },
-  { value: 'online', label: 'Online', dot: true },
-  { value: 'offline', label: 'Offline' },
+const FILTERS: ReadonlyArray<{
+  value: DashboardSearchFilter;
+  labelKey: TranslationKey;
+  dot?: boolean;
+}> = [
+  { value: 'all', labelKey: 'dashboard.filterAll' },
+  { value: 'ppp', labelKey: 'dashboard.filterPpp' },
+  { value: 'hotspot', labelKey: 'dashboard.filterHotspot' },
+  { value: 'online', labelKey: 'dashboard.filterOnline', dot: true },
+  { value: 'offline', labelKey: 'dashboard.filterOffline' },
 ];
 
 function throughputBarClass(bar: ThroughputBar): string {
@@ -78,7 +83,7 @@ export class DashboardView implements View {
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col w-full px-3.5 pb-8 space-y-4';
+    root.className = 'view flex flex-col pb-8 space-y-4';
     root.innerHTML = `
       <div class="w-full rounded-2xl bg-surface-container/70 backdrop-blur-xl p-4 shadow-xl relative overflow-hidden ring-1 ring-outline-variant/30">
         <div class="absolute -right-12 -top-12 w-44 h-44 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
@@ -113,7 +118,7 @@ export class DashboardView implements View {
             </div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-mono font-medium bg-primary/10 px-2 py-0.5 rounded-full">
               ${icon('schedule', 'text-[13px]')}
-              <span>Uptime 48h 14j</span>
+              <span>${escapeHtml(t('dashboard.uptime', { value: '48h 14m' }))}</span>
             </div>
           </div>
         </div>
@@ -151,25 +156,25 @@ export class DashboardView implements View {
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-1.5">
             ${icon('travel_explore', 'text-primary text-[18px]')}
-            <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">Pencarian Cepat</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">${escapeHtml(t('dashboard.quickSearch'))}</h3>
           </div>
-          <span class="text-[11px] text-on-surface-variant">PPP &amp; Hotspot Aktif</span>
+          <span class="text-[11px] text-on-surface-variant">${escapeHtml(t('dashboard.searchScope'))}</span>
         </div>
 
         <div class="relative w-full">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             ${icon('search', 'text-[20px] text-primary')}
           </div>
-          <input data-dashboard-search type="text" aria-label="Cari username, IP, MAC, atau layanan"
-            placeholder="Cari username, IP, MAC, layanan..."
+          <input data-dashboard-search type="text" aria-label="${escapeHtml(t('dashboard.searchAria'))}"
+            placeholder="${escapeHtml(t('dashboard.searchPlaceholder'))}"
             class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-variant/70 text-on-surface placeholder:text-on-surface-variant/60 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary/60 focus:bg-surface-variant/90 transition-all" />
-          <button data-clear-search type="button" aria-label="Bersihkan pencarian"
+          <button data-clear-search type="button" aria-label="${escapeHtml(t('dashboard.clearSearch'))}"
             class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-on-surface">
             ${icon('cancel', 'text-[18px]')}
           </button>
         </div>
 
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1" role="group" aria-label="Filter pencarian">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1" role="group" aria-label="${escapeHtml(t('dashboard.filterAria'))}">
           ${FILTERS.map((filter) => this.filterChip(filter)).join('')}
         </div>
 
@@ -179,7 +184,7 @@ export class DashboardView implements View {
       <div class="w-full rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3.5 ring-1 ring-outline-variant/20">
         <div class="flex items-center gap-1.5 mb-3">
           ${icon('bolt', 'text-primary text-[18px]')}
-          <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">Akses Cepat</h3>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface font-headline">${escapeHtml(t('dashboard.shortcuts'))}</h3>
         </div>
         <div class="grid grid-cols-3 gap-2">
           ${DASHBOARD_SHORTCUTS.map((shortcut) => this.shortcut(shortcut)).join('')}
@@ -209,9 +214,9 @@ export class DashboardView implements View {
         <div class="flex items-center justify-between text-on-surface-variant">
           <span class="text-[11px] font-medium flex items-center gap-1">
             ${icon(metric.icon, `text-[14px] ${TONE_TEXT[metric.tone]}`)}
-            ${escapeHtml(metric.label)}
+            ${escapeHtml(t(metric.labelKey))}
           </span>
-          <span class="text-[10px] font-mono ${TONE_TEXT[metric.tone]} font-semibold">${escapeHtml(metric.status)}</span>
+          <span class="text-[10px] font-mono ${TONE_TEXT[metric.tone]} font-semibold">${escapeHtml(t(metric.statusKey))}</span>
         </div>
         <div class="mt-1.5 flex items-baseline justify-between">
           <span class="text-lg font-bold font-headline text-on-surface tracking-tight">${escapeHtml(metric.value)}</span>
@@ -234,22 +239,23 @@ export class DashboardView implements View {
     const denominator = kpi.denominator
       ? `<span class="text-xs text-on-surface-variant font-medium">${kpi.denominator === 'TB' ? ' ' : '/'}${escapeHtml(kpi.denominator)}</span>`
       : '';
+    const badge = kpi.badgeKey ? t(kpi.badgeKey, kpi.badgeParams) : (kpi.badge ?? '');
 
     return `
       <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-3 ring-1 ring-outline-variant/20 relative overflow-hidden">
         <div class="absolute -right-6 -top-6 w-20 h-20 rounded-full ${TONE_GLOW[kpi.tone]} blur-2xl"></div>
         <div class="flex items-center justify-between">
           ${icon(kpi.icon, `text-[18px] ${TONE_TEXT[kpi.tone]}`)}
-          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${badgeClass}">${escapeHtml(kpi.badge)}</span>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${badgeClass}">${escapeHtml(badge)}</span>
         </div>
         <p class="mt-2 text-xl font-bold font-headline tracking-tight text-on-surface leading-none">${escapeHtml(kpi.value)}${denominator}</p>
-        <p class="text-[10px] text-on-surface-variant mt-1">${escapeHtml(kpi.label)}</p>
+        <p class="text-[10px] text-on-surface-variant mt-1">${escapeHtml(t(kpi.labelKey))}</p>
       </div>`;
   }
 
   private filterChip(filter: {
     value: DashboardSearchFilter;
-    label: string;
+    labelKey: TranslationKey;
     dot?: boolean;
   }): string {
     const active = filter.value === this.filter;
@@ -263,7 +269,7 @@ export class DashboardView implements View {
           filter.dot ? 'flex items-center gap-1' : ''
         }" aria-pressed="${active}">
         ${filter.dot ? '<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>' : ''}
-        ${escapeHtml(filter.label)}
+        ${escapeHtml(t(filter.labelKey))}
       </button>`;
   }
 
@@ -272,7 +278,7 @@ export class DashboardView implements View {
       <button type="button" data-shortcut-view="${shortcut.view}"
         class="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-surface-container-high/50 hover:bg-surface-container-high/90 ring-1 ring-outline-variant/20 transition-colors active:scale-95">
         ${icon(shortcut.icon, `text-[20px] ${TONE_TEXT[shortcut.tone]}`)}
-        <span class="text-[10px] text-on-surface-variant font-medium">${escapeHtml(shortcut.label)}</span>
+        <span class="text-[10px] text-on-surface-variant font-medium">${escapeHtml(t(shortcut.labelKey))}</span>
       </button>`;
   }
 
@@ -362,7 +368,7 @@ export class DashboardView implements View {
       results.innerHTML = `
         <div class="p-5 rounded-xl bg-surface-container-high/40 ring-1 ring-outline-variant/20 text-center">
           ${icon('search_off', 'text-[26px] text-on-surface-variant/60')}
-          <p class="text-xs text-on-surface-variant mt-2">Tidak ada hasil untuk pencarian ini.</p>
+          <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(t('dashboard.noResults'))}</p>
         </div>`;
       return;
     }
@@ -401,13 +407,16 @@ export class DashboardView implements View {
         ? `<span class="px-1 rounded bg-surface-variant text-[10px] text-secondary">${escapeHtml(item.meta)}</span>`
         : `<span class="text-[10px] text-on-surface-variant">${escapeHtml(item.meta)}</span>`;
 
+    const footerLabel = t(item.footerLabel.key, item.footerLabel.params);
+    const statusNote = t(item.statusNote.key, item.statusNote.params);
+
     const footer = online
       ? `
         <div class="mt-2 pt-2 flex items-center justify-between text-[11px] text-on-surface-variant/80 bg-surface-container-lowest/40 rounded-lg px-2 py-1">
-          <span class="flex items-center gap-1">${icon(item.footerIcon, `text-[13px] ${TONE_TEXT[item.type === 'ppp' ? 'primary' : 'tertiary']}`)} ${escapeHtml(item.footerLabel)}</span>
+          <span class="flex items-center gap-1">${icon(item.footerIcon, `text-[13px] ${TONE_TEXT[item.type === 'ppp' ? 'primary' : 'tertiary']}`)} ${escapeHtml(footerLabel)}</span>
           <button type="button" data-detail-view="${item.detailView}" data-id="${escapeHtml(item.id)}"
             class="flex items-center gap-1 text-primary hover:underline">
-            <span>Detail</span>${icon('arrow_forward', 'text-[13px]')}
+            <span>${escapeHtml(t('common.detail'))}</span>${icon('arrow_forward', 'text-[13px]')}
           </button>
         </div>`
       : '';
@@ -417,7 +426,7 @@ export class DashboardView implements View {
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="px-1.5 py-0.5 rounded ${typeBadge} text-[9px] font-bold tracking-wide uppercase">${escapeHtml(item.typeLabel)}</span>
+              <span class="px-1.5 py-0.5 rounded ${typeBadge} text-[9px] font-bold tracking-wide uppercase">${escapeHtml(t(item.typeLabelKey))}</span>
               <span class="text-xs font-bold ${nameClass} truncate">${escapeHtml(item.name)}</span>
             </div>
             <p class="text-[11px] text-on-surface-variant mt-1 flex items-center gap-2 flex-wrap">
@@ -429,9 +438,9 @@ export class DashboardView implements View {
           <div class="flex flex-col items-end shrink-0">
             <span class="px-2 py-0.5 rounded-full ${statusPill} text-[10px] font-bold flex items-center gap-1">
               ${online ? '<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>' : ''}
-              ${escapeHtml(item.statusLabel)}
+              ${escapeHtml(t(item.statusLabelKey))}
             </span>
-            <span class="text-[10px] ${statusNoteClass} mt-1">${escapeHtml(item.statusNote)}</span>
+            <span class="text-[10px] ${statusNoteClass} mt-1">${escapeHtml(statusNote)}</span>
           </div>
         </div>
         ${footer}

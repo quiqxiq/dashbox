@@ -22,6 +22,7 @@ import { HotspotView } from '@views/hotspot.view';
 import { ReportView } from '@views/report.view';
 import { MonitorView } from '@views/monitor.view';
 import { SettingsView } from '@views/settings.view';
+import { subscribeLocale, t } from '@i18n/translate';
 import { logger } from '@utils/logger';
 
 function bootstrap(): void {
@@ -45,8 +46,9 @@ function bootstrap(): void {
   const mainSlot = document.createElement('main');
   mainSlot.id = 'main-content';
   mainSlot.tabIndex = -1;
-  mainSlot.setAttribute('aria-label', 'Konten utama');
-  mainSlot.className = 'flex-1 flex flex-col relative w-full pt-header pb-nav bg-background';
+  mainSlot.setAttribute('aria-label', t('common.mainContent'));
+  mainSlot.className =
+    'flex-1 flex flex-col relative w-full pt-header pb-nav md:pb-0 bg-background';
   appRoot.appendChild(mainSlot);
   router.bind(mainSlot);
 
@@ -71,11 +73,11 @@ function bootstrap(): void {
     new PppSuiteView(ppp, router, inspector, params.tab).mount(container),
   );
   router.register('hotspot', (container, params) =>
-    new HotspotView(params.hotspotTab).mount(container),
+    new HotspotView(params.hotspotTab, router).mount(container),
   );
   router.register('report', (container) => new ReportView().mount(container));
   router.register('monitor', (container, params) =>
-    new MonitorView(params.monitorSection).mount(container),
+    new MonitorView(params.monitorSection, router).mount(container),
   );
   router.register('settings', (container) => new SettingsView().mount(container));
 
@@ -83,7 +85,19 @@ function bootstrap(): void {
     document.title = `Dashbox · ${title}`;
   });
 
-  document.documentElement.lang = getLocale();
+  const syncShell = (): void => {
+    document.documentElement.lang = getLocale();
+    document.title = `Dashbox · ${router.currentTitle}`;
+    mainSlot.setAttribute('aria-label', t('common.mainContent'));
+    const skipLink = document.querySelector<HTMLAnchorElement>('a[href="#main-content"]');
+    if (skipLink) skipLink.textContent = t('common.skipToContent');
+  };
+
+  syncShell();
+  subscribeLocale(() => {
+    syncShell();
+    router.refresh();
+  });
 
   router.navigate('dashboard');
 }

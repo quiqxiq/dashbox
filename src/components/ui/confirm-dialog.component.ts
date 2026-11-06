@@ -1,4 +1,5 @@
 import { escapeHtml } from '@utils/format';
+import { t } from '@i18n/translate';
 import { icon } from './icon';
 
 export type ConfirmDialogTone = 'danger' | 'primary';
@@ -66,8 +67,9 @@ export class ConfirmDialogComponent {
 
     const tone = TONE[options.tone ?? 'danger'];
     const confirmLabel =
-      options.confirmLabel ?? (options.tone === 'primary' ? 'Lanjutkan' : 'Hapus');
-    const cancelLabel = options.cancelLabel ?? 'Batal';
+      options.confirmLabel ??
+      (options.tone === 'primary' ? t('common.continue') : t('common.delete'));
+    const cancelLabel = options.cancelLabel ?? t('common.cancel');
 
     this.dialog.innerHTML = `
       <div class="p-4 flex items-start gap-3">

@@ -12,6 +12,7 @@ import { HotspotToolbarComponent } from '@components/hotspot/hotspot-toolbar.com
 import { PppPaginationComponent } from '@components/ppp/ppp-pagination.component';
 import { ConfirmDialogComponent } from '@components/ui/confirm-dialog.component';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import {
   generateHotspotUsers,
   loadHotspotMockData,
@@ -23,6 +24,7 @@ import {
   saveHotspotProfile,
   saveHotspotUser,
 } from '@mock/hotspot.mock';
+import type { ViewRouter } from '@router/view-router';
 import { toast } from '@store/ui.store';
 import type {
   HotspotActiveSession,
@@ -39,19 +41,31 @@ type HotspotEntry = HotspotUser | HotspotProfile | HotspotActiveSession | Hotspo
 
 const PAGE_SIZE = 6;
 
-const LIST_LABEL: Record<HotspotTabName, string> = {
-  users: 'Hotspot Users',
-  profiles: 'User Profile',
-  active: 'Sesi Aktif',
-  hosts: 'Hosts',
-};
+function listLabel(tab: HotspotTabName): string {
+  switch (tab) {
+    case 'users':
+      return t('hotspot.listUsers');
+    case 'profiles':
+      return t('hotspot.listProfiles');
+    case 'active':
+      return t('hotspot.listActive');
+    case 'hosts':
+      return t('hotspot.listHosts');
+  }
+}
 
-const NOUN: Record<HotspotTabName, string> = {
-  users: 'user',
-  profiles: 'profile',
-  active: 'sesi aktif',
-  hosts: 'perangkat',
-};
+function nounForTab(tab: HotspotTabName): string {
+  switch (tab) {
+    case 'users':
+      return t('hotspot.nounUser');
+    case 'profiles':
+      return t('hotspot.nounProfile');
+    case 'active':
+      return t('hotspot.nounActive');
+    case 'hosts':
+      return t('hotspot.nounHost');
+  }
+}
 
 function isUser(entry: HotspotEntry): entry is HotspotUser {
   return 'password' in entry;
@@ -70,7 +84,10 @@ function isHost(entry: HotspotEntry): entry is HotspotHost {
 }
 
 export class HotspotView implements View {
-  constructor(initialTab: HotspotTabName = 'users') {
+  constructor(
+    initialTab: HotspotTabName = 'users',
+    private readonly router?: ViewRouter,
+  ) {
     this.activeTab = initialTab;
   }
   private root: HTMLElement | null = null;
@@ -102,7 +119,7 @@ export class HotspotView implements View {
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col w-full px-3 pb-8 space-y-2.5';
+    root.className = 'view flex flex-col pb-8 space-y-2.5';
     container.appendChild(root);
     this.root = root;
 
@@ -140,7 +157,7 @@ export class HotspotView implements View {
     listHeader.className =
       'flex items-center justify-between px-1 text-[10px] font-semibold tracking-wider text-on-surface-variant uppercase';
     listHeader.innerHTML = `
-      <span data-list-label>Hotspot Users</span>
+      <span data-list-label>${listLabel(this.activeTab)}</span>
       <span data-list-count class="font-mono normal-case">0 item</span>`;
     listPanel.appendChild(listHeader);
     this.listLabel = listHeader.querySelector<HTMLElement>('[data-list-label]');
@@ -215,7 +232,7 @@ export class HotspotView implements View {
     } catch (error) {
       logger.error('[hotspot] failed to load mock data', error);
       this.loading = false;
-      this.error = error instanceof Error ? error.message : 'Data Hotspot gagal dimuat';
+      this.error = error instanceof Error ? error.message : t('hotspot.loadError');
       this.render();
       return false;
     }
@@ -254,8 +271,12 @@ export class HotspotView implements View {
     this.cards?.setData(data, this.selectedIds, this.loading);
     this.pagination?.update(this.page, PAGE_SIZE, total);
 
-    if (this.listLabel) this.listLabel.textContent = LIST_LABEL[this.activeTab];
-    if (this.listCount) this.listCount.textContent = this.loading ? 'Memuat...' : `${total} item`;
+    if (this.listLabel) this.listLabel.textContent = listLabel(this.activeTab);
+    if (this.listCount) {
+      this.listCount.textContent = this.loading
+        ? t('common.loading')
+        : t('common.itemCount', { count: total });
+    }
     this.listPanel?.setAttribute('aria-busy', String(this.loading));
   }
 
@@ -276,8 +297,8 @@ export class HotspotView implements View {
       return [
         {
           key: 'profile',
-          label: 'Filter profile',
-          allLabel: 'Semua Profile',
+          label: t('hotspot.filterProfile'),
+          allLabel: t('hotspot.allProfiles'),
           value: this.profileFilter,
           options: this.profiles.map((profile) => ({
             value: profile.name,
@@ -286,8 +307,8 @@ export class HotspotView implements View {
         },
         {
           key: 'comment',
-          label: 'Filter komentar',
-          allLabel: 'Semua Komentar',
+          label: t('hotspot.filterComment'),
+          allLabel: t('hotspot.allComments'),
           value: this.commentFilter,
           options: comments.map((comment) => ({ value: comment, label: comment })),
         },
@@ -298,8 +319,8 @@ export class HotspotView implements View {
       return [
         {
           key: 'server',
-          label: 'Filter server',
-          allLabel: 'Semua Server',
+          label: t('hotspot.filterServer'),
+          allLabel: t('hotspot.allServers'),
           value: this.serverFilter,
           options: this.servers.map((server) => ({ value: server, label: server })),
         },
@@ -310,20 +331,20 @@ export class HotspotView implements View {
       return [
         {
           key: 'server',
-          label: 'Filter server',
-          allLabel: 'Semua Server',
+          label: t('hotspot.filterServer'),
+          allLabel: t('hotspot.allServers'),
           value: this.serverFilter,
           options: this.servers.map((server) => ({ value: server, label: server })),
         },
         {
           key: 'host-status',
-          label: 'Filter status',
-          allLabel: 'Semua Status',
+          label: t('hotspot.filterStatus'),
+          allLabel: t('hotspot.allStatuses'),
           value: this.hostStatusFilter,
           options: [
-            { value: 'authorized', label: 'Authorized' },
-            { value: 'bypassed', label: 'Bypassed' },
-            { value: 'waiting', label: 'Menunggu' },
+            { value: 'authorized', label: t('hotspot.hostAuthorized') },
+            { value: 'bypassed', label: t('hotspot.hostBypassed') },
+            { value: 'waiting', label: t('hotspot.hostWaiting') },
           ],
         },
       ];
@@ -426,6 +447,7 @@ export class HotspotView implements View {
     if (tab === this.activeTab) return;
 
     this.activeTab = tab;
+    this.router?.setParams({ hotspotTab: tab });
     this.page = 1;
     this.search = '';
     this.profileFilter = '';
@@ -498,7 +520,7 @@ export class HotspotView implements View {
 
   private async refresh(): Promise<void> {
     const loaded = await this.load();
-    if (loaded) toast('Data Hotspot diperbarui', 'success');
+    if (loaded) toast(t('hotspot.toastRefreshed'), 'success');
   }
 
   private async submitDialog(
@@ -508,7 +530,9 @@ export class HotspotView implements View {
       const user = await saveHotspotUser(data.values, data.id);
       await this.load();
       toast(
-        data.id ? `User '${user.name}' diperbarui` : `User '${user.name}' ditambahkan`,
+        data.id
+          ? t('hotspot.toastUpdatedUser', { name: user.name })
+          : t('hotspot.toastAddedUser', { name: user.name }),
         'success',
       );
       return;
@@ -518,7 +542,9 @@ export class HotspotView implements View {
       const profile = await saveHotspotProfile(data.values, data.id);
       await this.load();
       toast(
-        data.id ? `Profile '${profile.name}' diperbarui` : `Profile '${profile.name}' ditambahkan`,
+        data.id
+          ? t('hotspot.toastUpdatedProfile', { name: profile.name })
+          : t('hotspot.toastAddedProfile', { name: profile.name }),
         'success',
       );
       return;
@@ -526,6 +552,7 @@ export class HotspotView implements View {
 
     const users = await generateHotspotUsers(data.values);
     this.activeTab = 'users';
+    this.router?.setParams({ hotspotTab: 'users' });
     this.page = 1;
     this.search = '';
     this.profileFilter = '';
@@ -535,19 +562,27 @@ export class HotspotView implements View {
     this.selectedIds.clear();
     this.toolbar?.setSearch('');
     await this.load();
-    toast(`${users.length} voucher berhasil dibuat`, 'success');
+    toast(t('hotspot.toastVouchers', { count: users.length }), 'success');
   }
 
   private async removeRecords(ids: string[]): Promise<void> {
     if (!ids.length) return;
 
-    const noun = NOUN[this.activeTab];
+    const noun = nounForTab(this.activeTab);
     const isSession = this.activeTab === 'active';
-    const action = isSession ? 'diputuskan' : 'dihapus';
+    const action = isSession ? t('hotspot.actionTerminate') : t('hotspot.actionRemove');
     const confirmed = await ConfirmDialogComponent.ask({
-      title: isSession ? 'Putuskan sesi?' : `Hapus ${noun}?`,
-      message: `${ids.length} ${noun} yang dipilih akan ${action} dari data mock.`,
-      confirmLabel: isSession ? 'Putuskan' : 'Hapus',
+      title: isSession
+        ? t('hotspot.confirmTerminateTitle')
+        : t('hotspot.confirmDeleteTitle', { noun }),
+      message: t('hotspot.confirmRemoveMessage', {
+        count: ids.length,
+        noun,
+        action,
+      }),
+      confirmLabel: isSession
+        ? t('hotspot.confirmTerminateLabel')
+        : t('hotspot.confirmRemoveLabel'),
       tone: 'danger',
     });
     if (!confirmed) return;
@@ -562,10 +597,10 @@ export class HotspotView implements View {
 
       this.selectedIds.clear();
       await this.load();
-      toast(`${ids.length} ${noun} berhasil ${action}`, 'success');
+      toast(t('hotspot.toastRemoved', { count: ids.length, noun, action }), 'success');
     } catch (error) {
       logger.error('[hotspot] remove failed', error);
-      toast(error instanceof Error ? error.message : `Gagal menghapus ${noun}`, 'error');
+      toast(error instanceof Error ? error.message : t('hotspot.errorRemove', { noun }), 'error');
       await this.load();
     }
   }
@@ -574,9 +609,9 @@ export class HotspotView implements View {
     if (!ids.length) return;
 
     const confirmed = await ConfirmDialogComponent.ask({
-      title: 'Reset counter user?',
-      message: `Byte In dan Byte Out dari ${ids.length} user yang dipilih akan direset di data mock.`,
-      confirmLabel: 'Reset counter',
+      title: t('hotspot.confirmResetTitle'),
+      message: t('hotspot.confirmResetMessage', { count: ids.length }),
+      confirmLabel: t('hotspot.resetCounter'),
       tone: 'primary',
     });
     if (!confirmed) return;
@@ -585,10 +620,10 @@ export class HotspotView implements View {
       for (const id of ids) await resetHotspotUserCounters(id);
       this.selectedIds.clear();
       await this.load();
-      toast(`Counter ${ids.length} user direset`, 'success');
+      toast(t('hotspot.toastReset', { count: ids.length }), 'success');
     } catch (error) {
       logger.error('[hotspot] reset user counters failed', error);
-      toast(error instanceof Error ? error.message : 'Counter user gagal direset', 'error');
+      toast(error instanceof Error ? error.message : t('hotspot.errorReset'), 'error');
     }
   }
 }

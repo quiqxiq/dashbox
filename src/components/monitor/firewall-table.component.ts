@@ -1,5 +1,6 @@
 import { ConfirmDialogComponent } from '@components/ui/confirm-dialog.component';
 import { icon } from '@components/ui/icon';
+import { formatNumber, t } from '@i18n/translate';
 import { toast } from '@store/ui.store';
 import type {
   FirewallAction,
@@ -7,7 +8,7 @@ import type {
   FirewallRuleEntry,
   FirewallTab,
 } from '@types';
-import { escapeHtml, formatBytes, formatNumber } from '@utils/format';
+import { escapeHtml, formatBytes } from '@utils/format';
 
 export interface FirewallTableCallbacks {
   onTabChange: (tab: FirewallTab) => void;
@@ -54,34 +55,34 @@ export class FirewallTableComponent {
         <div class="flex items-center gap-1 p-1 rounded-xl bg-surface-container/60 backdrop-blur-md ring-1 ring-outline-variant/20 overflow-x-auto no-scrollbar" role="tablist">
           <button type="button" data-fw-tab="filter"
             class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary/15 text-primary shadow-[0_0_12px_rgba(125,211,252,0.18)] transition-colors shrink-0">
-            Filter Rules
+            ${escapeHtml(t('monitor.firewallSection.filterRules'))}
           </button>
           <button type="button" data-fw-tab="nat"
             class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors shrink-0">
-            NAT
+            ${escapeHtml(t('monitor.firewallSection.nat'))}
           </button>
           <button type="button" data-fw-tab="mangle"
             class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors shrink-0">
-            Mangle
+            ${escapeHtml(t('monitor.firewallSection.mangle'))}
           </button>
           <button type="button" data-fw-tab="connections"
             class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors shrink-0">
-            Active Connections
+            ${escapeHtml(t('monitor.firewallSection.activeConnections'))}
           </button>
         </div>
 
         <div class="flex items-center gap-2">
           <!-- Chain Filter -->
           <div data-chain-container class="flex items-center">
-            <select data-chain-select aria-label="Filter chain firewall"
+            <select data-chain-select aria-label="${escapeHtml(t('monitor.firewallSection.chainAria'))}"
               class="h-8 px-2.5 rounded-lg bg-surface-container-high/70 text-xs text-on-surface border border-outline-variant/20 focus:outline-none focus:border-primary/50">
-              <option value="all">Semua Chain</option>
-              <option value="input">Chain: input</option>
-              <option value="forward">Chain: forward</option>
-              <option value="output">Chain: output</option>
-              <option value="srcnat">Chain: srcnat</option>
-              <option value="dstnat">Chain: dstnat</option>
-              <option value="prerouting">Chain: prerouting</option>
+              <option value="all">${escapeHtml(t('monitor.firewallSection.allChains'))}</option>
+              <option value="input">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'input' }))}</option>
+              <option value="forward">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'forward' }))}</option>
+              <option value="output">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'output' }))}</option>
+              <option value="srcnat">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'srcnat' }))}</option>
+              <option value="dstnat">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'dstnat' }))}</option>
+              <option value="prerouting">${escapeHtml(t('monitor.firewallSection.chainPrefix', { chain: 'prerouting' }))}</option>
             </select>
           </div>
 
@@ -90,12 +91,12 @@ export class FirewallTableComponent {
             <span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-on-surface-variant/60">
               ${icon('search', 'text-[14px]')}
             </span>
-            <input type="search" data-fw-search placeholder="Cari rule..."
+            <input type="search" data-fw-search placeholder="${escapeHtml(t('monitor.firewallSection.search'))}"
               class="w-full h-8 pl-8 pr-2.5 bg-surface-container-high/60 rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none" />
           </div>
 
           <!-- Refresh -->
-          <button type="button" data-fw-refresh title="Muat ulang"
+          <button type="button" data-fw-refresh title="${escapeHtml(t('monitor.firewallSection.refresh'))}" aria-label="${escapeHtml(t('monitor.firewallSection.refresh'))}"
             class="toolbar-btn inline-flex items-center justify-center size-8 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
             ${icon('refresh', 'text-[16px]')}
           </button>
@@ -108,14 +109,14 @@ export class FirewallTableComponent {
           <table class="w-full text-left text-xs">
             <thead data-fw-thead class="bg-surface-container-high/50 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
               <tr>
-                <th class="py-2.5 px-3 w-12 text-center">Status</th>
-                <th class="py-2.5 px-3">Action</th>
-                <th class="py-2.5 px-3">Chain</th>
-                <th class="py-2.5 px-3">Src / Dst Address</th>
-                <th class="py-2.5 px-3">Protocol / Port</th>
-                <th class="py-2.5 px-3">Komentar / Match</th>
-                <th class="py-2.5 px-3 text-right">Packets / Bytes</th>
-                <th class="py-2.5 px-3 text-center w-16">Aksi</th>
+                <th class="py-2.5 px-3 w-12 text-center">${escapeHtml(t('monitor.firewallSection.colStatus'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.firewallSection.colAction'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.firewallSection.colChain'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.firewallSection.colAddresses'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.firewallSection.colProtocol'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.firewallSection.colComment'))}</th>
+                <th class="py-2.5 px-3 text-right">${escapeHtml(t('monitor.firewallSection.colTraffic'))}</th>
+                <th class="py-2.5 px-3 text-center w-16">${escapeHtml(t('monitor.firewallSection.colActions'))}</th>
               </tr>
             </thead>
             <tbody data-fw-tbody class="divide-y divide-outline-variant/10 font-mono text-[11px]">
@@ -211,7 +212,7 @@ export class FirewallTableComponent {
         tbody.innerHTML = `
           <tr>
             <td colspan="8" class="py-8 text-center text-on-surface-variant font-sans text-xs">
-              Tidak ada aturan firewall yang sesuai.
+              ${escapeHtml(t('monitor.firewallSection.emptyRules'))}
             </td>
           </tr>`;
       } else {
@@ -226,7 +227,7 @@ export class FirewallTableComponent {
             return `
               <tr class="hover:bg-surface-container-high/40 transition-colors ${opacity}">
                 <td class="py-2 px-3 text-center">
-                  <button type="button" data-action="toggle-rule" data-id="${r.id}" title="${r.enabled ? 'Disable rule' : 'Enable rule'}"
+                  <button type="button" data-action="toggle-rule" data-id="${r.id}" title="${r.enabled ? escapeHtml(t('monitor.firewallSection.toggleDisable')) : escapeHtml(t('monitor.firewallSection.toggleEnable'))}"
                     class="p-1 rounded hover:bg-surface-container-highest transition-colors">
                     ${icon(r.enabled ? 'check_circle' : 'block', r.enabled ? 'text-primary text-[15px]' : 'text-outline text-[15px]')}
                   </button>
@@ -264,7 +265,7 @@ export class FirewallTableComponent {
                   </div>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <button type="button" data-action="delete-rule" data-id="${r.id}" title="Hapus rule"
+                  <button type="button" data-action="delete-rule" data-id="${r.id}" title="${escapeHtml(t('monitor.firewallSection.deleteTitle'))}" aria-label="${escapeHtml(t('monitor.firewallSection.deleteTitle'))}"
                     class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors">
                     ${icon('delete', 'text-[15px]')}
                   </button>
@@ -280,7 +281,7 @@ export class FirewallTableComponent {
       if (list.length === 0) {
         cards.innerHTML = `
           <div class="p-6 text-center rounded-xl bg-surface-container/60 text-xs text-on-surface-variant">
-            Tidak ada rule firewall.
+            ${escapeHtml(t('monitor.firewallSection.emptyRulesShort'))}
           </div>`;
       } else {
         cards.innerHTML = list
@@ -346,67 +347,83 @@ export class FirewallTableComponent {
     const cards = this.el.querySelector<HTMLElement>('[data-fw-cards]');
 
     if (tbody) {
-      tbody.innerHTML = list
-        .map(
-          (c) => `
-          <tr class="hover:bg-surface-container-high/40 transition-colors">
-            <td class="py-2 px-3 text-center">
-              <span class="size-2 rounded-full bg-emerald-400 inline-block"></span>
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-8 text-center text-on-surface-variant font-sans text-xs">
+              ${escapeHtml(t('monitor.firewallSection.emptyConnections'))}
             </td>
-            <td class="py-2 px-3 whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded text-[10px] uppercase font-sans font-bold bg-primary/10 text-primary border border-primary/20">
-                ${c.protocol.toUpperCase()}
-              </span>
-            </td>
-            <td class="py-2 px-3 whitespace-nowrap text-on-surface-variant font-mono">
-              ${c.tcpState ?? 'active'}
-            </td>
-            <td class="py-2 px-3 whitespace-nowrap font-mono text-on-surface">
-              ${c.srcAddress} → ${c.dstAddress}
-            </td>
-            <td class="py-2 px-3 whitespace-nowrap font-mono text-on-surface-variant/80">
-              ${c.replySrcAddress} → ${c.replyDstAddress}
-            </td>
-            <td class="py-2 px-3 text-on-surface-variant text-[10px]">
-              timeout: ${c.timeout}
-            </td>
-            <td class="py-2 px-3 text-right whitespace-nowrap text-[10px]">
-              <span class="text-primary">${formatBytes(c.origBytes)}</span>
-              <span class="text-outline-variant mx-1">/</span>
-              <span class="text-secondary">${formatBytes(c.respBytes)}</span>
-            </td>
-            <td class="py-2 px-3 text-center text-outline">
-              -
-            </td>
-          </tr>`,
-        )
-        .join('');
+          </tr>`;
+      } else {
+        tbody.innerHTML = list
+          .map(
+            (c) => `
+            <tr class="hover:bg-surface-container-high/40 transition-colors">
+              <td class="py-2 px-3 text-center">
+                <span class="size-2 rounded-full bg-emerald-400 inline-block"></span>
+              </td>
+              <td class="py-2 px-3 whitespace-nowrap">
+                <span class="px-2 py-0.5 rounded text-[10px] uppercase font-sans font-bold bg-primary/10 text-primary border border-primary/20">
+                  ${c.protocol.toUpperCase()}
+                </span>
+              </td>
+              <td class="py-2 px-3 whitespace-nowrap text-on-surface-variant font-mono">
+                ${c.tcpState ?? t('monitor.firewallSection.activeState')}
+              </td>
+              <td class="py-2 px-3 whitespace-nowrap font-mono text-on-surface">
+                ${c.srcAddress} → ${c.dstAddress}
+              </td>
+              <td class="py-2 px-3 whitespace-nowrap font-mono text-on-surface-variant/80">
+                ${c.replySrcAddress} → ${c.replyDstAddress}
+              </td>
+              <td class="py-2 px-3 text-on-surface-variant text-[10px]">
+                timeout: ${c.timeout}
+              </td>
+              <td class="py-2 px-3 text-right whitespace-nowrap text-[10px]">
+                <span class="text-primary">${formatBytes(c.origBytes)}</span>
+                <span class="text-outline-variant mx-1">/</span>
+                <span class="text-secondary">${formatBytes(c.respBytes)}</span>
+              </td>
+              <td class="py-2 px-3 text-center text-outline">
+                -
+              </td>
+            </tr>`,
+          )
+          .join('');
+      }
     }
 
     if (cards) {
-      cards.innerHTML = list
-        .map(
-          (c) => `
-          <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col gap-1.5 font-mono text-xs">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-primary/15 text-primary border border-primary/20">
-                ${c.protocol.toUpperCase()} · ${c.tcpState ?? 'active'}
-              </span>
-              <span class="text-[10px] text-on-surface-variant">Timeout: ${c.timeout}</span>
-            </div>
-            <div class="text-[11px] text-on-surface font-semibold pt-1">
-              ${c.srcAddress} → ${c.dstAddress}
-            </div>
-            <div class="text-[10px] text-on-surface-variant/80">
-              Reply: ${c.replySrcAddress} → ${c.replyDstAddress}
-            </div>
-            <div class="flex justify-between text-[10px] text-primary pt-1 border-t border-outline-variant/15">
-              <span>Orig: ${formatBytes(c.origBytes)}</span>
-              <span class="text-secondary">Resp: ${formatBytes(c.respBytes)}</span>
-            </div>
-          </div>`,
-        )
-        .join('');
+      if (list.length === 0) {
+        cards.innerHTML = `
+          <div class="p-6 text-center rounded-xl bg-surface-container/60 text-xs text-on-surface-variant">
+            ${escapeHtml(t('monitor.firewallSection.emptyConnections'))}
+          </div>`;
+      } else {
+        cards.innerHTML = list
+          .map(
+            (c) => `
+            <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col gap-1.5 font-mono text-xs">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-primary/15 text-primary border border-primary/20">
+                  ${c.protocol.toUpperCase()} · ${c.tcpState ?? t('monitor.firewallSection.activeState')}
+                </span>
+                <span class="text-[10px] text-on-surface-variant">Timeout: ${c.timeout}</span>
+              </div>
+              <div class="text-[11px] text-on-surface font-semibold pt-1">
+                ${c.srcAddress} → ${c.dstAddress}
+              </div>
+              <div class="text-[10px] text-on-surface-variant/80">
+                Reply: ${c.replySrcAddress} → ${c.replyDstAddress}
+              </div>
+              <div class="flex justify-between text-[10px] text-primary pt-1 border-t border-outline-variant/15">
+                <span>Orig: ${formatBytes(c.origBytes)}</span>
+                <span class="text-secondary">Resp: ${formatBytes(c.respBytes)}</span>
+              </div>
+            </div>`,
+          )
+          .join('');
+      }
     }
   }
 
@@ -427,14 +444,14 @@ export class FirewallTableComponent {
         const id = btn.dataset.id;
         if (!id) return;
         const confirmed = await ConfirmDialogComponent.ask({
-          title: 'Hapus Rule Firewall',
-          message: 'Apakah Anda yakin ingin menghapus aturan firewall ini?',
-          confirmLabel: 'Hapus',
+          title: t('monitor.firewallSection.deleteTitle'),
+          message: t('monitor.firewallSection.deleteMessage'),
+          confirmLabel: t('common.delete'),
           tone: 'danger',
         });
         if (confirmed) {
           this.callbacks.onDeleteRule(id);
-          toast('Rule firewall berhasil dihapus', 'success');
+          toast(t('monitor.firewallSection.deleteToast'), 'success');
         }
       };
     });

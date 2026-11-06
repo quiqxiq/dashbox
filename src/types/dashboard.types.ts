@@ -1,26 +1,34 @@
 import type { IconName } from './icon.types';
+import type { TranslationKey } from '@i18n/translate';
 
 export type AccentTone = 'primary' | 'secondary' | 'tertiary' | 'error';
 export type DashboardSearchFilter = 'all' | 'ppp' | 'hotspot' | 'online' | 'offline';
 export type DashboardSearchStatus = 'online' | 'offline' | 'expired';
 
+export interface DashboardLocalizedText {
+  key: TranslationKey;
+  params?: Record<string, string | number>;
+}
+
 export interface TelemetryMetric {
   key: 'cpu' | 'ram' | 'temp' | 'fan';
   icon: IconName;
-  label: string;
+  labelKey: TranslationKey;
   value: string;
   meta: string;
   percent: number;
   tone: AccentTone;
-  status: string;
+  statusKey: TranslationKey;
 }
 
 export interface DashboardKpi {
   icon: IconName;
-  label: string;
+  labelKey: TranslationKey;
   value: string;
   denominator?: string;
-  badge: string;
+  badge?: string;
+  badgeKey?: TranslationKey;
+  badgeParams?: Record<string, string | number>;
   tone: AccentTone;
   badgeTone: 'accent' | 'muted' | 'error';
 }
@@ -33,21 +41,21 @@ export interface ThroughputBar {
 export interface DashboardSearchItem {
   id: string;
   type: 'ppp' | 'hotspot';
-  typeLabel: string;
+  typeLabelKey: TranslationKey;
   name: string;
   ip: string;
   meta: string;
   status: DashboardSearchStatus;
-  statusLabel: string;
-  statusNote: string;
+  statusLabelKey: TranslationKey;
+  statusNote: DashboardLocalizedText;
   footerIcon: IconName;
-  footerLabel: string;
+  footerLabel: DashboardLocalizedText;
   detailView: 'ppp' | 'hotspot';
   searchText: string;
 }
 
 export interface DashboardShortcut {
-  label: string;
+  labelKey: TranslationKey;
   icon: IconName;
   view: 'ppp' | 'hotspot' | 'report' | 'monitor' | 'settings';
   tone: AccentTone;

@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 
 export interface PppToolbarCallbacks {
   onAdd: () => void;
@@ -24,40 +25,40 @@ export class PppToolbarComponent {
       'ppp-toolbar flex items-center justify-between gap-1 p-1 rounded-xl bg-surface-container/80 backdrop-blur-xl ring-1 ring-outline-variant/20';
     el.innerHTML = `
       <div class="flex items-center gap-0.5">
-        <button type="button" data-btn="add" title="Tambah Secret" aria-label="Tambah Secret" class="toolbar-btn tb-add">
+        <button type="button" data-btn="add" title="${escapeAttr(t('ppp.toolbarAdd'))}" aria-label="${escapeAttr(t('ppp.toolbarAdd'))}" class="toolbar-btn tb-add">
           ${icon('add', 'text-[16px]')}
         </button>
-        <button type="button" data-btn="remove" class="toolbar-btn tb-remove" disabled title="Hapus" aria-label="Hapus">
+        <button type="button" data-btn="remove" class="toolbar-btn tb-remove" disabled title="${escapeAttr(t('ppp.toolbarRemove'))}" aria-label="${escapeAttr(t('ppp.toolbarRemove'))}">
           ${icon('remove', 'text-[16px]')}
         </button>
-        <button type="button" data-btn="enable" class="toolbar-btn tb-enable" disabled title="Aktifkan" aria-label="Aktifkan">
+        <button type="button" data-btn="enable" class="toolbar-btn tb-enable" disabled title="${escapeAttr(t('ppp.toolbarEnable'))}" aria-label="${escapeAttr(t('ppp.toolbarEnable'))}">
           ${icon('check', 'text-[16px]')}
         </button>
-        <button type="button" data-btn="disable" class="toolbar-btn tb-disable" disabled title="Nonaktifkan" aria-label="Nonaktifkan">
+        <button type="button" data-btn="disable" class="toolbar-btn tb-disable" disabled title="${escapeAttr(t('ppp.toolbarDisable'))}" aria-label="${escapeAttr(t('ppp.toolbarDisable'))}">
           ${icon('close', 'text-[16px]')}
         </button>
-        <button type="button" data-btn="comment" class="toolbar-btn tb-comment" disabled title="Komentar" aria-label="Komentar">
+        <button type="button" data-btn="comment" class="toolbar-btn tb-comment" disabled title="${escapeAttr(t('ppp.toolbarComment'))}" aria-label="${escapeAttr(t('ppp.toolbarComment'))}">
           ${icon('chat_bubble', 'text-[15px]')}
         </button>
-        <button type="button" data-btn="reset" class="toolbar-btn tb-reset" disabled title="Reset Counter" aria-label="Reset Counter">
+        <button type="button" data-btn="reset" class="toolbar-btn tb-reset" disabled title="${escapeAttr(t('ppp.toolbarReset'))}" aria-label="${escapeAttr(t('ppp.toolbarReset'))}">
           ${icon('restart_alt', 'text-[16px]')}
         </button>
       </div>
       <div class="flex items-center gap-0.5">
         <div data-ppp-search-control class="flex items-center">
-          <input id="ppp-toolbar-search" data-ppp-search type="text" aria-label="Filter secrets"
-            aria-hidden="true" tabindex="-1" placeholder="Cari secret..."
+          <input id="ppp-toolbar-search" data-ppp-search type="text" aria-label="${escapeAttr(t('ppp.toolbarSearch'))}"
+            aria-hidden="true" tabindex="-1" placeholder="${escapeAttr(t('ppp.searchPlaceholder'))}"
             class="toolbar-search-input h-7 bg-surface-container-high/70 rounded-lg text-[11px] text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none transition-all" />
           <button type="button" data-btn="search" aria-expanded="false" aria-controls="ppp-toolbar-search"
-            title="Cari Secret" aria-label="Cari Secret" class="toolbar-btn tb-search">
+            title="${escapeAttr(t('ppp.toolbarSearch'))}" aria-label="${escapeAttr(t('ppp.toolbarSearch'))}" class="toolbar-btn tb-search">
             ${icon('search', 'text-[16px]')}
           </button>
-          <button type="button" data-clear-filter aria-label="Bersihkan filter" title="Bersihkan filter"
+          <button type="button" data-clear-filter aria-label="${escapeAttr(t('ppp.toolbarClear'))}" title="${escapeAttr(t('ppp.toolbarClear'))}"
             class="hidden toolbar-btn tb-clear-filter">
             ${icon('cancel', 'text-[14px]')}
           </button>
         </div>
-        <button type="button" data-btn="refresh" title="Muat Ulang" aria-label="Muat Ulang" class="toolbar-btn tb-refresh">
+        <button type="button" data-btn="refresh" title="${escapeAttr(t('ppp.toolbarRefresh'))}" aria-label="${escapeAttr(t('ppp.toolbarRefresh'))}" class="toolbar-btn tb-refresh">
           <span data-refresh-icon class="inline-flex">${icon('refresh', 'text-[16px]')}</span>
         </button>
       </div>`;
@@ -153,4 +154,8 @@ export class PppToolbarComponent {
     searchInput.tabIndex = open ? 0 : -1;
     searchButton.setAttribute('aria-expanded', String(open));
   }
+}
+
+function escapeAttr(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

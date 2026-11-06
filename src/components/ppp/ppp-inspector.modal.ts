@@ -3,6 +3,8 @@ import { toast } from '@store/ui.store';
 import { escapeHtml } from '@utils/format';
 import { logger } from '@utils/logger';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
+import type { TranslationKey } from '@i18n/translate';
 import { PPP_STATUS_CONFIG } from './ppp-row.template';
 
 export type InspectorTab = 'general' | 'limits' | 'status';
@@ -35,10 +37,10 @@ const PROFILES: readonly string[] = [
   'default',
 ];
 
-const TABS: ReadonlyArray<{ tab: InspectorTab; label: string }> = [
-  { tab: 'general', label: 'Umum' },
-  { tab: 'limits', label: 'Batas' },
-  { tab: 'status', label: 'Status' },
+const TABS: ReadonlyArray<{ tab: InspectorTab; labelKey: TranslationKey }> = [
+  { tab: 'general', labelKey: 'ppp.inspector.tabGeneral' },
+  { tab: 'limits', labelKey: 'ppp.inspector.tabLimits' },
+  { tab: 'status', labelKey: 'ppp.inspector.tabStatus' },
 ];
 
 function defaultValues(): PppSecretFormValues {
@@ -204,7 +206,11 @@ export class PppInspectorModal {
     const values = secret ? valuesFromSecret(secret) : defaultValues();
     const statusPill = secret
       ? `<span data-modal-status class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase shrink-0 ${PPP_STATUS_CONFIG[secret.status].pillClass}">${secret.status}</span>`
-      : '<span data-modal-status class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase shrink-0 bg-surface-variant text-on-surface-variant">draf</span>';
+      : `<span data-modal-status class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase shrink-0 bg-surface-variant text-on-surface-variant">${escapeHtml(t('status.draft'))}</span>`;
+
+    const titleText = t('ppp.inspector.title', {
+      name: secret?.name || t('ppp.inspector.newSecret'),
+    });
 
     this.dialog.innerHTML = `
       <div class="px-4 py-3 bg-surface-container/90 flex items-center justify-between shrink-0">
@@ -212,23 +218,23 @@ export class PppInspectorModal {
           ${icon('badge', 'text-primary text-[20px]')}
           <div class="flex items-center gap-1.5 min-w-0">
             <span id="inspector-title" data-modal-title class="text-xs font-semibold text-on-surface font-headline truncate">
-              PPP Secret &lt;${escapeHtml(secret?.name || 'baru')}&gt;
+              ${escapeHtml(titleText)}
             </span>
             ${statusPill}
           </div>
         </div>
-        <button type="button" data-close aria-label="Tutup"
+        <button type="button" data-close aria-label="${escapeAttr(t('common.close'))}"
           class="w-7 h-7 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/30 flex items-center justify-center shrink-0">
           ${icon('close', 'text-[16px]')}
         </button>
       </div>
 
-      <div class="px-4 pt-2 pb-1 bg-surface-container/50 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0" role="tablist" aria-label="Bagian inspector">
+      <div class="px-4 pt-2 pb-1 bg-surface-container/50 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0" role="tablist" aria-label="${escapeAttr(t('ppp.inspector.sectionsAria'))}">
         ${TABS.map(
           (tab) => `
             <button type="button" data-tab="${tab.tab}" role="tab" aria-selected="false"
               class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface shrink-0">
-              ${tab.label}
+              ${escapeHtml(t(tab.labelKey))}
             </button>`,
         ).join('')}
       </div>
@@ -236,17 +242,17 @@ export class PppInspectorModal {
       <div class="p-4 overflow-y-auto flex-1 flex flex-col gap-3 text-xs">
         <div data-panel="general" class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
-            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-name">Nama</label>
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-name">${escapeHtml(t('ppp.inspector.name'))}</label>
             <input id="inspector-name" data-field="name" type="text" value="${escapeHtml(values.name)}"
               class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60 transition-all" />
           </div>
           <div class="flex flex-col gap-1">
-            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-password">Kata Sandi</label>
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-password">${escapeHtml(t('ppp.inspector.password'))}</label>
             <div class="relative w-full">
               <input id="inspector-password" data-field="password" type="password" value=""
-                placeholder="${secret ? 'Tidak diubah' : '••••••••'}"
+                placeholder="${secret ? escapeAttr(t('ppp.inspector.passwordUnchanged')) : '••••••••'}"
                 class="w-full h-9 pl-3 pr-10 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60 transition-all" />
-              <button type="button" data-toggle-password aria-label="Tampilkan kata sandi"
+              <button type="button" data-toggle-password aria-label="${escapeAttr(t('ppp.inspector.showPassword'))}"
                 class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant hover:text-primary">
                 <span data-password-icon class="inline-flex">${icon('visibility', 'text-[18px]')}</span>
               </button>
@@ -254,7 +260,7 @@ export class PppInspectorModal {
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-service">Service</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-service">${escapeHtml(t('ppp.inspector.service'))}</label>
               <select id="inspector-service" data-field="service"
                 class="h-9 px-2 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none cursor-pointer">
                 ${SERVICE_TYPES.map(
@@ -264,7 +270,7 @@ export class PppInspectorModal {
               </select>
             </div>
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-profile">Profil</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-profile">${escapeHtml(t('ppp.inspector.profile'))}</label>
               <select id="inspector-profile" data-field="profile"
                 class="h-9 px-2 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none cursor-pointer">
                 ${this.profileOptions(values.profile)}
@@ -273,23 +279,23 @@ export class PppInspectorModal {
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-local">Alamat Lokal</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-local">${escapeHtml(t('ppp.inspector.localAddress'))}</label>
               <input id="inspector-local" data-field="localAddress" type="text" value="${escapeHtml(values.localAddress)}"
                 class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60" />
             </div>
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-remote">Alamat Remote</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-remote">${escapeHtml(t('ppp.inspector.remoteAddress'))}</label>
               <input id="inspector-remote" data-field="remoteAddress" type="text" value="${escapeHtml(values.remoteAddress)}"
                 class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60" />
             </div>
           </div>
           <div class="flex flex-col gap-1">
-            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-caller">Caller ID (Kunci MAC)</label>
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-caller">${escapeHtml(t('ppp.inspector.callerId'))}</label>
             <input id="inspector-caller" data-field="callerId" type="text" value="${escapeHtml(values.callerId)}"
               class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60" />
           </div>
           <div class="flex flex-col gap-1">
-            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-comment">Komentar</label>
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-comment">${escapeHtml(t('ppp.inspector.comment'))}</label>
             <input id="inspector-comment" data-field="comment" type="text" value="${escapeHtml(values.comment)}"
               class="h-9 px-3 bg-surface-container rounded-lg text-on-surface text-xs focus:outline-none focus:ring-1 focus:ring-primary/60" />
           </div>
@@ -297,30 +303,30 @@ export class PppInspectorModal {
 
         <div data-panel="limits" class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
-            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-rate">Batas Kecepatan (Rx/Tx)</label>
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-rate">${escapeHtml(t('ppp.inspector.rateLimit'))}</label>
             <input id="inspector-rate" data-field="rateLimit" type="text" value="${escapeHtml(values.rateLimit)}"
               class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none focus:ring-1 focus:ring-primary/60" />
-            <span class="text-[10px] text-on-surface-variant">Format: [rx]/[tx] [burst-rx]/[burst-tx]</span>
+            <span class="text-[10px] text-on-surface-variant">${escapeHtml(t('ppp.inspector.rateLimitHint'))}</span>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-session">Timeout Sesi</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-session">${escapeHtml(t('ppp.inspector.sessionTimeout'))}</label>
               <input id="inspector-session" data-field="sessionTimeout" type="text" value="${escapeHtml(values.sessionTimeout)}"
                 class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none" />
             </div>
             <div class="flex flex-col gap-1">
-              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-idle">Timeout Idle</label>
+              <label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant" for="inspector-idle">${escapeHtml(t('ppp.inspector.idleTimeout'))}</label>
               <input id="inspector-idle" data-field="idleTimeout" type="text" value="${escapeHtml(values.idleTimeout)}"
                 class="h-9 px-3 bg-surface-container rounded-lg text-on-surface font-mono text-xs focus:outline-none" />
             </div>
           </div>
           <div class="p-3 rounded-xl bg-surface-container/60 flex items-center justify-between ring-1 ring-outline-variant/20">
             <div class="flex flex-col">
-              <span class="text-xs font-semibold text-on-surface">Satu Sesi Saja</span>
-              <span class="text-[10px] text-on-surface-variant">Hanya satu login aktif secara bersamaan</span>
+              <span class="text-xs font-semibold text-on-surface">${escapeHtml(t('ppp.inspector.onlyOneSession'))}</span>
+              <span class="text-[10px] text-on-surface-variant">${escapeHtml(t('ppp.inspector.onlyOneSessionHint'))}</span>
             </div>
             <button type="button" data-session-toggle role="switch" aria-checked="${this.onlyOneSession}"
-              aria-label="Satu Sesi Saja"
+              aria-label="${escapeAttr(t('ppp.inspector.onlyOneSession'))}"
               class="w-10 h-6 rounded-full p-1 flex items-center cursor-pointer transition-colors ${
                 this.onlyOneSession
                   ? 'bg-primary/30 justify-end'
@@ -336,31 +342,31 @@ export class PppInspectorModal {
         <div data-panel="status" class="flex flex-col gap-3">
           <div class="grid grid-cols-2 gap-2">
             <div class="p-2.5 rounded-xl bg-surface-container/80 flex flex-col ring-1 ring-outline-variant/20">
-              <span class="text-[10px] text-on-surface-variant uppercase font-medium">Uptime</span>
+              <span class="text-[10px] text-on-surface-variant uppercase font-medium">${escapeHtml(t('ppp.inspector.uptime'))}</span>
               <span class="text-xs font-mono font-bold text-primary mt-1">${escapeHtml(secret?.uptime ?? '—')}</span>
             </div>
             <div class="p-2.5 rounded-xl bg-surface-container/80 flex flex-col ring-1 ring-outline-variant/20">
-              <span class="text-[10px] text-on-surface-variant uppercase font-medium">IP Sesi</span>
+              <span class="text-[10px] text-on-surface-variant uppercase font-medium">${escapeHtml(t('ppp.inspector.sessionIp'))}</span>
               <span class="text-xs font-mono font-bold text-on-surface mt-1">${escapeHtml(secret?.remoteAddress ?? '—')}</span>
             </div>
           </div>
           <div class="p-3 rounded-xl bg-surface-container/80 flex flex-col gap-2 ring-1 ring-outline-variant/20">
-            <span class="text-[10px] text-on-surface-variant uppercase font-medium">Trafik Terakumulasi</span>
+            <span class="text-[10px] text-on-surface-variant uppercase font-medium">${escapeHtml(t('ppp.inspector.trafficTotal'))}</span>
             <div class="flex items-center justify-between font-mono text-xs">
-              <span class="text-on-surface-variant">Bytes Masuk:</span>
+              <span class="text-on-surface-variant">${escapeHtml(t('ppp.inspector.bytesIn'))}</span>
               <span class="font-bold text-tertiary">${escapeHtml(secret?.bytesIn ?? '—')}</span>
             </div>
             <div class="flex items-center justify-between font-mono text-xs">
-              <span class="text-on-surface-variant">Bytes Keluar:</span>
+              <span class="text-on-surface-variant">${escapeHtml(t('ppp.inspector.bytesOut'))}</span>
               <span class="font-bold text-primary">${escapeHtml(secret?.bytesOut ?? '—')}</span>
             </div>
           </div>
           <div class="p-3 rounded-xl bg-surface-container/80 flex flex-col gap-1.5 font-mono text-[11px] ring-1 ring-outline-variant/20">
             <div class="flex items-center justify-between text-on-surface-variant">
-              <span>Encoding / MTU:</span><span class="text-on-surface">${escapeHtml(secret?.encoding ?? '—')}</span>
+              <span>${escapeHtml(t('ppp.inspector.encodingMtu'))}</span><span class="text-on-surface">${escapeHtml(secret?.encoding ?? '—')}</span>
             </div>
             <div class="flex items-center justify-between text-on-surface-variant">
-              <span>Disconnect Terakhir:</span><span class="text-on-surface">${escapeHtml(secret?.lastDisconnect ?? '—')}</span>
+              <span>${escapeHtml(t('ppp.inspector.lastDisconnect'))}</span><span class="text-on-surface">${escapeHtml(secret?.lastDisconnect ?? '—')}</span>
             </div>
           </div>
         </div>
@@ -371,15 +377,15 @@ export class PppInspectorModal {
       <div class="px-4 py-3 bg-surface-container/90 flex items-center justify-end gap-2 shrink-0">
         <button type="button" data-cancel
           class="px-3.5 py-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-semibold text-xs active:scale-95 transition-all">
-          Batal
+          ${escapeHtml(t('ppp.inspector.cancel'))}
         </button>
         <button type="button" data-apply
           class="px-3.5 py-1.5 rounded-lg bg-surface-container-highest text-secondary hover:text-on-surface font-semibold text-xs active:scale-95 transition-all">
-          Terapkan
+          ${escapeHtml(t('ppp.inspector.apply'))}
         </button>
         <button type="button" data-ok
           class="px-5 py-1.5 rounded-lg bg-primary text-on-primary font-bold text-xs shadow-lg shadow-primary/20 active:scale-95 transition-all">
-          OK
+          ${escapeHtml(t('ppp.inspector.ok'))}
         </button>
       </div>`;
 
@@ -461,7 +467,7 @@ export class PppInspectorModal {
 
     button?.setAttribute(
       'aria-label',
-      this.passwordVisible ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi',
+      this.passwordVisible ? t('ppp.inspector.hidePassword') : t('ppp.inspector.showPassword'),
     );
   }
 
@@ -508,7 +514,7 @@ export class PppInspectorModal {
 
     const values = this.readValues();
     if (!values.name) {
-      this.setError('Nama secret wajib diisi.');
+      this.setError(t('ppp.inspector.errorNameRequired'));
       this.dialog?.querySelector<HTMLElement>('[data-field="name"]')?.focus();
       return;
     }
@@ -532,7 +538,11 @@ export class PppInspectorModal {
         this.updateHeader();
       }
 
-      toast(previousMode === 'create' ? 'Secret berhasil dibuat' : 'Perubahan disimpan');
+      toast(
+        previousMode === 'create'
+          ? t('ppp.inspector.toastCreated')
+          : t('ppp.inspector.toastUpdated'),
+      );
       this.setBusy(false);
 
       if (action === 'ok') {
@@ -541,7 +551,7 @@ export class PppInspectorModal {
       }
     } catch (error) {
       logger.error('[inspector] gagal menyimpan secret', error);
-      const message = error instanceof Error ? error.message : 'Gagal menyimpan secret';
+      const message = error instanceof Error ? error.message : t('ppp.inspector.errorSave');
       this.setError(message);
       toast(message, 'error');
     } finally {
@@ -554,7 +564,9 @@ export class PppInspectorModal {
 
     const secret = this.activeSecret;
     const title = this.dialog.querySelector<HTMLElement>('[data-modal-title]');
-    if (title) title.innerHTML = `PPP Secret &lt;${escapeHtml(secret.name)}&gt;`;
+    if (title) {
+      title.textContent = t('ppp.inspector.title', { name: secret.name });
+    }
 
     const status = this.dialog.querySelector<HTMLElement>('[data-modal-status]');
     if (!status) return;
@@ -629,4 +641,8 @@ export class PppInspectorModal {
       )
       .join('');
   }
+}
+
+function escapeAttr(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

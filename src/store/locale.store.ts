@@ -2,6 +2,7 @@ import type { Locale } from '@types';
 import { createStore } from './create-store';
 
 const STORAGE_KEY = 'dashbox.locale';
+const DEFAULT_LOCALE: Locale = 'id';
 
 function detectInitial(): Locale {
   try {
@@ -10,8 +11,7 @@ function detectInitial(): Locale {
   } catch {
     // storage unavailable — fall back to default
   }
-  const nav = typeof navigator !== 'undefined' ? navigator.language.toLowerCase() : 'id';
-  return nav.startsWith('en') ? 'en' : 'id';
+  return DEFAULT_LOCALE;
 }
 
 interface LocaleState {

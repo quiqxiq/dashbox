@@ -1,4 +1,6 @@
 import { icon } from '@components/ui/icon';
+import { formatCurrency, t } from '@i18n/translate';
+import type { TranslationKey } from '@i18n/translate';
 import type {
   HotspotActiveSession,
   HotspotHost,
@@ -10,23 +12,36 @@ import type {
 } from '@types';
 import { escapeHtml } from '@utils/format';
 
-const EMPTY_LABEL: Record<HotspotTabName, string> = {
-  users: 'Tidak ada user yang cocok dengan filter.',
-  profiles: 'Tidak ada profile yang cocok dengan filter.',
-  active: 'Tidak ada sesi aktif yang cocok dengan filter.',
-  hosts: 'Tidak ada perangkat yang cocok dengan filter.',
-};
+function emptyLabel(tab: HotspotTabName): string {
+  switch (tab) {
+    case 'users':
+      return t('hotspot.emptyUsers');
+    case 'profiles':
+      return t('hotspot.emptyProfiles');
+    case 'active':
+      return t('hotspot.emptyActive');
+    case 'hosts':
+      return t('hotspot.emptyHosts');
+  }
+}
 
-const EXPIRY_LABEL: Record<HotspotProfile['expiryMode'], string> = {
-  none: 'Tanpa expiry',
-  remove: 'Hapus saat kedaluwarsa',
-  notice: 'Tandai kedaluwarsa',
-  'remove-record': 'Hapus & catat',
-  'notice-record': 'Tandai & catat',
-};
+function expiryLabel(mode: HotspotProfile['expiryMode']): string {
+  switch (mode) {
+    case 'none':
+      return t('hotspot.expiryNone');
+    case 'remove':
+      return t('hotspot.expiryRemove');
+    case 'notice':
+      return t('hotspot.expiryNotice');
+    case 'remove-record':
+      return t('hotspot.expiryRemoveRecord');
+    case 'notice-record':
+      return t('hotspot.expiryNoticeRecord');
+  }
+}
 
 interface HostStatusConfig {
-  label: string;
+  labelKey: TranslationKey;
   flagIcon: IconName;
   flagClass: string;
   pillClass: string;
@@ -34,19 +49,19 @@ interface HostStatusConfig {
 
 const HOST_STATUS: Record<HotspotHost['status'], HostStatusConfig> = {
   authorized: {
-    label: 'Authorized',
+    labelKey: 'hotspot.hostAuthorized',
     flagIcon: 'verified',
     flagClass: 'bg-primary/15 text-primary',
     pillClass: 'bg-primary/15 text-primary',
   },
   bypassed: {
-    label: 'Bypassed',
+    labelKey: 'hotspot.hostBypassed',
     flagIcon: 'bolt',
     flagClass: 'bg-tertiary/15 text-tertiary',
     pillClass: 'bg-tertiary/15 text-tertiary',
   },
   waiting: {
-    label: 'Menunggu',
+    labelKey: 'hotspot.hostWaiting',
     flagIcon: 'schedule',
     flagClass: 'bg-surface-container-highest text-on-surface-variant',
     pillClass: 'bg-surface-container-highest text-on-surface-variant',
@@ -74,21 +89,21 @@ function statusPill(label: string, className: string): string {
 
 function userFlag(user: HotspotUser): string {
   return user.disabled
-    ? flagMarkup('block', 'bg-error/15 text-error', 'Nonaktif')
-    : flagMarkup('check_circle', 'bg-primary/15 text-primary', 'Aktif');
+    ? flagMarkup('block', 'bg-error/15 text-error', t('hotspot.flagInactive'))
+    : flagMarkup('check_circle', 'bg-primary/15 text-primary', t('hotspot.flagActive'));
 }
 
 function profileFlag(): string {
-  return flagMarkup('badge', 'bg-primary/15 text-primary', 'User Profile');
+  return flagMarkup('badge', 'bg-primary/15 text-primary', t('hotspot.flagProfile'));
 }
 
 function activeFlag(): string {
-  return flagMarkup('play_circle', 'bg-primary/15 text-primary', 'Sesi aktif');
+  return flagMarkup('play_circle', 'bg-primary/15 text-primary', t('hotspot.flagActiveSession'));
 }
 
 function hostFlag(status: HotspotHost['status']): string {
   const config = HOST_STATUS[status];
-  return flagMarkup(config.flagIcon, config.flagClass, config.label);
+  return flagMarkup(config.flagIcon, config.flagClass, t(config.labelKey));
 }
 
 function rowClasses(selected: boolean, disabled = false): string {
@@ -133,19 +148,13 @@ function commentMarkup(comment: string): string {
 }
 
 function currency(value: number): string {
-  return value
-    ? new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-      }).format(value)
-    : '—';
+  return value ? formatCurrency(value) : '—';
 }
 
 function lockLabel(profile: HotspotProfile): string {
   const locks: string[] = [];
-  if (profile.lockUser) locks.push('MAC');
-  if (profile.lockServer) locks.push('Server');
+  if (profile.lockUser) locks.push(t('hotspot.lockMac'));
+  if (profile.lockServer) locks.push(t('hotspot.lockServer'));
   return locks.length ? locks.join(' / ') : '—';
 }
 
@@ -165,7 +174,7 @@ function cardShell(
 }
 
 export function hotspotTableHead(tab: HotspotTabName): string {
-  const statusHeader = `<th class="text-left px-2.5 py-2 w-9" aria-label="Status">${icon(
+  const statusHeader = `<th class="text-left px-2.5 py-2 w-9" aria-label="${escapeHtml(t('hotspot.colStatus'))}">${icon(
     'flag',
     'text-[12px]',
   )}</th>`;
@@ -173,40 +182,40 @@ export function hotspotTableHead(tab: HotspotTabName): string {
   switch (tab) {
     case 'users':
       return `<tr>${statusHeader}
-        <th class="text-left px-2.5 py-2">Username / MAC</th>
-        <th class="text-left px-2.5 py-2">Profile</th>
-        <th class="text-left px-2.5 py-2">Server</th>
-        <th class="text-left px-2.5 py-2">Uptime</th>
-        <th class="text-left px-2.5 py-2">Traffic</th>
-        <th class="text-left px-2.5 py-2 hidden lg:table-cell">Komentar</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colUserMac'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colProfile'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colServer'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colUptime'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colTraffic'))}</th>
+        <th class="text-left px-2.5 py-2 hidden lg:table-cell">${escapeHtml(t('hotspot.colComment'))}</th>
       </tr>`;
     case 'profiles':
       return `<tr>${statusHeader}
-        <th class="text-left px-2.5 py-2">Nama Profile</th>
-        <th class="text-left px-2.5 py-2">Rate Limit</th>
-        <th class="text-left px-2.5 py-2">Shared</th>
-        <th class="text-left px-2.5 py-2">Validity / Expiry</th>
-        <th class="text-left px-2.5 py-2">Harga Jual / Modal</th>
-        <th class="text-left px-2.5 py-2 hidden lg:table-cell">Lock</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colProfileName'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colRateLimit'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colShared'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colValidity'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colPrice'))}</th>
+        <th class="text-left px-2.5 py-2 hidden lg:table-cell">${escapeHtml(t('hotspot.colLock'))}</th>
       </tr>`;
     case 'active':
       return `<tr>${statusHeader}
-        <th class="text-left px-2.5 py-2">Username / MAC</th>
-        <th class="text-left px-2.5 py-2">Address</th>
-        <th class="text-left px-2.5 py-2">Server</th>
-        <th class="text-left px-2.5 py-2">Uptime</th>
-        <th class="text-left px-2.5 py-2">Traffic</th>
-        <th class="text-left px-2.5 py-2">Time Left</th>
-        <th class="text-left px-2.5 py-2 hidden lg:table-cell">Login / Komentar</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colUserMac'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colAddress'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colServer'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colUptime'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colTraffic'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colTimeLeft'))}</th>
+        <th class="text-left px-2.5 py-2 hidden lg:table-cell">${escapeHtml(t('hotspot.colLoginComment'))}</th>
       </tr>`;
     case 'hosts':
       return `<tr>${statusHeader}
-        <th class="text-left px-2.5 py-2">MAC Address</th>
-        <th class="text-left px-2.5 py-2">Address</th>
-        <th class="text-left px-2.5 py-2">To Address</th>
-        <th class="text-left px-2.5 py-2">Server</th>
-        <th class="text-left px-2.5 py-2">Status</th>
-        <th class="text-left px-2.5 py-2 hidden lg:table-cell">Komentar</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colMacAddress'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colAddress'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colToAddress'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colServer'))}</th>
+        <th class="text-left px-2.5 py-2">${escapeHtml(t('hotspot.colStatus'))}</th>
+        <th class="text-left px-2.5 py-2 hidden lg:table-cell">${escapeHtml(t('hotspot.colComment'))}</th>
       </tr>`;
   }
 }
@@ -233,17 +242,17 @@ export function hotspotProfileRow(profile: HotspotProfile, selected: boolean): s
       <td class="px-2.5 py-2 align-middle">${profileFlag()}</td>
       <td class="px-2.5 py-2 align-middle">
         <div class="cell-name text-[12px] font-semibold text-on-surface truncate max-w-[220px]">${escapeHtml(profile.name)}</div>
-        <div class="text-[10px] text-on-surface-variant truncate max-w-[220px]">${profile.sharedUsers} shared user</div>
+        <div class="text-[10px] text-on-surface-variant truncate max-w-[220px]">${escapeHtml(t('hotspot.sharedUser', { count: profile.sharedUsers }))}</div>
       </td>
       <td class="px-2.5 py-2 align-middle"><span class="text-[11px] font-mono font-medium text-primary">${escapeHtml(profile.rateLimit || 'unlimited')}</span></td>
       <td class="px-2.5 py-2 align-middle"><span class="text-[11px] font-mono">${profile.sharedUsers}</span></td>
       <td class="px-2.5 py-2 align-middle">
         <div class="text-[11px] text-on-surface">${escapeHtml(profile.validity || '—')}</div>
-        <div class="text-[10px] text-on-surface-variant truncate max-w-[180px]">${escapeHtml(EXPIRY_LABEL[profile.expiryMode])}</div>
+        <div class="text-[10px] text-on-surface-variant truncate max-w-[180px]">${escapeHtml(expiryLabel(profile.expiryMode))}</div>
       </td>
       <td class="px-2.5 py-2 align-middle">
         <div class="text-[11px] font-mono text-on-surface">${currency(profile.sellingPrice)}</div>
-        <div class="text-[10px] text-on-surface-variant">Modal ${currency(profile.price)}</div>
+        <div class="text-[10px] text-on-surface-variant">${escapeHtml(t('hotspot.cost', { value: currency(profile.price) }))}</div>
       </td>
       <td class="px-2.5 py-2 align-middle hidden lg:table-cell"><span class="text-[11px] text-on-surface-variant">${escapeHtml(lockLabel(profile))}</span></td>
     </tr>`;
@@ -279,7 +288,7 @@ export function hotspotHostRow(host: HotspotHost, selected: boolean): string {
       <td class="px-2.5 py-2 align-middle"><span class="text-[11px] font-mono font-medium text-primary">${escapeHtml(host.address)}</span></td>
       <td class="px-2.5 py-2 align-middle"><span class="text-[11px] font-mono text-on-surface-variant">${escapeHtml(host.toAddress)}</span></td>
       <td class="px-2.5 py-2 align-middle"><span class="text-[11px] text-on-surface-variant">${escapeHtml(host.server)}</span></td>
-      <td class="px-2.5 py-2 align-middle">${statusPill(config.label, config.pillClass)}</td>
+      <td class="px-2.5 py-2 align-middle">${statusPill(t(config.labelKey), config.pillClass)}</td>
       <td class="px-2.5 py-2 align-middle hidden lg:table-cell">${commentMarkup(host.comment)}</td>
     </tr>`;
 }
@@ -289,7 +298,7 @@ export function hotspotUserCard(user: HotspotUser, selected: boolean): string {
     user.id,
     selected,
     user.disabled,
-    `Buka detail ${user.name}`,
+    t('hotspot.openDetail', { name: user.name }),
     `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
@@ -329,14 +338,14 @@ export function hotspotProfileCard(profile: HotspotProfile, selected: boolean): 
     profile.id,
     selected,
     false,
-    `Buka detail ${profile.name}`,
+    t('hotspot.openDetail', { name: profile.name }),
     `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
           ${profileFlag()}
           <div class="flex flex-col min-w-0">
             <span class="text-xs font-semibold text-on-surface tracking-tight truncate">${escapeHtml(profile.name)}</span>
-            <span class="text-[10px] text-on-surface-variant truncate">${profile.sharedUsers} shared user</span>
+            <span class="text-[10px] text-on-surface-variant truncate">${escapeHtml(t('hotspot.sharedUser', { count: profile.sharedUsers }))}</span>
           </div>
         </div>
         <span class="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-primary/10 text-primary">${escapeHtml(profile.rateLimit || 'unlimited')}</span>
@@ -344,11 +353,11 @@ export function hotspotProfileCard(profile: HotspotProfile, selected: boolean): 
       <div class="flex items-center justify-between gap-2 pt-1 text-[10px] text-on-surface-variant">
         <div class="flex min-w-0 items-center gap-1.5">
           ${icon('schedule', 'text-[13px] text-outline')}
-          <span class="truncate">${escapeHtml(profile.validity || 'Tanpa validity')}</span>
+          <span class="truncate">${escapeHtml(profile.validity || t('hotspot.noValidity'))}</span>
         </div>
         <div class="flex shrink-0 items-center gap-1 font-mono text-primary">${currency(profile.sellingPrice)}</div>
       </div>
-      <div class="text-[10px] text-on-surface-variant truncate">${escapeHtml(EXPIRY_LABEL[profile.expiryMode])} · ${escapeHtml(lockLabel(profile))}</div>
+      <div class="text-[10px] text-on-surface-variant truncate">${escapeHtml(expiryLabel(profile.expiryMode))} · ${escapeHtml(lockLabel(profile))}</div>
     `,
   );
 }
@@ -360,7 +369,7 @@ export function hotspotActiveCard(session: HotspotActiveSession, selected: boole
     session.id,
     selected,
     false,
-    `Buka detail ${session.name}`,
+    t('hotspot.openDetail', { name: session.name }),
     `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
@@ -398,7 +407,7 @@ export function hotspotHostCard(host: HotspotHost, selected: boolean): string {
     host.id,
     selected,
     false,
-    `Buka detail ${host.macAddress}`,
+    t('hotspot.openDetail', { name: host.macAddress }),
     `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
@@ -412,7 +421,7 @@ export function hotspotHostCard(host: HotspotHost, selected: boolean): string {
             </span>
           </div>
         </div>
-        ${statusPill(config.label, config.pillClass)}
+        ${statusPill(t(config.labelKey), config.pillClass)}
       </div>
       <div class="flex items-center justify-between gap-2 pt-1 text-[10px] text-on-surface-variant">
         <div class="flex min-w-0 items-center gap-1.5">
@@ -433,7 +442,7 @@ function hotspotEmptyRow(tab: HotspotTabName, columns: number): string {
     <tr>
       <td colspan="${columns}" class="px-3 py-8 text-center text-on-surface-variant text-xs">
         ${icon('search_off', 'text-[22px] block mx-auto text-on-surface-variant/60')}
-        <span class="mt-2 inline-block">${escapeHtml(EMPTY_LABEL[tab])}</span>
+        <span class="mt-2 inline-block">${escapeHtml(emptyLabel(tab))}</span>
       </td>
     </tr>`;
 }
@@ -443,7 +452,7 @@ function hotspotLoadingRow(columns: number): string {
     <tr>
       <td colspan="${columns}" class="px-3 py-8 text-center text-on-surface-variant text-xs">
         <span class="inline-flex animate-spin text-primary">${icon('refresh', 'text-[22px]')}</span>
-        <span class="mt-2 inline-block">Memuat data Hotspot...</span>
+        <span class="mt-2 inline-block">${escapeHtml(t('hotspot.loading'))}</span>
       </td>
     </tr>`;
 }
@@ -452,7 +461,7 @@ function hotspotEmptyCard(tab: HotspotTabName): string {
   return `
     <div class="p-6 rounded-xl bg-surface-container/40 ring-1 ring-outline-variant/20 text-center">
       ${icon('search_off', 'text-[26px] text-on-surface-variant/60')}
-      <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(EMPTY_LABEL[tab])}</p>
+      <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(emptyLabel(tab))}</p>
     </div>`;
 }
 
@@ -460,7 +469,7 @@ function hotspotLoadingCard(): string {
   return `
     <div class="p-6 rounded-xl bg-surface-container/40 ring-1 ring-outline-variant/20 text-center">
       <span class="inline-flex animate-spin text-primary">${icon('refresh', 'text-[24px]')}</span>
-      <p class="text-xs text-on-surface-variant mt-2">Memuat data Hotspot...</p>
+      <p class="text-xs text-on-surface-variant mt-2">${escapeHtml(t('hotspot.loading'))}</p>
     </div>`;
 }
 

@@ -1,4 +1,6 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
+import { escapeHtml } from '@utils/format';
 
 export class PppPaginationComponent {
   private el: HTMLElement | null = null;
@@ -13,12 +15,12 @@ export class PppPaginationComponent {
     el.innerHTML = `
       <span data-info class="text-[10px] font-mono text-on-surface-variant">—</span>
       <div class="flex items-center gap-1">
-        <button type="button" data-prev aria-label="Halaman sebelumnya"
+        <button type="button" data-prev aria-label="${escapeHtml(t('ppp.paginationPrev'))}"
           class="w-8 h-8 rounded-lg bg-surface-container/70 ring-1 ring-outline-variant/20 text-on-surface-variant flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 disabled:pointer-events-none">
           ${icon('chevron_left', 'text-[18px]')}
         </button>
         <div data-numbers class="flex items-center gap-1"></div>
-        <button type="button" data-next aria-label="Halaman berikutnya"
+        <button type="button" data-next aria-label="${escapeHtml(t('ppp.paginationNext'))}"
           class="w-8 h-8 rounded-lg bg-surface-container/70 ring-1 ring-outline-variant/20 text-on-surface-variant flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 disabled:pointer-events-none">
           ${icon('chevron_right', 'text-[18px]')}
         </button>
@@ -53,13 +55,14 @@ export class PppPaginationComponent {
 
     const info = this.el.querySelector<HTMLElement>('[data-info]');
     if (info) {
+      const ofLabel = t('common.of');
       info.textContent =
         total === 0
-          ? '0 dari 0'
+          ? `0 ${ofLabel} 0`
           : `${(this.current - 1) * pageSize + 1}–${Math.min(
               this.current * pageSize,
               total,
-            )} dari ${total}`;
+            )} ${ofLabel} ${total}`;
     }
 
     const prev = this.el.querySelector<HTMLButtonElement>('[data-prev]');

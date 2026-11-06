@@ -1,5 +1,6 @@
 import { ConfirmDialogComponent } from '@components/ui/confirm-dialog.component';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import { toast } from '@store/ui.store';
 import type { SimpleQueueEntry } from '@types';
 import { escapeHtml, formatBitsPerSec, formatBytes } from '@utils/format';
@@ -22,7 +23,7 @@ function getUsageTone(percent: number): {
       color: 'text-error',
       barClass: 'bg-error shadow-[0_0_8px_rgba(255,107,107,0.5)]',
       bgGlow: 'bg-error/15 text-error border-error/30',
-      label: 'Saturated',
+      label: t('monitor.queuesSection.usageSaturated'),
     };
   }
   if (percent >= 50) {
@@ -30,14 +31,14 @@ function getUsageTone(percent: number): {
       color: 'text-amber-400',
       barClass: 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.4)]',
       bgGlow: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-      label: 'Heavy',
+      label: t('monitor.queuesSection.usageHeavy'),
     };
   }
   return {
     color: 'text-emerald-400',
     barClass: 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.3)]',
     bgGlow: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    label: 'Normal',
+    label: t('monitor.queuesSection.usageNormal'),
   };
 }
 
@@ -58,7 +59,7 @@ export class QueueTableComponent {
             <span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-on-surface-variant/60">
               ${icon('search', 'text-[15px]')}
             </span>
-            <input type="search" data-queue-search placeholder="Cari nama antrean, target IP..."
+            <input type="search" data-queue-search placeholder="${escapeHtml(t('monitor.queuesSection.search'))}"
               class="w-full h-8 pl-8 pr-3 bg-surface-container-high/60 rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none transition-all" />
           </div>
         </div>
@@ -67,9 +68,9 @@ export class QueueTableComponent {
           <button type="button" data-queue-add
             class="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg bg-primary text-on-primary text-xs font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all">
             ${icon('add', 'text-[15px]')}
-            <span class="hidden sm:inline">Tambah Queue</span>
+            <span class="hidden sm:inline">${escapeHtml(t('monitor.queuesSection.add'))}</span>
           </button>
-          <button type="button" data-queue-refresh title="Muat ulang status"
+          <button type="button" data-queue-refresh title="${escapeHtml(t('monitor.queuesSection.refresh'))}" aria-label="${escapeHtml(t('monitor.queuesSection.refresh'))}"
             class="toolbar-btn inline-flex items-center justify-center size-8 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
             ${icon('refresh', 'text-[16px]')}
           </button>
@@ -82,13 +83,13 @@ export class QueueTableComponent {
           <table class="w-full text-left text-xs">
             <thead class="bg-surface-container-high/50 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
               <tr>
-                <th class="py-2.5 px-3 w-10 text-center">Status</th>
-                <th class="py-2.5 px-3">Nama Queue</th>
-                <th class="py-2.5 px-3">Target IP</th>
-                <th class="py-2.5 px-3">Upload (Rate / Limit)</th>
-                <th class="py-2.5 px-3">Download (Rate / Limit)</th>
-                <th class="py-2.5 px-3">Total Volume</th>
-                <th class="py-2.5 px-3 text-center w-20">Aksi</th>
+                <th class="py-2.5 px-3 w-10 text-center">${escapeHtml(t('monitor.queuesSection.colStatus'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.queuesSection.colQueueName'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.queuesSection.colTarget'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.queuesSection.colUpload'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.queuesSection.colDownload'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.queuesSection.colVolume'))}</th>
+                <th class="py-2.5 px-3 text-center w-20">${escapeHtml(t('monitor.queuesSection.colActions'))}</th>
               </tr>
             </thead>
             <tbody data-queue-tbody class="divide-y divide-outline-variant/10 font-mono text-[11px]">
@@ -114,7 +115,7 @@ export class QueueTableComponent {
     });
 
     el.querySelector<HTMLButtonElement>('[data-queue-add]')?.addEventListener('click', () => {
-      toast('Formulir tambah Simple Queue siap dikonfigurasi', 'info');
+      toast(t('monitor.queuesSection.addToast'), 'info');
     });
 
     return this;
@@ -141,7 +142,7 @@ export class QueueTableComponent {
         tbody.innerHTML = `
           <tr>
             <td colspan="7" class="py-8 text-center text-on-surface-variant font-sans text-xs">
-              Tidak ada antrean bandwidth yang sesuai.
+              ${escapeHtml(t('monitor.queuesSection.empty'))}
             </td>
           </tr>`;
       } else {
@@ -166,7 +167,7 @@ export class QueueTableComponent {
             return `
               <tr class="hover:bg-surface-container-high/40 transition-colors ${opacity}">
                 <td class="py-2.5 px-3 text-center">
-                  <button type="button" data-action="toggle-queue" data-id="${q.id}" title="${q.enabled ? 'Disable' : 'Enable'}"
+                  <button type="button" data-action="toggle-queue" data-id="${q.id}" title="${q.enabled ? escapeHtml(t('monitor.queuesSection.toggleDisable')) : escapeHtml(t('monitor.queuesSection.toggleEnable'))}"
                     class="p-1 rounded hover:bg-surface-container-highest transition-colors">
                     ${icon(q.enabled ? 'check_circle' : 'block', q.enabled ? 'text-primary text-[15px]' : 'text-outline text-[15px]')}
                   </button>
@@ -217,11 +218,11 @@ export class QueueTableComponent {
                 </td>
                 <td class="py-2.5 px-3 text-center whitespace-nowrap">
                   <div class="flex items-center justify-center gap-1">
-                    <button type="button" data-action="reset-queue" data-id="${q.id}" title="Reset byte counter"
+                    <button type="button" data-action="reset-queue" data-id="${q.id}" title="${escapeHtml(t('monitor.queuesSection.resetCounter'))}" aria-label="${escapeHtml(t('monitor.queuesSection.resetCounter'))}"
                       class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors">
                       ${icon('restart_alt', 'text-[15px]')}
                     </button>
-                    <button type="button" data-action="delete-queue" data-id="${q.id}" title="Hapus queue"
+                    <button type="button" data-action="delete-queue" data-id="${q.id}" title="${escapeHtml(t('monitor.queuesSection.delete'))}" aria-label="${escapeHtml(t('monitor.queuesSection.delete'))}"
                       class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors">
                       ${icon('delete', 'text-[15px]')}
                     </button>
@@ -238,7 +239,7 @@ export class QueueTableComponent {
       if (filtered.length === 0) {
         cards.innerHTML = `
           <div class="p-6 text-center rounded-xl bg-surface-container/60 text-xs text-on-surface-variant">
-            Tidak ada queue yang sesuai.
+            ${escapeHtml(t('monitor.queuesSection.emptyShort'))}
           </div>`;
       } else {
         cards.innerHTML = filtered
@@ -262,7 +263,7 @@ export class QueueTableComponent {
               <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col gap-2 ${opacity}">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-1.5 min-w-0">
-                    <button type="button" data-action="toggle-queue" data-id="${q.id}">
+                    <button type="button" data-action="toggle-queue" data-id="${q.id}" aria-label="${q.enabled ? escapeHtml(t('monitor.queuesSection.toggleDisable')) : escapeHtml(t('monitor.queuesSection.toggleEnable'))}">
                       ${icon(q.enabled ? 'check_circle' : 'block', q.enabled ? 'text-primary text-[16px]' : 'text-outline text-[16px]')}
                     </button>
                     <span class="font-semibold text-xs text-on-surface truncate">${escapeHtml(q.name)}</span>
@@ -272,15 +273,15 @@ export class QueueTableComponent {
                   </span>
                 </div>
                 <div class="flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
-                  <span>Target: ${q.target}</span>
-                  <span>Total: ${formatBytes(q.totalBytes)}</span>
+                  <span>${escapeHtml(t('monitor.queuesSection.target'))}: ${q.target}</span>
+                  <span>${escapeHtml(t('monitor.queuesSection.total'))}: ${formatBytes(q.totalBytes)}</span>
                 </div>
                 <!-- Dual Rates -->
                 <div class="flex flex-col gap-2 pt-1 border-t border-outline-variant/15 font-mono text-[11px]">
                   <div>
                     <div class="flex justify-between text-[10px] mb-0.5">
-                      <span class="${upTone.color} font-bold">Up: ${formatBitsPerSec(q.currentRateUploadBps)}</span>
-                      <span class="text-on-surface-variant">Max: ${q.maxLimitUpload} (${upPercent}%)</span>
+                      <span class="${upTone.color} font-bold">${escapeHtml(t('monitor.queuesSection.up'))}: ${formatBitsPerSec(q.currentRateUploadBps)}</span>
+                      <span class="text-on-surface-variant">${escapeHtml(t('monitor.queuesSection.max'))}: ${q.maxLimitUpload} (${upPercent}%)</span>
                     </div>
                     <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
                       <div class="h-full rounded-full ${upTone.barClass}" style="width: ${upPercent}%"></div>
@@ -288,8 +289,8 @@ export class QueueTableComponent {
                   </div>
                   <div>
                     <div class="flex justify-between text-[10px] mb-0.5">
-                      <span class="${downTone.color} font-bold">Down: ${formatBitsPerSec(q.currentRateDownloadBps)}</span>
-                      <span class="text-on-surface-variant">Max: ${q.maxLimitDownload} (${downPercent}%)</span>
+                      <span class="${downTone.color} font-bold">${escapeHtml(t('monitor.queuesSection.down'))}: ${formatBitsPerSec(q.currentRateDownloadBps)}</span>
+                      <span class="text-on-surface-variant">${escapeHtml(t('monitor.queuesSection.max'))}: ${q.maxLimitDownload} (${downPercent}%)</span>
                     </div>
                     <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
                       <div class="h-full rounded-full ${downTone.barClass}" style="width: ${downPercent}%"></div>
@@ -299,10 +300,10 @@ export class QueueTableComponent {
                 <!-- Actions -->
                 <div class="flex justify-end gap-2 pt-1">
                   <button type="button" data-action="reset-queue" data-id="${q.id}" class="text-[10px] text-primary flex items-center gap-1 px-2 py-1 rounded bg-primary/10">
-                    ${icon('restart_alt', 'text-[12px]')} Reset Counter
+                    ${icon('restart_alt', 'text-[12px]')} ${escapeHtml(t('monitor.queuesSection.resetCounter'))}
                   </button>
                   <button type="button" data-action="delete-queue" data-id="${q.id}" class="text-[10px] text-error flex items-center gap-1 px-2 py-1 rounded bg-error/10">
-                    ${icon('delete', 'text-[12px]')} Hapus
+                    ${icon('delete', 'text-[12px]')} ${escapeHtml(t('monitor.queuesSection.delete'))}
                   </button>
                 </div>
               </div>`;
@@ -329,7 +330,7 @@ export class QueueTableComponent {
         const id = btn.dataset.id;
         if (id) {
           this.callbacks.onResetBytes(id);
-          toast('Counter byte queue berhasil direset', 'info');
+          toast(t('monitor.queuesSection.resetToast'), 'info');
         }
       };
     });
@@ -339,14 +340,14 @@ export class QueueTableComponent {
         const id = btn.dataset.id;
         if (!id) return;
         const confirmed = await ConfirmDialogComponent.ask({
-          title: 'Hapus Simple Queue',
-          message: 'Apakah Anda yakin ingin menghapus antrean bandwidth ini?',
-          confirmLabel: 'Hapus',
+          title: t('monitor.queuesSection.deleteTitle'),
+          message: t('monitor.queuesSection.deleteMessage'),
+          confirmLabel: t('common.delete'),
           tone: 'danger',
         });
         if (confirmed) {
           this.callbacks.onDeleteQueue(id);
-          toast('Queue berhasil dihapus', 'success');
+          toast(t('monitor.queuesSection.deleteToast'), 'success');
         }
       };
     });

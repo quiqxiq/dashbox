@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import type { IconName } from '@types';
 import { escapeHtml } from '@utils/format';
 
@@ -32,7 +33,7 @@ export class BottomNavSheet {
     if (this.root) return this;
     const root = document.createElement('div');
     root.className =
-      'fixed inset-0 z-[70] hidden items-end justify-center bg-background/60 backdrop-blur-sm';
+      'fixed inset-0 z-[70] hidden md:!hidden items-end justify-center bg-background/60 backdrop-blur-sm';
     root.setAttribute('aria-hidden', 'true');
     root.innerHTML = `
       <div data-sheet
@@ -45,7 +46,7 @@ export class BottomNavSheet {
             <span data-sheet-icon class="size-8 rounded-lg ring-1 flex items-center justify-center shrink-0"></span>
             <h3 data-sheet-title class="text-sm font-bold font-headline text-on-surface truncate"></h3>
           </div>
-          <button type="button" data-sheet-close aria-label="Close"
+          <button type="button" data-sheet-close aria-label="${escapeHtml(t('layout.sheetClose'))}"
             class="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors shrink-0">
             ${icon('close', 'text-[18px]')}
           </button>

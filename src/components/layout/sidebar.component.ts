@@ -9,9 +9,7 @@ import type { PppStoreApi } from '@store/ppp.store';
 import { closeDrawer, toast, uiStore } from '@store/ui.store';
 import type { ViewRouter } from '@router/view-router';
 import type { HotspotTabName, MonitorSection, PppTabName, ViewName } from '@types';
-import { LOCALE_OPTIONS } from '@config/locale.config';
 import { subscribeLocale, t } from '@i18n/translate';
-import { getLocale, setLocale } from '@store/locale.store';
 import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
 
@@ -46,12 +44,13 @@ export class SidebarComponent {
     const el = document.createElement('aside');
     el.className =
       'fixed top-0 bottom-0 left-0 z-50 w-72 max-w-[85vw] bg-surface-container-low/95 backdrop-blur-2xl shadow-[0_0_40px_rgba(0,0,0,0.6)] flex flex-col transform -translate-x-full transition-transform duration-300 ease-out pt-safe pb-safe';
-    el.setAttribute('aria-label', 'Menu navigasi utama');
+    el.setAttribute('aria-label', t('layout.menuAria'));
     el.innerHTML = this.markup();
     parent.appendChild(el);
     this.el = el;
 
     el.addEventListener('click', (event) => this.handleClick(event));
+    el.addEventListener('change', (event) => this.handleRouterChange(event));
     el.addEventListener('keydown', (event) => this.trapFocus(event));
 
     document.addEventListener('keydown', (event) => {
@@ -79,17 +78,19 @@ export class SidebarComponent {
     this.router.subscribe(() => this.refreshActive());
     this.ppp.store.subscribe(() => this.refreshActive());
     subscribeLocale(() => {
+      el.setAttribute('aria-label', t('layout.menuAria'));
       el.innerHTML = this.markup();
       this.refreshActive();
     });
 
-    const routerSelect = el.querySelector<HTMLSelectElement>('[data-router-select]');
-    routerSelect?.addEventListener('change', () => {
-      const label = routerSelect.selectedOptions[0]?.textContent ?? 'Router';
-      toast(`Router aktif: ${label}`, 'info');
-    });
-
     return this;
+  }
+
+  private handleRouterChange(event: Event): void {
+    const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-router-select]');
+    if (!select) return;
+    const label = select.selectedOptions[0]?.textContent ?? 'Router';
+    toast(t('layout.routerSwitchToast', { name: label }), 'info');
   }
 
   private handleClick(event: MouseEvent): void {
@@ -97,12 +98,6 @@ export class SidebarComponent {
 
     if (target.closest('[data-action="close-drawer"]')) {
       closeDrawer();
-      return;
-    }
-
-    const localeBtn = target.closest<HTMLButtonElement>('[data-locale]');
-    if (localeBtn?.dataset.locale) {
-      setLocale(localeBtn.dataset.locale as 'id' | 'en');
       return;
     }
 
@@ -232,7 +227,7 @@ export class SidebarComponent {
       <div class="px-3 pt-2.5 pb-2 shrink-0">
         <div class="relative">
           <span class="absolute left-2.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary pointer-events-none"></span>
-          <select data-router-select aria-label="Pilih Router Aktif"
+          <select data-router-select aria-label="${escapeHtml(t('common.selectRouter'))}"
             class="w-full appearance-none rounded-lg bg-surface-container/60 border border-outline-variant/25 pl-6 pr-7 py-1.5 text-[11px] font-medium text-on-surface focus:outline-none focus:border-primary/40 cursor-pointer transition-colors">
             ${options}
           </select>
@@ -253,23 +248,11 @@ export class SidebarComponent {
       </nav>
 
       <div class="px-4 py-3 shrink-0 border-t border-outline-variant/15">
-        <div class="flex items-center gap-2 mb-2.5">
+        <div class="flex items-center gap-2">
           <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-          <span class="text-[10px] font-mono text-on-surface-variant">${APP_META.connectedLabel}</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="text-on-surface-variant flex items-center gap-1 text-[10px] font-medium shrink-0">${icon('language', 'text-[14px]')}</span>
-          ${LOCALE_OPTIONS.map(
-            (opt) => `
-            <button type="button" data-locale="${opt.value}"
-              class="flex-1 px-2 py-1 rounded-md text-[10px] font-bold transition-colors ${
-                getLocale() === opt.value
-                  ? 'bg-primary/15 text-primary ring-1 ring-primary/30'
-                  : 'text-on-surface-variant bg-surface-container/50 hover:text-on-surface'
-              }">
-              ${opt.value === 'id' ? 'ID' : 'EN'}
-            </button>`,
-          ).join('')}
+          <span class="text-[10px] font-mono text-on-surface-variant">${escapeHtml(
+            `${t('layout.connected')} · API 8728 · ${APP_META.name} ${APP_META.version}`,
+          )}</span>
         </div>
       </div>`;
   }

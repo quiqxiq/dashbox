@@ -27,25 +27,18 @@ export class ViewRouter {
   }
 
   navigate(view: ViewName, params: ViewParams = {}): void {
-    const renderer = this.renderers.get(view);
-    if (!renderer) {
-      logger.warn(`[router] renderer not registered for "${view}"`);
-      return;
-    }
-
-    this.currentView?.destroy();
-    this.currentView = null;
-
     this.store.setState({ current: view, params });
-
-    if (!this.container) {
-      logger.warn('[router] container is not bound');
-      return;
-    }
-
-    this.container.innerHTML = '';
-    this.currentView = renderer(this.container, params);
+    this.render(view, params);
     window.scrollTo(0, 0);
+  }
+
+  refresh(): void {
+    const { current, params } = this.store.getState();
+    this.render(current, params);
+  }
+
+  setParams(params: ViewParams): void {
+    this.store.setState({ params });
   }
 
   get current(): ViewName {
@@ -64,5 +57,24 @@ export class ViewRouter {
     return this.store.subscribe((state) => {
       listener(state.current, t(VIEW_META[state.current].titleKey), state.params);
     });
+  }
+
+  private render(view: ViewName, params: ViewParams): void {
+    const renderer = this.renderers.get(view);
+    if (!renderer) {
+      logger.warn(`[router] renderer not registered for "${view}"`);
+      return;
+    }
+
+    this.currentView?.destroy();
+    this.currentView = null;
+
+    if (!this.container) {
+      logger.warn('[router] container is not bound');
+      return;
+    }
+
+    this.container.innerHTML = '';
+    this.currentView = renderer(this.container, params);
   }
 }

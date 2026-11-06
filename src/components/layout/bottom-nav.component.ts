@@ -19,7 +19,7 @@ export class BottomNavComponent {
   mount(parent: HTMLElement): this {
     const el = document.createElement('nav');
     el.className =
-      'fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-2px_16px_rgba(0,0,0,0.35)]';
+      'md:hidden fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-2px_16px_rgba(0,0,0,0.35)]';
     el.setAttribute('aria-label', t('nav.mainNavigation'));
     el.innerHTML = this.render();
     parent.appendChild(el);
@@ -91,6 +91,7 @@ export class BottomNavComponent {
   private refreshLabels(): void {
     if (!this.el) return;
     const activeId = this.getActiveItemId();
+    this.el.setAttribute('aria-label', t('nav.mainNavigation'));
     this.el.innerHTML = this.render();
     this.markActive(activeId);
   }

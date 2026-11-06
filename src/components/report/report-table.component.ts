@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import { formatRupiah } from '@mock/report.mock';
 import type { ReportEntry } from '@types';
 import { escapeHtml } from '@utils/format';
@@ -15,14 +16,14 @@ export class ReportTableComponent {
           <table class="w-full text-left text-xs">
             <thead class="bg-surface-container-high/50 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
               <tr>
-                <th class="py-2.5 px-3">Date</th>
-                <th class="py-2.5 px-3">Time</th>
-                <th class="py-2.5 px-3">Username</th>
-                <th class="py-2.5 px-3">IP Address</th>
-                <th class="py-2.5 px-3">MAC Address</th>
-                <th class="py-2.5 px-3">Profile</th>
-                <th class="py-2.5 px-3">Comment</th>
-                <th class="py-2.5 px-3 text-right">Price</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableDate'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableTime'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableUsername'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableIp'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableMac'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableProfile'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('report.tableComment'))}</th>
+                <th class="py-2.5 px-3 text-right">${escapeHtml(t('report.tablePrice'))}</th>
               </tr>
             </thead>
             <tbody data-report-tbody class="divide-y divide-outline-variant/10 text-[11px]">
@@ -47,7 +48,7 @@ export class ReportTableComponent {
         tbody.innerHTML = `
           <tr>
             <td colspan="8" class="py-10 text-center text-on-surface-variant font-sans text-xs">
-              Tidak ada data penjualan yang sesuai dengan filter.
+              ${escapeHtml(t('report.emptySales'))}
             </td>
           </tr>`;
       } else {
@@ -78,7 +79,7 @@ export class ReportTableComponent {
       if (entries.length === 0) {
         cards.innerHTML = `
           <div class="p-6 text-center rounded-xl bg-surface-container/60 text-xs text-on-surface-variant">
-            Tidak ada data penjualan yang sesuai.
+            ${escapeHtml(t('report.emptySalesShort'))}
           </div>`;
       } else {
         cards.innerHTML = entries

@@ -10,6 +10,8 @@ export function escapeHtml(input: string): string {
   return input.replace(/[&<>"']/g, (character) => HTML_ESCAPE[character] ?? character);
 }
 
+export const escapeAttr = escapeHtml;
+
 export function formatBytes(bytes: number): string {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
   let value = bytes;

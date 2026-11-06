@@ -1,7 +1,7 @@
 import { LOCALE_OPTIONS } from '@config/locale.config';
 import { icon } from '@components/ui/icon';
 import { getLocale, setLocale } from '@store/locale.store';
-import { subscribeLocale, t } from '@i18n/translate';
+import { t } from '@i18n/translate';
 import type { View } from './base.view';
 
 export class SettingsView implements View {
@@ -9,7 +9,7 @@ export class SettingsView implements View {
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col gap-3 w-full px-3.5 pb-8';
+    root.className = 'view flex flex-col gap-3 pb-8';
     root.innerHTML = `
       <header class="flex items-center gap-3 px-1 pt-1">
         <div class="min-w-0">
@@ -56,10 +56,10 @@ export class SettingsView implements View {
 
           <div class="flex items-center gap-2 text-[10px] text-on-surface-variant/70 font-mono flex-wrap">
             ${icon('admin_panel_settings', 'text-[14px] text-secondary')}
-            <span>RouterOS REST</span>
+            <span>${escapeLabel(t('settings.routerosRest'))}</span>
             <span class="text-outline-variant">/</span>
             ${icon('verified', 'text-[14px] text-primary')}
-            <span>Safe Mode</span>
+            <span>${escapeLabel(t('settings.safeMode'))}</span>
           </div>
         </div>
       </div>
@@ -77,13 +77,6 @@ export class SettingsView implements View {
       const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-locale]');
       if (!btn?.dataset.locale) return;
       setLocale(btn.dataset.locale as 'id' | 'en');
-    });
-
-    subscribeLocale(() => {
-      this.destroy();
-      // Re-mount into parent
-      const parent = root.parentElement as HTMLElement | null;
-      if (parent) this.mount(parent);
     });
 
     return this;

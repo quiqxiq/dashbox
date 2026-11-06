@@ -44,7 +44,7 @@ export class HeaderComponent {
             ${icon('language', 'text-[14px]')}
             <span data-locale-label>${getLocale().toUpperCase()}</span>
           </button>
-          <div role="img" aria-label="Profil administrator"
+          <div role="img" aria-label="${escapeLabel(t('common.adminProfile'))}"
             class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(125,211,252,0.3)]">
             ${icon('person', 'text-on-primary text-[17px]')}
           </div>
@@ -63,7 +63,12 @@ export class HeaderComponent {
       const label = el.querySelector<HTMLElement>('[data-locale-label]');
       if (label) label.textContent = getLocale().toUpperCase();
       const btn = el.querySelector<HTMLButtonElement>('[data-locale-toggle]');
-      if (btn) btn.setAttribute('aria-label', t('common.language'));
+      if (btn) {
+        btn.setAttribute('aria-label', t('common.language'));
+        btn.setAttribute('title', t('common.language'));
+      }
+      const profile = el.querySelector<HTMLElement>('[role="img"]');
+      if (profile) profile.setAttribute('aria-label', t('common.adminProfile'));
       // Refresh title to current view's translated title
       const titleEl = el.querySelector<HTMLElement>('[data-title]');
       if (titleEl) titleEl.textContent = this.router.currentTitle;

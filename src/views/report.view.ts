@@ -2,6 +2,7 @@ import { ReportResumeComponent } from '@components/report/report-resume.componen
 import { ReportSummaryComponent } from '@components/report/report-summary.component';
 import { ReportTableComponent } from '@components/report/report-table.component';
 import { ReportToolbarComponent } from '@components/report/report-toolbar.component';
+import { t } from '@i18n/translate';
 import {
   REPORT_ENTRIES,
   computeLast7Days,
@@ -13,9 +14,8 @@ import {
   toXlsHtml,
 } from '@mock/report.mock';
 import { toast } from '@store/ui.store';
-import { t } from '@i18n/translate';
-import { escapeHtml } from '@utils/format';
 import type { ReportEntry, ReportFilter, ReportTab } from '@types';
+import { escapeHtml } from '@utils/format';
 import type { View } from './base.view';
 
 const EMPTY_FILTER: ReportFilter = { day: 'all', month: 'all', year: 'all', query: '' };
@@ -33,7 +33,7 @@ export class ReportView implements View {
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col gap-3 w-full px-3.5 pb-8';
+    root.className = 'view flex flex-col gap-3 pb-8';
     this.root = root;
     container.appendChild(root);
 
@@ -45,13 +45,13 @@ export class ReportView implements View {
         </div>
         <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary">
           <span class="size-1.5 rounded-full bg-primary animate-pulse"></span>
-          <span>LIVE · MOCK</span>
+          <span>${escapeHtml(t('report.liveMock'))}</span>
         </span>
       </header>
       <div data-report-toolbar class="w-full"></div>
       <div data-report-summary class="w-full"></div>
       <div data-report-content class="w-full"></div>
-      <p class="px-1 text-[10px] text-on-surface-variant/70">Sumber referensi: mikhmon_v4/report · diserialisasikan sebagai mock data (Date, Time, Username, IP, MAC, Profile, Comment, Price)</p>`;
+      <p class="px-1 text-[10px] text-on-surface-variant/70">${escapeHtml(t('report.sourceNote'))}</p>`;
 
     const toolbarSlot = root.querySelector<HTMLElement>('[data-report-toolbar]');
     const summarySlot = root.querySelector<HTMLElement>('[data-report-summary]');
@@ -98,7 +98,7 @@ export class ReportView implements View {
     }
 
     if (!options.silent) {
-      // tidak perlu toast setiap filter — hanya tampilkan di konsol bila perlu (tetap ringkas)
+      // tidak perlu toast setiap filter
     }
   }
 
@@ -131,17 +131,17 @@ export class ReportView implements View {
 
   private exportCsv(): void {
     if (this.filtered.length === 0) {
-      toast('Tidak ada data untuk di-export', 'info');
+      toast(t('report.exportEmpty'), 'info');
       return;
     }
     const stamp = new Date().toISOString().slice(0, 10);
     downloadFile(`dashbox-report-${stamp}.csv`, toCsv(this.filtered), 'text/csv');
-    toast(`CSV berhasil diunduh · ${this.filtered.length} baris`, 'success');
+    toast(t('report.exportCsvToast', { count: this.filtered.length }), 'success');
   }
 
   private exportXls(): void {
     if (this.filtered.length === 0) {
-      toast('Tidak ada data untuk di-export', 'info');
+      toast(t('report.exportEmpty'), 'info');
       return;
     }
     const stamp = new Date().toISOString().slice(0, 10);
@@ -150,7 +150,7 @@ export class ReportView implements View {
       toXlsHtml(this.filtered),
       'application/vnd.ms-excel',
     );
-    toast(`XLS berhasil diunduh · ${this.filtered.length} baris`, 'success');
+    toast(t('report.exportXlsToast', { count: this.filtered.length }), 'success');
   }
 
   destroy(): void {

@@ -1,5 +1,7 @@
 import type { PppSecret } from '@types';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
+import { escapeAttr } from '@utils/format';
 import { pppEmptyRow, pppTableRow } from './ppp-row.template';
 
 export interface PppRowCallbacks {
@@ -19,13 +21,13 @@ export class PppTableComponent {
       <table class="w-full text-xs">
         <thead class="bg-surface-container-low/80 text-[10px] uppercase tracking-wider text-on-surface-variant">
           <tr>
-            <th class="text-left px-2.5 py-2 w-9" aria-label="Status">${icon('flag', 'text-[12px]')}</th>
-            <th class="text-left px-2.5 py-2">Nama / Caller ID</th>
-            <th class="text-left px-2.5 py-2">Layanan</th>
-            <th class="text-left px-2.5 py-2">Profil</th>
-            <th class="text-left px-2.5 py-2">Remote</th>
-            <th class="text-left px-2.5 py-2">Uptime</th>
-            <th class="text-left px-2.5 py-2 hidden lg:table-cell">Komentar</th>
+            <th class="text-left px-2.5 py-2 w-9" aria-label="${escapeAttr(t('ppp.colStatus'))}">${icon('flag', 'text-[12px]')}</th>
+            <th class="text-left px-2.5 py-2">${escapeAttr(t('ppp.colNameCallerId'))}</th>
+            <th class="text-left px-2.5 py-2">${escapeAttr(t('ppp.colService'))}</th>
+            <th class="text-left px-2.5 py-2">${escapeAttr(t('ppp.colProfile'))}</th>
+            <th class="text-left px-2.5 py-2">${escapeAttr(t('ppp.colRemote'))}</th>
+            <th class="text-left px-2.5 py-2">${escapeAttr(t('ppp.colUptime'))}</th>
+            <th class="text-left px-2.5 py-2 hidden lg:table-cell">${escapeAttr(t('ppp.colComment'))}</th>
           </tr>
         </thead>
         <tbody data-rows></tbody>

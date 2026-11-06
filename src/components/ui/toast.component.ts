@@ -17,7 +17,7 @@ export class ToastComponent {
     el.setAttribute('aria-atomic', 'true');
     el.innerHTML = `
       <span data-toast-icon class="inline-flex">${icon('verified', 'text-sm')}</span>
-      <span data-toast-message>Konfigurasi Diterapkan</span>`;
+      <span data-toast-message></span>`;
     parent.appendChild(el);
 
     uiStore.subscribe((state) => {

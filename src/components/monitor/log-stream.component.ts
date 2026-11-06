@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { formatDateTime, t } from '@i18n/translate';
 import { createMockSystemLog, createMockSystemLogHistory } from '@mock/system-logs.mock';
 import type { SystemLogEntry, SystemLogLevel } from '@mock/system-logs.mock';
 import { toast } from '@store/ui.store';
@@ -34,12 +35,12 @@ const LEVEL_STYLES: Record<
 };
 
 function formatTime(date: Date): string {
-  return new Intl.DateTimeFormat('id-ID', {
+  return formatDateTime(date, {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
     hour12: false,
-  }).format(date);
+  });
 }
 
 function renderLogEntry(entry: SystemLogEntry): string {
@@ -78,35 +79,35 @@ export class LogStreamComponent {
           <div class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-container-high/60 border border-outline-variant/20 text-xs">
             <button type="button" data-level-filter="all"
               class="px-2 py-1 rounded-md font-semibold bg-primary/15 text-primary transition-colors text-[11px]">
-              Semua
+              ${escapeHtml(t('monitor.logsSection.all'))}
             </button>
             <button type="button" data-level-filter="info"
               class="px-2 py-1 rounded-md text-on-surface-variant hover:text-on-surface transition-colors text-[11px]">
-              Info
+              ${escapeHtml(t('monitor.logsSection.info'))}
             </button>
             <button type="button" data-level-filter="warning"
               class="px-2 py-1 rounded-md text-on-surface-variant hover:text-on-surface transition-colors text-[11px]">
-              Warn
+              ${escapeHtml(t('monitor.logsSection.warn'))}
             </button>
             <button type="button" data-level-filter="error"
               class="px-2 py-1 rounded-md text-on-surface-variant hover:text-on-surface transition-colors text-[11px]">
-              Error
+              ${escapeHtml(t('monitor.logsSection.error'))}
             </button>
             <button type="button" data-level-filter="debug"
               class="px-2 py-1 rounded-md text-on-surface-variant hover:text-on-surface transition-colors text-[11px]">
-              Debug
+              ${escapeHtml(t('monitor.logsSection.debug'))}
             </button>
           </div>
 
           <!-- Topic Filter Dropdown -->
-          <select data-topic-filter aria-label="Filter topik log"
+          <select data-topic-filter aria-label="${escapeHtml(t('monitor.logsSection.topicAria'))}"
             class="h-7.5 px-2 rounded-lg bg-surface-container-high/70 text-xs text-on-surface border border-outline-variant/20 focus:outline-none">
-            <option value="all">Semua Topik</option>
-            <option value="system">Topik: system</option>
-            <option value="ppp">Topik: ppp</option>
-            <option value="interface">Topik: interface</option>
-            <option value="firewall">Topik: firewall</option>
-            <option value="dhcp">Topik: dhcp</option>
+            <option value="all">${escapeHtml(t('monitor.logsSection.allTopics'))}</option>
+            <option value="system">${escapeHtml(t('monitor.logsSection.topicPrefix', { topic: 'system' }))}</option>
+            <option value="ppp">${escapeHtml(t('monitor.logsSection.topicPrefix', { topic: 'ppp' }))}</option>
+            <option value="interface">${escapeHtml(t('monitor.logsSection.topicPrefix', { topic: 'interface' }))}</option>
+            <option value="firewall">${escapeHtml(t('monitor.logsSection.topicPrefix', { topic: 'firewall' }))}</option>
+            <option value="dhcp">${escapeHtml(t('monitor.logsSection.topicPrefix', { topic: 'dhcp' }))}</option>
           </select>
         </div>
 
@@ -116,27 +117,27 @@ export class LogStreamComponent {
             <span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-on-surface-variant/60">
               ${icon('search', 'text-[14px]')}
             </span>
-            <input type="search" data-log-search placeholder="Cari isi log..."
+            <input type="search" data-log-search placeholder="${escapeHtml(t('monitor.logsSection.search'))}"
               class="w-full h-7.5 pl-8 pr-2.5 bg-surface-container-high/60 rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none" />
           </div>
 
           <!-- Copy Logs -->
-          <button type="button" data-log-copy title="Salin log ke clipboard"
+          <button type="button" data-log-copy title="${escapeHtml(t('monitor.logsSection.copyTitle'))}" aria-label="${escapeHtml(t('monitor.logsSection.copyTitle'))}"
             class="toolbar-btn inline-flex items-center justify-center size-7.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
             ${icon('content_copy', 'text-[15px]')}
           </button>
 
           <!-- Clear Logs -->
-          <button type="button" data-log-clear title="Bersihkan tampilan log"
+          <button type="button" data-log-clear title="${escapeHtml(t('monitor.logsSection.clearTitle'))}" aria-label="${escapeHtml(t('monitor.logsSection.clearTitle'))}"
             class="toolbar-btn inline-flex items-center justify-center size-7.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
             ${icon('clear_all', 'text-[16px]')}
           </button>
 
           <!-- Pause/Resume -->
-          <button type="button" data-stream-toggle title="Jeda stream"
+          <button type="button" data-stream-toggle title="${escapeHtml(t('monitor.logsSection.pauseTitle'))}" aria-label="${escapeHtml(t('monitor.logsSection.pauseTitle'))}"
             class="inline-flex h-7.5 items-center gap-1 rounded-lg px-2 text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors">
             <span data-stream-icon>${icon('pause_circle', 'text-[14px]')}</span>
-            <span data-stream-action>Jeda</span>
+            <span data-stream-action>${escapeHtml(t('common.pause'))}</span>
           </button>
         </div>
       </div>
@@ -147,31 +148,31 @@ export class LogStreamComponent {
         <div class="flex items-center justify-between gap-2 border-b border-outline-variant/15 px-3 py-2 bg-surface-container-high/30">
           <div class="flex items-center gap-2">
             ${icon('terminal', 'text-[15px] text-primary')}
-            <span class="text-xs font-semibold text-on-surface">RouterOS Terminal Log</span>
-            <span data-log-count class="rounded bg-surface-container-high px-1.5 py-0.5 font-mono text-[9px] text-on-surface-variant">0 baris</span>
+            <span class="text-xs font-semibold text-on-surface">${escapeHtml(t('monitor.logsSection.terminalTitle'))}</span>
+            <span data-log-count class="rounded bg-surface-container-high px-1.5 py-0.5 font-mono text-[9px] text-on-surface-variant">${escapeHtml(t('monitor.logsSection.lines', { count: 0 }))}</span>
           </div>
           <span data-stream-status class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-semibold text-primary">
             <span data-stream-dot class="size-1.5 rounded-full bg-primary animate-pulse"></span>
-            <span data-stream-label>STREAMING · LIVE</span>
+            <span data-stream-label>${escapeHtml(t('monitor.logsSection.streaming'))}</span>
           </span>
         </div>
 
         <!-- Scrollable Log List -->
-        <div data-log-scroll class="system-log-scroll overflow-y-auto p-2 h-[420px] max-h-[60vh]" role="log" aria-label="System log router" aria-live="off">
+        <div data-log-scroll class="system-log-scroll overflow-y-auto p-2 h-[420px] max-h-[60vh]" role="log" aria-label="${escapeHtml(t('monitor.logsSection.panelAria'))}" aria-live="off">
           <div data-log-list class="flex flex-col gap-0.5"></div>
         </div>
 
         <!-- Terminal Footer -->
         <footer class="flex items-center justify-between gap-2 border-t border-outline-variant/15 px-3 py-2 bg-surface-container-high/30">
-          <span data-follow-status class="text-[10px] text-on-surface-variant">Mengikuti log terbaru secara otomatis</span>
+          <span data-follow-status class="text-[10px] text-on-surface-variant">${escapeHtml(t('monitor.logsSection.followAuto'))}</span>
           <button type="button" data-jump-to-latest
             class="hidden inline-flex h-6.5 shrink-0 items-center gap-1 rounded-lg bg-primary px-2.5 text-[10px] font-semibold text-on-primary shadow-sm transition-transform active:scale-95">
             ${icon('arrow_downward', 'text-[13px]')}
-            <span data-jump-label>Ke terbaru</span>
+            <span data-jump-label>${escapeHtml(t('monitor.logsSection.jumpLatest'))}</span>
           </button>
         </footer>
       </div>
-      <p class="px-1 text-[10px] text-on-surface-variant/70">Data simulasi real-time · entri baru di-push setiap 1,5 detik</p>`;
+      <p class="px-1 text-[10px] text-on-surface-variant/70">${escapeHtml(t('monitor.logsSection.footerNote'))}</p>`;
 
     parent.appendChild(el);
     this.el = el;
@@ -224,8 +225,8 @@ export class LogStreamComponent {
         )
         .join('\n');
       navigator.clipboard.writeText(text).then(
-        () => toast('Log berhasil disalin ke clipboard', 'success'),
-        () => toast('Gagal menyalin log', 'error'),
+        () => toast(t('monitor.logsSection.copied'), 'success'),
+        () => toast(t('monitor.logsSection.copyFailed'), 'error'),
       );
     });
 
@@ -233,7 +234,7 @@ export class LogStreamComponent {
     this.el.querySelector<HTMLButtonElement>('[data-log-clear]')?.addEventListener('click', () => {
       this.entries = [];
       this.renderFilteredList();
-      toast('Tampilan log dibersihkan', 'info');
+      toast(t('monitor.logsSection.cleared'), 'info');
     });
 
     // Pause/Resume
@@ -292,14 +293,14 @@ export class LogStreamComponent {
     if (filtered.length === 0) {
       this.logList.innerHTML = `
         <div class="py-12 text-center text-on-surface-variant text-xs font-sans">
-          Tidak ada entri log yang sesuai dengan filter.
+          ${escapeHtml(t('monitor.logsSection.empty'))}
         </div>`;
     } else {
       this.logList.innerHTML = filtered.map(renderLogEntry).join('');
     }
 
     const countEl = this.el?.querySelector<HTMLElement>('[data-log-count]');
-    if (countEl) countEl.textContent = `${filtered.length} baris`;
+    if (countEl) countEl.textContent = t('monitor.logsSection.lines', { count: filtered.length });
 
     if (this.followingLatest) {
       this.scrollToLatest();
@@ -341,7 +342,11 @@ export class LogStreamComponent {
     }
 
     const countEl = this.el?.querySelector<HTMLElement>('[data-log-count]');
-    if (countEl) countEl.textContent = `${this.logList.childElementCount} baris`;
+    if (countEl) {
+      countEl.textContent = t('monitor.logsSection.lines', {
+        count: this.logList.childElementCount,
+      });
+    }
 
     if (this.followingLatest) {
       this.scrollToLatest();
@@ -367,8 +372,8 @@ export class LogStreamComponent {
     const status = this.el?.querySelector<HTMLElement>('[data-follow-status]');
     if (status) {
       status.textContent = following
-        ? 'Mengikuti log terbaru secara otomatis'
-        : 'Auto-scroll dijeda · posisi baca dipertahankan';
+        ? t('monitor.logsSection.followAuto')
+        : t('monitor.logsSection.followPaused');
     }
     if (following) this.unreadCount = 0;
     this.updateJumpButton();
@@ -382,7 +387,9 @@ export class LogStreamComponent {
     const show = !this.followingLatest;
     button.classList.toggle('hidden', !show);
     label.textContent =
-      this.unreadCount > 0 ? `Ke terbaru · ${this.unreadCount} baru` : 'Ke terbaru';
+      this.unreadCount > 0
+        ? t('monitor.logsSection.jumpLatestNew', { count: this.unreadCount })
+        : t('monitor.logsSection.jumpLatest');
   }
 
   private toggleStreaming(): void {
@@ -391,11 +398,24 @@ export class LogStreamComponent {
     const dot = this.el?.querySelector<HTMLElement>('[data-stream-dot]');
     const action = this.el?.querySelector<HTMLElement>('[data-stream-action]');
     const iconElement = this.el?.querySelector<HTMLElement>('[data-stream-icon]');
+    const button = this.el?.querySelector<HTMLButtonElement>('[data-stream-toggle]');
 
-    if (label) label.textContent = this.paused ? 'PAUSED · MOCK' : 'STREAMING · LIVE';
+    if (label) {
+      label.textContent = this.paused
+        ? t('monitor.logsSection.paused')
+        : t('monitor.logsSection.streaming');
+    }
     if (dot) dot.classList.toggle('animate-pulse', !this.paused);
     if (dot) dot.classList.toggle('opacity-40', this.paused);
-    if (action) action.textContent = this.paused ? 'Lanjut' : 'Jeda';
+    if (action) {
+      action.textContent = this.paused ? t('common.resume') : t('common.pause');
+    }
+    if (button) {
+      button.title = this.paused
+        ? t('monitor.logsSection.resumeTitle')
+        : t('monitor.logsSection.pauseTitle');
+      button.setAttribute('aria-label', button.title);
+    }
     if (iconElement) {
       iconElement.innerHTML = icon(this.paused ? 'play_circle' : 'pause_circle', 'text-[14px]');
     }

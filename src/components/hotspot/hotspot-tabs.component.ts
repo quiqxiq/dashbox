@@ -26,7 +26,7 @@ export class HotspotTabsComponent {
     const el = document.createElement('div');
     el.className = 'w-full overflow-x-auto no-scrollbar pt-1';
     el.innerHTML = `
-      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container/60 backdrop-blur-md ring-1 ring-outline-variant/20 min-w-max" role="tablist" aria-label="Tab Hotspot">
+      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container/60 backdrop-blur-md ring-1 ring-outline-variant/20 min-w-max" role="tablist" aria-label="${escapeHtml(t('hotspot.tabAria'))}">
         ${TABS.map(
           (tab) => `
             <button type="button" data-tab="${tab.tab}" role="tab" aria-selected="false"

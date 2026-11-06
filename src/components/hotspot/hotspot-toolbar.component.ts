@@ -1,4 +1,6 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
+import type { TranslationKey } from '@i18n/translate';
 import type { HotspotTabName, IconName } from '@types';
 
 export interface HotspotToolbarCallbacks {
@@ -13,11 +15,11 @@ export interface HotspotToolbarCallbacks {
   onSearchChange: (value: string) => void;
 }
 
-const SEARCH_LABELS: Record<HotspotTabName, string> = {
-  users: 'Cari user, server, IP...',
-  profiles: 'Cari profile...',
-  active: 'Cari sesi aktif...',
-  hosts: 'Cari perangkat...',
+const SEARCH_KEYS: Record<HotspotTabName, TranslationKey> = {
+  users: 'hotspot.searchPlaceholder',
+  profiles: 'hotspot.filterProfile',
+  active: 'hotspot.listActive',
+  hosts: 'hotspot.listHosts',
 };
 
 export class HotspotToolbarComponent {
@@ -37,28 +39,28 @@ export class HotspotToolbarComponent {
       'flex items-center justify-between gap-1 p-1 rounded-xl bg-surface-container/80 backdrop-blur-xl ring-1 ring-outline-variant/20';
     el.innerHTML = `
       <div data-actions class="flex min-w-0 items-center gap-0.5">
-        ${this.actionButton('add-user', 'add', 'Tambah user', 'tb-add')}
-        ${this.actionButton('generate', 'confirmation_number', 'Generate voucher', 'tb-add')}
-        ${this.actionButton('add-profile', 'add', 'Tambah profile', 'tb-add')}
-        ${this.actionButton('edit-selected', 'edit', 'Edit data terpilih', '', true)}
-        ${this.actionButton('remove-selected', 'remove', 'Hapus data terpilih', 'tb-remove', true)}
-        ${this.actionButton('reset', 'restart_alt', 'Reset counter', 'tb-reset', true)}
+        ${this.actionButton('add-user', 'add', t('hotspot.toolbarAddUser'), 'tb-add')}
+        ${this.actionButton('generate', 'confirmation_number', t('hotspot.toolbarGenerate'), 'tb-add')}
+        ${this.actionButton('add-profile', 'add', t('hotspot.toolbarAddProfile'), 'tb-add')}
+        ${this.actionButton('edit-selected', 'edit', t('hotspot.toolbarEdit'), '', true)}
+        ${this.actionButton('remove-selected', 'remove', t('hotspot.toolbarRemove'), 'tb-remove', true)}
+        ${this.actionButton('reset', 'restart_alt', t('hotspot.toolbarReset'), 'tb-reset', true)}
       </div>
       <div class="flex shrink-0 items-center gap-0.5">
         <div class="flex items-center">
-          <input id="hotspot-toolbar-search" data-hotspot-search type="search" aria-label="Cari data Hotspot"
-            aria-hidden="true" tabindex="-1" placeholder="Cari..."
+          <input id="hotspot-toolbar-search" data-hotspot-search type="search" aria-label="${escapeAttr(t('common.searchData'))}"
+            aria-hidden="true" tabindex="-1" placeholder="${escapeAttr(t('common.searchPlaceholder'))}"
             class="toolbar-search-input h-7 bg-surface-container-high/70 rounded-lg text-[11px] text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none transition-all" />
           <button type="button" data-btn="search" aria-expanded="false" aria-controls="hotspot-toolbar-search"
-            title="Cari" aria-label="Cari" class="toolbar-btn tb-search">
+            title="${escapeAttr(t('hotspot.toolbarSearch'))}" aria-label="${escapeAttr(t('hotspot.toolbarSearch'))}" class="toolbar-btn tb-search">
             ${icon('search', 'text-[16px]')}
           </button>
-          <button type="button" data-clear-filter aria-label="Bersihkan pencarian" title="Bersihkan pencarian"
+          <button type="button" data-clear-filter aria-label="${escapeAttr(t('hotspot.toolbarClear'))}" title="${escapeAttr(t('hotspot.toolbarClear'))}"
             class="hidden toolbar-btn tb-clear-filter">
             ${icon('cancel', 'text-[14px]')}
           </button>
         </div>
-        <button type="button" data-btn="refresh" title="Muat Ulang" aria-label="Muat Ulang" class="toolbar-btn tb-refresh">
+        <button type="button" data-btn="refresh" title="${escapeAttr(t('hotspot.toolbarRefresh'))}" aria-label="${escapeAttr(t('hotspot.toolbarRefresh'))}" class="toolbar-btn tb-refresh">
           <span data-refresh-icon class="inline-flex">${icon('refresh', 'text-[16px]')}</span>
         </button>
       </div>`;
@@ -130,12 +132,12 @@ export class HotspotToolbarComponent {
     if (remove) {
       const label =
         tab === 'active'
-          ? 'Putuskan sesi'
+          ? t('hotspot.terminateSession')
           : tab === 'hosts'
-            ? 'Hapus perangkat'
+            ? t('hotspot.removeDevice')
             : tab === 'profiles'
-              ? 'Hapus profile'
-              : 'Hapus user';
+              ? t('hotspot.removeProfile')
+              : t('hotspot.removeUser');
       const iconName: IconName = tab === 'active' ? 'link_off' : 'remove';
 
       remove.title = label;
@@ -147,7 +149,7 @@ export class HotspotToolbarComponent {
       }
     }
 
-    const searchLabel = SEARCH_LABELS[tab];
+    const searchLabel = t(SEARCH_KEYS[tab]);
     if (this.searchInput) {
       this.searchInput.placeholder = searchLabel;
       this.searchInput.setAttribute('aria-label', searchLabel);
@@ -235,4 +237,8 @@ export class HotspotToolbarComponent {
     const button = this.actionButtons.get(action);
     if (button) button.disabled = !enabled;
   }
+}
+
+function escapeAttr(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 }

@@ -3,6 +3,7 @@ import { LogStreamComponent } from '@components/monitor/log-stream.component';
 import { MonitorTabsComponent } from '@components/monitor/monitor-tabs.component';
 import { QueueTableComponent } from '@components/monitor/queue-table.component';
 import { TrafficTableComponent } from '@components/monitor/traffic-table.component';
+import { t } from '@i18n/translate';
 import {
   deleteFirewallRule,
   deleteSimpleQueue,
@@ -16,8 +17,8 @@ import {
   toggleFirewallRule,
   toggleSimpleQueue,
 } from '@mock/monitor.mock';
+import type { ViewRouter } from '@router/view-router';
 import type { FirewallTab, MonitorSection, ViewParams } from '@types';
-import { t } from '@i18n/translate';
 import { escapeHtml } from '@utils/format';
 import type { View } from './base.view';
 
@@ -41,13 +42,16 @@ export class MonitorView implements View {
   // State
   private firewallTab: FirewallTab = 'filter';
 
-  constructor(section: ViewParams['monitorSection'] = 'logs') {
+  constructor(
+    section: ViewParams['monitorSection'] = 'logs',
+    private readonly router?: ViewRouter,
+  ) {
     this.activeSection = section ?? 'logs';
   }
 
   mount(container: HTMLElement): this {
     const root = document.createElement('section');
-    root.className = 'view flex flex-col gap-3 w-full px-3.5 pb-8';
+    root.className = 'view flex flex-col gap-3 pb-8';
     this.root = root;
     container.appendChild(root);
 
@@ -87,6 +91,7 @@ export class MonitorView implements View {
 
   private switchSection(section: MonitorSection): void {
     this.activeSection = section;
+    this.router?.setParams({ monitorSection: section });
     if (!this.contentSlot) return;
 
     this.clearContentSlot();

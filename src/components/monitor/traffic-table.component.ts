@@ -1,6 +1,7 @@
 import { icon } from '@components/ui/icon';
+import { formatNumber, t } from '@i18n/translate';
 import type { InterfaceTrafficEntry } from '@types';
-import { escapeHtml, formatBitsPerSec, formatBytes, formatNumber } from '@utils/format';
+import { escapeHtml, formatBitsPerSec, formatBytes } from '@utils/format';
 
 export interface TrafficTableCallbacks {
   onRefresh: () => void;
@@ -31,7 +32,7 @@ export class TrafficTableComponent {
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between">
           <div class="flex items-center justify-between text-on-surface-variant text-[11px]">
-            <span>Total Download (Rx)</span>
+            <span>${escapeHtml(t('monitor.trafficSection.totalDownload'))}</span>
             ${icon('arrow_downward', 'text-primary text-[15px]')}
           </div>
           <div class="mt-1 flex items-baseline gap-1.5">
@@ -40,7 +41,7 @@ export class TrafficTableComponent {
         </div>
         <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between">
           <div class="flex items-center justify-between text-on-surface-variant text-[11px]">
-            <span>Total Upload (Tx)</span>
+            <span>${escapeHtml(t('monitor.trafficSection.totalUpload'))}</span>
             ${icon('arrow_upward', 'text-secondary text-[15px]')}
           </div>
           <div class="mt-1 flex items-baseline gap-1.5">
@@ -49,17 +50,17 @@ export class TrafficTableComponent {
         </div>
         <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between">
           <div class="flex items-center justify-between text-on-surface-variant text-[11px]">
-            <span>Interface Aktif</span>
+            <span>${escapeHtml(t('monitor.trafficSection.activeInterfaces'))}</span>
             ${icon('swap_calls', 'text-emerald-400 text-[15px]')}
           </div>
           <div class="mt-1 flex items-baseline gap-1.5">
             <span data-summary-active class="text-base sm:text-lg font-bold font-mono text-emerald-400">0</span>
-            <span class="text-[10px] text-on-surface-variant">ports link up</span>
+            <span class="text-[10px] text-on-surface-variant">${escapeHtml(t('monitor.trafficSection.linkUp'))}</span>
           </div>
         </div>
         <div class="p-3 rounded-xl bg-surface-container/70 backdrop-blur-md ring-1 ring-outline-variant/20 flex flex-col justify-between">
           <div class="flex items-center justify-between text-on-surface-variant text-[11px]">
-            <span>Total Volume</span>
+            <span>${escapeHtml(t('monitor.trafficSection.totalVolume'))}</span>
             ${icon('data_usage', 'text-tertiary text-[15px]')}
           </div>
           <div class="mt-1 flex items-baseline gap-1.5">
@@ -75,11 +76,11 @@ export class TrafficTableComponent {
             <span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-on-surface-variant/60">
               ${icon('search', 'text-[15px]')}
             </span>
-            <input type="search" data-traffic-search placeholder="Cari nama interface, komentar, tipe..."
+            <input type="search" data-traffic-search placeholder="${escapeHtml(t('monitor.trafficSection.search'))}"
               class="w-full h-8 pl-8 pr-3 bg-surface-container-high/60 rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant/60 ring-1 ring-outline-variant/20 focus:ring-primary/50 focus:outline-none transition-all" />
           </div>
         </div>
-        <button type="button" data-traffic-refresh title="Muat ulang status"
+        <button type="button" data-traffic-refresh title="${escapeHtml(t('monitor.trafficSection.refresh'))}" aria-label="${escapeHtml(t('monitor.trafficSection.refresh'))}"
           class="toolbar-btn inline-flex items-center justify-center size-8 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
           ${icon('refresh', 'text-[16px]')}
         </button>
@@ -91,13 +92,13 @@ export class TrafficTableComponent {
           <table class="w-full text-left text-xs">
             <thead class="bg-surface-container-high/50 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
               <tr>
-                <th class="py-2.5 px-3">Status</th>
-                <th class="py-2.5 px-3">Interface</th>
-                <th class="py-2.5 px-3">Tipe / Speed</th>
-                <th class="py-2.5 px-3">Rx Rate (Down)</th>
-                <th class="py-2.5 px-3">Tx Rate (Up)</th>
-                <th class="py-2.5 px-3">Packet Rate</th>
-                <th class="py-2.5 px-3">Total Transfer</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colStatus'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colInterface'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colTypeSpeed'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colRx'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colTx'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colPacketRate'))}</th>
+                <th class="py-2.5 px-3">${escapeHtml(t('monitor.trafficSection.colTotalTransfer'))}</th>
               </tr>
             </thead>
             <tbody data-traffic-tbody class="divide-y divide-outline-variant/10 font-mono text-[11px]">
@@ -173,7 +174,7 @@ export class TrafficTableComponent {
         tbody.innerHTML = `
           <tr>
             <td colspan="7" class="py-8 text-center text-on-surface-variant font-sans text-xs">
-              Tidak ada interface yang sesuai dengan pencarian.
+              ${escapeHtml(t('monitor.trafficSection.empty'))}
             </td>
           </tr>`;
       } else {
@@ -187,10 +188,10 @@ export class TrafficTableComponent {
                 : '<span class="size-2 rounded-full bg-outline inline-block mr-1.5"></span>';
             const statusLabel =
               i.status === 'running'
-                ? 'Running'
+                ? t('status.running')
                 : i.status === 'link-down'
-                  ? 'Link Down'
-                  : 'Disabled';
+                  ? t('status.linkDown')
+                  : t('status.disabled');
 
             const typeStyle = TYPE_BADGE[i.type] ?? 'bg-surface-container text-on-surface-variant';
 
@@ -199,7 +200,7 @@ export class TrafficTableComponent {
                 <td class="py-2.5 px-3 whitespace-nowrap">
                   <span class="inline-flex items-center text-[10px] ${isRunning ? 'text-emerald-400' : 'text-on-surface-variant'}">
                     ${statusDot}
-                    <span>${statusLabel}</span>
+                    <span>${escapeHtml(statusLabel)}</span>
                   </span>
                 </td>
                 <td class="py-2.5 px-3">
@@ -239,7 +240,7 @@ export class TrafficTableComponent {
       if (filtered.length === 0) {
         cards.innerHTML = `
           <div class="p-6 text-center rounded-xl bg-surface-container/60 text-xs text-on-surface-variant">
-            Tidak ada interface yang sesuai.
+            ${escapeHtml(t('monitor.trafficSection.empty'))}
           </div>`;
       } else {
         cards.innerHTML = filtered

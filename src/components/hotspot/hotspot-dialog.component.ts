@@ -1,5 +1,5 @@
-import { escapeHtml } from '@utils/format';
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import type {
   HotspotGenerateInput,
   HotspotProfile,
@@ -7,6 +7,7 @@ import type {
   HotspotUser,
   HotspotUserInput,
 } from '@types';
+import { escapeHtml } from '@utils/format';
 
 type DialogMode = 'user' | 'profile' | 'generate';
 type DialogSubmit =
@@ -140,12 +141,12 @@ export class HotspotDialogComponent {
     this.open(
       'user',
       user?.id,
-      user ? `Edit User · ${user.name}` : 'Tambah Hotspot User',
+      user ? t('hotspot.dialog.editUser', { name: user.name }) : t('hotspot.dialog.addUser'),
       `
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        ${selectField('Server', 'server', options(servers, selectedServer), selectedServer)}
+        ${selectField(t('hotspot.dialog.server'), 'server', options(servers, selectedServer), selectedServer)}
         ${selectField(
-          'Profile',
+          t('hotspot.dialog.profile'),
           'profile',
           options(
             profiles.map((profile) => profile.name),
@@ -153,25 +154,25 @@ export class HotspotDialogComponent {
           ),
           selectedProfile,
         )}
-        ${field('Username', 'name', user?.name ?? '', { required: true })}
-        ${field('Password', 'password', user?.password ?? '', { required: true })}
-        ${field('MAC Address / Lock User', 'macAddress', user?.macAddress ?? 'auto')}
-        ${field('Limit Uptime', 'limitUptime', user?.limitUptime ?? '3h', { placeholder: 'Contoh: 3h atau 45m' })}
-        ${field('Limit Data', 'limitBytesTotal', user?.limitBytesTotal ?? '1G', { placeholder: 'Contoh: 1G atau 500M' })}
-        ${field('Comment', 'comment', user?.comment ?? '')}
+        ${field(t('hotspot.dialog.username'), 'name', user?.name ?? '', { required: true })}
+        ${field(t('hotspot.dialog.password'), 'password', user?.password ?? '', { required: true })}
+        ${field(t('hotspot.dialog.macLock'), 'macAddress', user?.macAddress ?? 'auto')}
+        ${field(t('hotspot.dialog.limitUptime'), 'limitUptime', user?.limitUptime ?? '3h', { placeholder: t('hotspot.dialog.placeholderUptime') })}
+        ${field(t('hotspot.dialog.limitData'), 'limitBytesTotal', user?.limitBytesTotal ?? '1G', { placeholder: t('hotspot.dialog.placeholderData') })}
+        ${field(t('hotspot.dialog.comment'), 'comment', user?.comment ?? '')}
       </div>
       ${
         currentUser
           ? `<section class="mt-4 rounded-xl bg-surface-container/70 p-3">
-              <h3 class="text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">Pemakaian saat ini</h3>
+              <h3 class="text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">${escapeHtml(t('hotspot.dialog.currentUsage'))}</h3>
               <dl class="mt-2 grid grid-cols-2 gap-2 text-[11px]">
-                <div><dt class="text-on-surface-variant">Uptime</dt><dd class="mt-0.5 font-mono">${escapeHtml(currentUser.uptime)}</dd></div>
+                <div><dt class="text-on-surface-variant">${escapeHtml(t('hotspot.colUptime'))}</dt><dd class="mt-0.5 font-mono">${escapeHtml(currentUser.uptime)}</dd></div>
                 <div><dt class="text-on-surface-variant">Bytes In / Out</dt><dd class="mt-0.5 font-mono">${escapeHtml(currentUser.bytesIn)} / ${escapeHtml(currentUser.bytesOut)}</dd></div>
               </dl>
             </section>`
           : ''
       }
-      <p class="mt-3 text-[10px] text-on-surface-variant">Username harus unik. Password hanya tersimpan di data mock lokal.</p>`,
+      <p class="mt-3 text-[10px] text-on-surface-variant">${escapeHtml(t('hotspot.dialog.noteUser'))}</p>`,
     );
   }
 
@@ -191,32 +192,34 @@ export class HotspotDialogComponent {
       lockServer: false,
     };
     const expiryModes = [
-      { value: 'none', label: 'Tidak ada' },
-      { value: 'remove', label: 'Hapus saat kedaluwarsa' },
-      { value: 'notice', label: 'Tandai kedaluwarsa' },
-      { value: 'remove-record', label: 'Hapus & catat' },
-      { value: 'notice-record', label: 'Tandai & catat' },
+      { value: 'none', label: t('hotspot.expiryNone') },
+      { value: 'remove', label: t('hotspot.expiryRemove') },
+      { value: 'notice', label: t('hotspot.expiryNotice') },
+      { value: 'remove-record', label: t('hotspot.expiryRemoveRecord') },
+      { value: 'notice-record', label: t('hotspot.expiryNoticeRecord') },
     ];
 
     this.open(
       'profile',
       profile?.id,
-      profile ? `Edit Profile · ${profile.name}` : 'Tambah User Profile',
+      profile
+        ? t('hotspot.dialog.editProfile', { name: profile.name })
+        : t('hotspot.dialog.addProfile'),
       `
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        ${field('Nama profile', 'name', selectedProfile.name, { required: true })}
-        ${field('Shared users', 'sharedUsers', String(selectedProfile.sharedUsers), { type: 'number', min: 1, max: 999 })}
-        ${field('Rate limit', 'rateLimit', selectedProfile.rateLimit, { placeholder: 'Contoh: 10M/10M' })}
-        ${field('Address pool', 'addressPool', selectedProfile.addressPool)}
-        ${field('Parent queue', 'parentQueue', selectedProfile.parentQueue)}
-        ${selectField('Expiry mode', 'expiryMode', expiryModes, selectedProfile.expiryMode)}
-        ${field('Validity', 'validity', selectedProfile.validity, { placeholder: 'Contoh: 1d atau 12h' })}
-        ${field('Harga modal', 'price', String(selectedProfile.price), { type: 'number', min: 0 })}
-        ${field('Harga jual', 'sellingPrice', String(selectedProfile.sellingPrice), { type: 'number', min: 0 })}
+        ${field(t('hotspot.dialog.nameProfile'), 'name', selectedProfile.name, { required: true })}
+        ${field(t('hotspot.dialog.sharedUsers'), 'sharedUsers', String(selectedProfile.sharedUsers), { type: 'number', min: 1, max: 999 })}
+        ${field(t('hotspot.dialog.rateLimit'), 'rateLimit', selectedProfile.rateLimit, { placeholder: t('hotspot.dialog.placeholderRate') })}
+        ${field(t('hotspot.dialog.addressPool'), 'addressPool', selectedProfile.addressPool)}
+        ${field(t('hotspot.dialog.parentQueue'), 'parentQueue', selectedProfile.parentQueue)}
+        ${selectField(t('hotspot.dialog.expiryMode'), 'expiryMode', expiryModes, selectedProfile.expiryMode)}
+        ${field(t('hotspot.dialog.validity'), 'validity', selectedProfile.validity, { placeholder: t('hotspot.dialog.placeholderValidity') })}
+        ${field(t('hotspot.dialog.costPrice'), 'price', String(selectedProfile.price), { type: 'number', min: 0 })}
+        ${field(t('hotspot.dialog.sellingPrice'), 'sellingPrice', String(selectedProfile.sellingPrice), { type: 'number', min: 0 })}
       </div>
       <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-        ${checkboxField('Kunci ke MAC user', 'lockUser', selectedProfile.lockUser)}
-        ${checkboxField('Kunci ke server', 'lockServer', selectedProfile.lockServer)}
+        ${checkboxField(t('hotspot.dialog.lockToMac'), 'lockUser', selectedProfile.lockUser)}
+        ${checkboxField(t('hotspot.dialog.lockToServer'), 'lockServer', selectedProfile.lockServer)}
       </div>`,
     );
   }
@@ -227,13 +230,13 @@ export class HotspotDialogComponent {
     this.open(
       'generate',
       undefined,
-      'Generate Voucher',
+      t('hotspot.dialog.generateTitle'),
       `
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        ${field('Jumlah voucher', 'quantity', '10', { type: 'number', min: 1, max: 100, required: true })}
-        ${selectField('Server', 'server', options(servers, server), server)}
+        ${field(t('hotspot.dialog.quantity'), 'quantity', '10', { type: 'number', min: 1, max: 100, required: true })}
+        ${selectField(t('hotspot.dialog.server'), 'server', options(servers, server), server)}
         ${selectField(
-          'Profile',
+          t('hotspot.dialog.profile'),
           'profile',
           options(
             profiles.map((item) => item.name),
@@ -242,32 +245,32 @@ export class HotspotDialogComponent {
           profile,
         )}
         ${selectField(
-          'Mode username',
+          t('hotspot.dialog.usernameMode'),
           'usernameMode',
           [
-            { value: 'voucher', label: 'Username = password' },
-            { value: 'username-password', label: 'Username & password' },
+            { value: 'voucher', label: t('hotspot.dialog.usernameEqualsPassword') },
+            { value: 'username-password', label: t('hotspot.dialog.usernameAndPassword') },
           ],
           'voucher',
         )}
-        ${field('Panjang username/password', 'nameLength', '6', { type: 'number', min: 4, max: 8, required: true })}
-        ${field('Prefix', 'prefix', '')}
+        ${field(t('hotspot.dialog.nameLength'), 'nameLength', '6', { type: 'number', min: 4, max: 8, required: true })}
+        ${field(t('hotspot.dialog.prefix'), 'prefix', '')}
         ${selectField(
-          'Karakter',
+          t('hotspot.dialog.characterSet'),
           'characterSet',
           [
-            { value: 'mixed', label: 'Campuran huruf & angka' },
-            { value: 'lower', label: 'Huruf kecil & angka' },
-            { value: 'upper', label: 'Huruf besar & angka' },
-            { value: 'digits', label: 'Angka saja' },
+            { value: 'mixed', label: t('hotspot.dialog.mixedChars') },
+            { value: 'lower', label: t('hotspot.dialog.lowerChars') },
+            { value: 'upper', label: t('hotspot.dialog.upperChars') },
+            { value: 'digits', label: t('hotspot.dialog.digitsOnly') },
           ],
           'mixed',
         )}
-        ${field('Limit uptime', 'limitUptime', '2h')}
-        ${field('Limit data', 'limitBytesTotal', '1G')}
-        ${field('Comment', 'comment', 'vc-generated')}
+        ${field(t('hotspot.dialog.limitUptime'), 'limitUptime', '2h')}
+        ${field(t('hotspot.dialog.limitData'), 'limitBytesTotal', '1G')}
+        ${field(t('hotspot.dialog.comment'), 'comment', 'vc-generated')}
       </div>
-      <p class="mt-3 text-[10px] text-on-surface-variant">Voucher dibuat sebagai data mock lokal, maksimal 100 akun per batch.</p>`,
+      <p class="mt-3 text-[10px] text-on-surface-variant">${escapeHtml(t('hotspot.dialog.noteVoucher'))}</p>`,
     );
   }
 
@@ -284,9 +287,9 @@ export class HotspotDialogComponent {
         <header class="flex items-start justify-between gap-3 border-b border-outline-variant/15 px-4 py-3">
           <div>
             <h2 id="hotspot-dialog-title" class="text-sm font-bold font-headline">${escapeHtml(title)}</h2>
-            <p class="mt-0.5 text-[10px] text-on-surface-variant">${mode === 'generate' ? 'Buat beberapa voucher sekaligus' : 'Data simulasi Hotspot'}</p>
+            <p class="mt-0.5 text-[10px] text-on-surface-variant">${escapeHtml(mode === 'generate' ? t('hotspot.dialog.generateSubtitle') : t('hotspot.dialog.dataSubtitle'))}</p>
           </div>
-          <button type="button" data-dialog-close aria-label="Tutup dialog" class="flex size-8 shrink-0 items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface">
+          <button type="button" data-dialog-close aria-label="${escapeHtml(t('hotspot.dialog.closeAria'))}" class="flex size-8 shrink-0 items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface">
             ${icon('close', 'text-[16px]')}
           </button>
         </header>
@@ -295,10 +298,10 @@ export class HotspotDialogComponent {
           <p data-dialog-error role="alert" class="hidden rounded-lg bg-error-container/40 px-3 py-2 text-[11px] text-error"></p>
         </div>
         <footer class="flex items-center justify-end gap-2 border-t border-outline-variant/15 px-4 py-3">
-          <button type="button" data-dialog-close class="h-8 rounded-lg px-3 text-xs font-medium text-on-surface-variant hover:bg-surface-container">Batal</button>
+          <button type="button" data-dialog-close class="h-8 rounded-lg px-3 text-xs font-medium text-on-surface-variant hover:bg-surface-container">${escapeHtml(t('hotspot.dialog.cancel'))}</button>
           <button type="submit" class="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-on-primary transition-transform active:scale-95">
             ${icon(mode === 'generate' ? 'confirmation_number' : 'save', 'text-[14px]')}
-            <span data-submit-label>${mode === 'generate' ? 'Generate' : 'Simpan'}</span>
+            <span data-submit-label>${escapeHtml(mode === 'generate' ? t('hotspot.dialog.generate') : t('hotspot.dialog.save'))}</span>
           </button>
         </footer>
       </form>`;
@@ -332,7 +335,7 @@ export class HotspotDialogComponent {
     } else if (this.currentMode === 'profile') {
       const expiryMode = readText(data, 'expiryMode');
       if (!isExpiryMode(expiryMode)) {
-        this.showError('Expiry mode tidak valid');
+        this.showError(t('hotspot.dialog.errorExpiry'));
         return;
       }
       submit = {
@@ -356,7 +359,7 @@ export class HotspotDialogComponent {
       const usernameMode = readText(data, 'usernameMode');
       const characterSet = readText(data, 'characterSet');
       if (usernameMode !== 'voucher' && usernameMode !== 'username-password') {
-        this.showError('Mode username tidak valid');
+        this.showError(t('hotspot.dialog.errorUsernameMode'));
         return;
       }
       if (
@@ -365,7 +368,7 @@ export class HotspotDialogComponent {
         characterSet !== 'mixed' &&
         characterSet !== 'digits'
       ) {
-        this.showError('Pilihan karakter tidak valid');
+        this.showError(t('hotspot.dialog.errorCharset'));
         return;
       }
       submit = {
@@ -390,17 +393,18 @@ export class HotspotDialogComponent {
     const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
     if (submitButton) submitButton.disabled = true;
-    if (submitLabel) submitLabel.textContent = 'Menyimpan...';
+    if (submitLabel) submitLabel.textContent = t('hotspot.dialog.saving');
 
     try {
       await this.callbacks.onSubmit(submit);
       this.close();
     } catch (error) {
-      this.showError(error instanceof Error ? error.message : 'Tidak dapat menyimpan data Hotspot');
+      this.showError(error instanceof Error ? error.message : t('hotspot.dialog.errorSave'));
       this.busy = false;
       if (submitButton) submitButton.disabled = false;
       if (submitLabel)
-        submitLabel.textContent = this.currentMode === 'generate' ? 'Generate' : 'Simpan';
+        submitLabel.textContent =
+          this.currentMode === 'generate' ? t('hotspot.dialog.generate') : t('hotspot.dialog.save');
     }
   }
 
@@ -408,20 +412,23 @@ export class HotspotDialogComponent {
     const error = this.dialog?.querySelector<HTMLElement>('[data-dialog-error]');
     if (!error) return;
     error.textContent = message;
-    error.classList.toggle('hidden', message.length === 0);
+    error.classList.toggle('hidden', !message);
   }
 
-  private close(): void {
-    if (!this.dialog?.open) return;
+  close(): void {
+    if (!this.dialog) return;
     this.dialog.close();
+    this.busy = false;
     this.currentMode = null;
     this.currentId = undefined;
-    if (this.lastFocus?.isConnected) this.lastFocus.focus();
+    if (this.lastFocus && document.body.contains(this.lastFocus)) {
+      this.lastFocus.focus();
+    }
     this.lastFocus = null;
   }
 
   destroy(): void {
-    if (this.dialog?.open) this.dialog.close();
+    this.close();
     this.dialog?.remove();
     this.dialog = null;
   }

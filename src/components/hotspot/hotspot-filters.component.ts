@@ -1,4 +1,5 @@
 import { icon } from '@components/ui/icon';
+import { t } from '@i18n/translate';
 import { escapeHtml } from '@utils/format';
 
 export type HotspotFilterKey = 'profile' | 'comment' | 'server' | 'host-status';
@@ -53,7 +54,7 @@ export class HotspotFiltersComponent {
     this.el.innerHTML = `
       <span class="inline-flex items-center gap-1 px-0.5 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">
         ${icon('filter_list', 'text-[13px]')}
-        <span class="hidden sm:inline">Filter</span>
+        <span class="hidden sm:inline">${escapeHtml(t('common.filter'))}</span>
       </span>
       ${filters
         .map(

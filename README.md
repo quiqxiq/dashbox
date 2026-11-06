@@ -75,11 +75,12 @@ Dashbox dirancang menyerupai fleksibilitas Winbox dipadukan dengan kemudahan web
 
 ### 6. Dua Bahasa (EN / ID) & Navigasi Dinamis
 
-- **i18n dua bahasa**: seluruh label navigasi, judul halaman, tab, dan aksi utama bisa diganti antara **Bahasa Indonesia (default)** dan **English (US)** — disimpan di `localStorage` (`dashbox.locale`), deteksi awal dari `navigator.language`, fallback otomatis ke `id`, dan `document.lang` diperbarui.
-- **Titik akses**: pemilih bahasa di **Settings** (radio ID/EN) dan tombol cepat **ID/EN** di Header + Sidebar footer. Perubahan langsung me-render ulang label tanpa reload.
-- **Bottom Navigation data-driven**: konfigurasi tunggal di `src/config/navigation.config.ts` (`NavBarItem` + `NavSubItem`). Untuk menyesuaikan menu cukup ubah array `BOTTOM_NAV` — tambah/hapus, urutkan ulang, set `enabled: false`, atau tambahkan `subItems`. Komponen `BottomNavComponent` tidak perlu diubah.
-- **Submenu turunan (PPP / Hotspot / Monitor)**: item induk yang punya `subItems` membuka **Bottom Sheet** modern (drag handle, header icon + judul + tombol close, grid 2 kolom dengan badge count, highlight item aktif). Klik kedua pada item aktif yang sama akan membuka sheet; klik pertama mengarah ke tab default. Contoh: PPP → Secrets (48), Active (32), Profiles (7), PPPoE Servers (2).
-- **Tombol "More" untuk item ke-7+**: jika jumlah item aktif melebihi `BOTTOM_NAV_MAX_VISIBLE` (6), bar menampilkan 5 item utama + tombol **More** (dengan badge jumlah sisanya) yang membuka sheet daftar item yang terpotong. Perilaku ini otomatis.
+- **Dukungan Dwibahasa Menyeluruh (i18n)**: Seluruh teks UI—meliputi navigasi shell, judul halaman, tab, KPI telemetri, tabel, dialog modal, filter, konfirmasi, hingga toast—bisa berganti secara dinamis antara **Bahasa Indonesia (default)** dan **English (US)**. Format angka, mata uang, dan tanggal/waktu disesuaikan secara terpusat. State bahasa disimpan di `localStorage` (`dashbox.locale`) dengan deteksi awal `navigator.language`, fallback otomatis `id`, serta pembaruan atribut `lang` dan judul dokumen.
+- **Titik Akses Bahasa Terfokus**: Tombol cepat alih bahasa (ID/EN) tersedia di **Header** utama serta pengaturan terperinci di menu **Settings**. Sidebar footer dirancang bersih tanpa toggle bahasa duplikat.
+- **Tata Letak 1280px Rata Tengah**: Seluruh tampilan halaman (`.view`) dibatasi lebar maksimum `80rem` (1280px) rata tengah (`mx-auto`) dengan padding horizontal responsif, menjaga kenyamanan visual pada layar monitor lebar maupun ultrawide.
+- **Bottom Navigation Mobile-Only (<768px)**: Bar navigasi bawah hanya aktif di perangkat mobile (`<768px`). Pada layar desktop dan tablet (`>=768px`), sistem navigasi beralih ke sidebar drawer responsif dengan kontrol hamburger toggle di header.
+- **Submenu Turunan & Bottom Sheet (Mobile)**: Item navigasi yang memiliki sub-item (seperti PPP, Hotspot, dan Monitor) membuka Bottom Sheet interaktif lengkap dengan penanda item aktif dan badge counter.
+- **Sinkronisasi Tab URL**: Parameter tab/section pada Hotspot, Monitor, dan PPP disinkronkan ke URL router, memastikan pergantian bahasa secara langsung merender ulang view tanpa mengubah posisi tab aktif pengguna.
 
 ### 7. Arsitektur & Keamanan
 
