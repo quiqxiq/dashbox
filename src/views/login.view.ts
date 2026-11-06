@@ -64,8 +64,8 @@ export class LoginView implements View {
       <div class="w-full max-w-sm rounded-2xl bg-surface-container/80 backdrop-blur-2xl ring-1 ring-outline-variant/25 shadow-[0_20px_60px_rgba(0,0,0,0.55)] p-6 sm:p-8 flex flex-col gap-6 relative z-10">
         <!-- Logo & Branding -->
         <div class="flex flex-col items-center text-center">
-          <div class="size-14 rounded-2xl bg-gradient-to-br from-primary/25 via-primary/10 to-transparent ring-1 ring-primary/40 shadow-[0_0_24px_rgba(125,211,252,0.22)] flex items-center justify-center mb-3">
-            ${icon('router', 'text-[28px] text-primary')}
+          <div class="size-16 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent ring-1 ring-primary/30 shadow-[0_0_28px_rgba(125,211,252,0.22)] flex items-center justify-center mb-3.5 p-2.5">
+            <img src="/dashbox-mark-dark.svg" alt="Dashbox" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(63,169,240,0.35)]" />
           </div>
           <h1 class="text-2xl font-extrabold tracking-tight font-headline text-on-surface">Dashbox</h1>
           <p class="text-xs text-on-surface-variant mt-1 font-medium">${escapeHtml(t('auth.loginSubtitle'))}</p>

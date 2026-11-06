@@ -24,11 +24,12 @@ export class HeaderComponent {
       'fixed top-0 inset-x-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-[0_1px_12px_rgba(0,0,0,0.35)] pt-safe';
     el.innerHTML = `
       <div class="h-16 px-3 flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2 min-w-0">
+        <div class="flex items-center gap-2.5 min-w-0">
           <button type="button" data-action="open-drawer" aria-label="${escapeLabel(t('common.openMenu'))}"
-            class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary active:bg-surface-container/60 transition-colors">
-            ${icon('menu', 'text-[24px]')}
+            class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary active:bg-surface-container/60 transition-colors shrink-0">
+            ${icon('menu', 'text-[22px]')}
           </button>
+          <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="24" height="24" class="shrink-0 object-contain drop-shadow-[0_1px_4px_rgba(63,169,240,0.3)] hidden sm:block" />
           <div class="flex flex-col min-w-0">
             <h1 data-title class="text-[13px] font-headline font-bold tracking-tight text-on-surface truncate leading-tight">${escapeLabel(t('nav.dashboard'))}</h1>
             <div class="flex items-center gap-1.5 mt-0.5 min-w-0">

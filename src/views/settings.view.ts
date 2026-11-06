@@ -93,7 +93,8 @@ export class SettingsView implements View {
         </div>
       </div>
 
-      <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-5 ring-1 ring-outline-variant/25 text-center">
+      <div class="rounded-2xl bg-surface-container/60 backdrop-blur-xl p-6 ring-1 ring-outline-variant/25 text-center flex flex-col items-center">
+        <img src="/dashbox-mark-dark.svg" alt="Dashbox" width="36" height="36" class="mb-3 object-contain drop-shadow-[0_2px_8px_rgba(63,169,240,0.3)]" />
         <span class="px-2 py-0.5 rounded-full bg-secondary/15 text-secondary text-[9px] font-bold uppercase tracking-wider">${escapeHtml(t('settings.previewBadge'))}</span>
         <h3 class="text-sm font-bold font-headline text-on-surface mt-2">${escapeHtml(t('settings.title'))}</h3>
         <p class="text-[11px] text-on-surface-variant mt-1 max-w-[320px] mx-auto leading-relaxed">${escapeHtml(t('settings.previewBody'))}</p>
